@@ -1,5 +1,7 @@
 package com.example.volunteer_platform.controller;
 
+import com.example.volunteer_platform.exeptions.EmailAlreadyExistsException;
+import com.example.volunteer_platform.exeptions.InvalidEmailException;
 import com.example.volunteer_platform.model.Customer;
 import com.example.volunteer_platform.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,17 @@ public class CustomerController extends UserController<Customer> {
         super(customerService);
     }
 
-    @Override
-    protected Customer createUserInstance(String email, String password, String username) {
-        return new Customer(email, password, username);
+    @PostMapping("/create")
+    public void createCustomer(@RequestParam String email,
+                               @RequestParam String password,
+                               @RequestParam String username) {
+        try {
+            CustomerService customerService = (CustomerService) service;
+            customerService.createCustomer(email, password, username);
+        } catch (EmailAlreadyExistsException | InvalidEmailException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("An unexpected error occurred", e);
+        }
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 
 @Service
 public class EventService {
@@ -19,7 +18,7 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Event createEvent(String name, String description, LocalDate date, LocalTime startTime, Optional<LocalTime> endTime) {
+    public Event createEvent(String name, String description, LocalDate date, LocalTime startTime, LocalTime endTime) {
         Event newEvent = new Event(name, description, "Unknown location", date, startTime, endTime);
         return eventRepository.save(newEvent);
     }
