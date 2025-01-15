@@ -1,10 +1,10 @@
 package com.example.volunteer_platform.controller;
 
-import com.example.volunteer_platform.exeptions.EmailAlreadyExistsException;
-import com.example.volunteer_platform.exeptions.InvalidEmailException;
 import com.example.volunteer_platform.model.Customer;
 import com.example.volunteer_platform.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,16 +17,15 @@ public class CustomerController extends UserController<Customer> {
     }
 
     @PostMapping("/create")
-    public void createCustomer(@RequestParam String email,
+    public ResponseEntity<String> createCustomer(@RequestParam String email,
                                @RequestParam String password,
                                @RequestParam String username) {
         try {
             CustomerService customerService = (CustomerService) service;
-            customerService.createCustomer(email, password, username);
-        } catch (EmailAlreadyExistsException | InvalidEmailException e) {
-            throw e;
+            customerService.createUserInstance(email, password, username);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created for " + username);
         } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
 }

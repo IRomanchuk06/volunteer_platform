@@ -1,14 +1,14 @@
 package com.example.volunteer_platform.service;
 
+import com.example.volunteer_platform.exeptions.AuthenticationException;
 import com.example.volunteer_platform.model.User;
 import com.example.volunteer_platform.repository.UserRepository;
-import com.example.volunteer_platform.utils.CurrentUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+@Service("userService")
 public abstract class UserService<U extends User> {
 
     protected final UserRepository<U> repository;
@@ -36,21 +36,14 @@ public abstract class UserService<U extends User> {
         return null;
     }
 
-    public void deleteUser(String email) {
+    public boolean deleteUser(String email) {
         U user = repository.findUserByEmail(email);
         if (user != null) {
             repository.delete(user);
+            return true;
         }
+        return false;
     }
 
-    public U authenticate(String email, String password) {
-        U user = repository.findUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            CurrentUserContext.setCurrentUser(user);
-            return user;
-        }
-        return null;
-    }
-
-    public abstract U createUserInstance(String email, String password, String username);
+    public abstract void createUserInstance(String email, String password, String username);
 }

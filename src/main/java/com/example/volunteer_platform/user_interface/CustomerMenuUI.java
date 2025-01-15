@@ -2,6 +2,7 @@ package com.example.volunteer_platform.user_interface;
 
 import com.example.volunteer_platform.controller.CustomerController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -21,17 +22,11 @@ public class CustomerMenuUI {
     public void start() {
         while (true) {
             System.out.println("Customer Menu");
-            System.out.println("1. Create Customer Account");
-            System.out.println("2. Back to Main Menu");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
-                case 1 -> createCustomerAccount();
-                case 2 -> {
-                    return;
-                }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
@@ -47,10 +42,9 @@ public class CustomerMenuUI {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
 
-        customerController.createCustomer(email, password, username);
+        ResponseEntity<String> response = customerController.createCustomer(email, password, username);
 
-        System.out.println("Customer account created successfully.");
+        System.out.println(response.getBody());
     }
-
 
 }

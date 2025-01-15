@@ -1,8 +1,7 @@
 package com.example.volunteer_platform.user_interface;
 
 import com.example.volunteer_platform.controller.VolunteerController;
-import com.example.volunteer_platform.exeptions.EmailAlreadyExistsException;
-import com.example.volunteer_platform.exeptions.InvalidEmailException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -18,6 +17,19 @@ public class VolunteerMenuUI {
         this.scanner = new Scanner(System.in);
     }
 
+    public void start() {
+        while (true) {
+            System.out.println("Volunteer Menu");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
     public void createVolunteerAccount() {
         System.out.println("Create Volunteer Account");
 
@@ -30,14 +42,8 @@ public class VolunteerMenuUI {
         System.out.print("Enter username: ");
         String username = scanner.next();
 
-        try {
-            volunteerController.createVolunteer(email, password, username);
-        } catch (EmailAlreadyExistsException | InvalidEmailException e) {
-            System.out.print(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred", e);
-        }
+        ResponseEntity<String> response = volunteerController.createVolunteer(email, password, username);
 
-        System.out.println("Volunteer account created successfully.");
+        System.out.println(response.getBody());
     }
 }

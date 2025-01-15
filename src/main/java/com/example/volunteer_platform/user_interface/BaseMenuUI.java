@@ -1,8 +1,12 @@
 package com.example.volunteer_platform.user_interface;
 
-import com.example.volunteer_platform.controller.UserController;
+import com.example.volunteer_platform.controller.AuthenticationController;
+import com.example.volunteer_platform.model.Customer;
 import com.example.volunteer_platform.model.User;
+import com.example.volunteer_platform.model.Volunteer;
+import com.example.volunteer_platform.utils.CurrentUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -15,14 +19,14 @@ public class BaseMenuUI {
     private final Scanner scanner;
     private final VolunteerMenuUI volunteerMenuUI;
     private final CustomerMenuUI customerMenuUI;
-    private final UserController<User> userController;
+    private final AuthenticationController authenticationController;
 
     @Autowired
-    public BaseMenuUI(VolunteerMenuUI volunteerMenuUI, CustomerMenuUI customerMenuUI, UserController<User> userController) {
+    public BaseMenuUI(VolunteerMenuUI volunteerMenuUI, CustomerMenuUI customerMenuUI, AuthenticationController authenticationController) {
         this.scanner = new Scanner(System.in);
         this.volunteerMenuUI = volunteerMenuUI;
         this.customerMenuUI = customerMenuUI;
-        this.userController = userController;
+        this.authenticationController = authenticationController;
     }
 
     public void start() {
@@ -80,12 +84,17 @@ public class BaseMenuUI {
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        User user = userController.authenticate(email, password);
+        ResponseEntity<String> response = authenticationController.login(email, password);
 
-        if (user != null) {
-            System.out.println("Login successful! Welcome " + user.getUsername());
-        } else {
-            System.out.println("Invalid credentials. Please try again.");
+        System.out.println(response.getBody());
+
+        if (CurrentUserContext.isAuthenticated()){
+            Class<? extends User> usersRole = CurrentUserContext.getCurrentUser().getClass();
+            if (usersRole.equals(Volunteer.class)) {
+                volunteerMenuUI.start();
+            } else if (usersRole.equals(Customer.class)) {
+                customerMenuUI.start();
+            }
         }
     }
 }

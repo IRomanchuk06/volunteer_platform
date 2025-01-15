@@ -17,26 +17,21 @@ public class CustomerService extends UserService<Customer> {
     }
 
     @Override
-    public Customer createUserInstance(String email, String password, String username) {
+    public void createUserInstance(String email, String password, String username) {
+        if(repository.findUserByEmail(email) != null) {
+            throw new EmailAlreadyExistsException(email + " this email is already registered.");
+        }
+
+        if(!InputUtils.isValidEmail(email)) {
+            throw new InvalidEmailException("Invalid email format.");
+        }
+
         Customer customer = Customer.builder()
-                                    .email(email)
-                                    .password(password)
-                                    .username(username)
-                                    .build();
+                .email(email)
+                .password(password)
+                .username(username)
+                .build();
 
         repository.save(customer);
-
-        return customer;
-    }
-
-    public Customer createCustomer(String email, String password, String username) {
-        if(repository.findUserByEmail(email) != null) {
-            if(!InputUtils.isValidEmail(email)) {
-                throw new InvalidEmailException("Invalid email format.");
-            }
-
-            return createUserInstance(email, password, username);
-        }
-        throw new EmailAlreadyExistsException(email + " this email is already registered.");
     }
 }

@@ -17,26 +17,21 @@ public class VolunteerService extends UserService<Volunteer> {
     }
 
     @Override
-    public Volunteer createUserInstance(String email, String password, String username) {
-         Volunteer volunteer = Volunteer.builder()
-                                        .email(email)
-                                        .password(password)
-                                        .username(username)
-                                        .build();
-
-         repository.save(volunteer);
-
-         return volunteer;
-    }
-
-    public Volunteer createVolunteer(String email, String password, String username) {
+    public void createUserInstance(String email, String password, String username) {
         if(repository.findUserByEmail(email) != null) {
-            if(!InputUtils.isValidEmail(email)) {
-                throw new InvalidEmailException("Invalid email format.");
-            }
-
-            return createUserInstance(email, password, username);
+            throw new EmailAlreadyExistsException(email + " this email is already registered.");
         }
-        throw new EmailAlreadyExistsException(email + " this email is already registered.");
+
+        if(!InputUtils.isValidEmail(email)) {
+            throw new InvalidEmailException("Invalid email format.");
+        }
+
+        Volunteer volunteer = Volunteer.builder()
+                .email(email)
+                .password(password)
+                .username(username)
+                .build();
+
+        repository.save(volunteer);
     }
 }

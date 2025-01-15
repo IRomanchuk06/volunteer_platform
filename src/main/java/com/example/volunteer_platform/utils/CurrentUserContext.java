@@ -16,4 +16,8 @@ public class CurrentUserContext {
     public static void clear() {
         currentUser.remove();
     }
+
+    public static boolean isAuthenticated() {
+        return currentUser.get() != null;
+    }
 }
