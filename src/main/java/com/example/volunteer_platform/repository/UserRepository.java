@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository<U extends User> extends JpaRepository<U, Long> {
-    U findUserByEmail(String email);
-    U findUserByUsername(String username);
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findUserByEmail(String email);
+    User findUserByUsername(String username);
 }

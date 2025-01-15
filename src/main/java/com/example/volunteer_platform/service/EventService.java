@@ -1,5 +1,6 @@
 package com.example.volunteer_platform.service;
 
+import com.example.volunteer_platform.exeptions.EventAlreadyExistsException;
 import com.example.volunteer_platform.model.Event;
 import com.example.volunteer_platform.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,19 @@ public class EventService {
     }
 
     public Event createEvent(String name, String description, LocalDate date, LocalTime startTime, LocalTime endTime) {
-        Event newEvent = new Event(name, description, "Unknown location", date, startTime, endTime);
-        return eventRepository.save(newEvent);
+        boolean eventExists = eventRepository.existsByNameAndDate(name, date);
+        if (eventExists) {
+            throw new EventAlreadyExistsException("Event with this name already exists on the given date.");
+        }
+
+        Event event = Event.builder()
+                .name(name)
+                .description(description)
+                .date(date)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+
+        return eventRepository.save(event);
     }
 }

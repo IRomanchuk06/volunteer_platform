@@ -19,26 +19,26 @@ public abstract class UserController<U extends User> {
     }
 
     @GetMapping("/email")
-    public ResponseEntity<U> getUserByEmail(@RequestParam String email) {
-        Optional<U> user = service.getUserByEmail(email);
+    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+        Optional<User> user = service.getUserByEmail(email);
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(null));
     }
 
     @GetMapping("/username")
-    public ResponseEntity<U> getUserByUsername(@RequestParam String username) {
-        Optional<U> user = service.getUserByUsername(username);
+    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
+        Optional<User> user = service.getUserByUsername(username);
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(null));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<U> updateUser(@RequestParam String email,
+    public ResponseEntity<User> updateUser(@RequestParam String email,
                                         @RequestParam String newUsername,
                                         @RequestParam String newPassword) {
-        U updatedUser = service.updateUser(email, newUsername, newPassword);
+        User updatedUser = service.updateUser(email, newUsername, newPassword);
         return ResponseEntity.ok(updatedUser);
     }
 

@@ -2,18 +2,18 @@ package com.example.volunteer_platform.service;
 
 import com.example.volunteer_platform.exeptions.EmailAlreadyExistsException;
 import com.example.volunteer_platform.exeptions.InvalidEmailException;
+
 import com.example.volunteer_platform.model.Volunteer;
-import com.example.volunteer_platform.repository.VolunteerRepository;
+import com.example.volunteer_platform.repository.UserRepository;
 import com.example.volunteer_platform.utils.InputUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 @Service("volunteerService")
 public class VolunteerService extends UserService<Volunteer> {
 
-    @Autowired
-    public VolunteerService(VolunteerRepository volunteerRepository) {
-        super(volunteerRepository);
+    public VolunteerService(UserRepository repository) {
+        super(repository);
     }
 
     @Override

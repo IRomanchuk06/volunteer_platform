@@ -1,16 +1,21 @@
 package com.example.volunteer_platform.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Event {
 
     @Id
@@ -26,13 +31,4 @@ public class Event {
 
     @Nullable
     private LocalTime endTime;
-
-    public Event(String name, String description, String location, LocalDate date, LocalTime startTime, @Nullable LocalTime endTime) {
-        this.name = name;
-        this.description = description;
-        this.location = location;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }

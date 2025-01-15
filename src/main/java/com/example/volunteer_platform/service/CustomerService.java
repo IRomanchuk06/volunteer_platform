@@ -3,17 +3,15 @@ package com.example.volunteer_platform.service;
 import com.example.volunteer_platform.exeptions.EmailAlreadyExistsException;
 import com.example.volunteer_platform.exeptions.InvalidEmailException;
 import com.example.volunteer_platform.model.Customer;
-import com.example.volunteer_platform.repository.CustomerRepository;
+import com.example.volunteer_platform.repository.UserRepository;
 import com.example.volunteer_platform.utils.InputUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("customerService")
 public class CustomerService extends UserService<Customer> {
 
-    @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
-        super(customerRepository);
+    public CustomerService(UserRepository userRepository) {
+        super(userRepository);
     }
 
     @Override
