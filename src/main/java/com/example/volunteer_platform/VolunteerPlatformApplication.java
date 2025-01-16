@@ -9,19 +9,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class VolunteerPlatformApplication implements CommandLineRunner {
 
-	private final BaseMenuUI baseMenuUI;
+    private final BaseMenuUI baseMenuUI;
 
-	@Autowired
-	public VolunteerPlatformApplication(BaseMenuUI baseMenuUI) {
-		this.baseMenuUI = baseMenuUI;
-	}
+    @Autowired
+    public VolunteerPlatformApplication(BaseMenuUI baseMenuUI) {
+        this.baseMenuUI = baseMenuUI;
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(VolunteerPlatformApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(VolunteerPlatformApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-		baseMenuUI.start();
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        baseMenuUI.start();
+    }
 }

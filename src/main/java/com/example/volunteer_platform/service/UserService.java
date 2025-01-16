@@ -44,5 +44,5 @@ public abstract class UserService<U extends User> {
         return false;
     }
 
-    public abstract void createUserInstance(String email, String password, String username);
+    public abstract U createUserInstance(String email, String password, String username);
 }

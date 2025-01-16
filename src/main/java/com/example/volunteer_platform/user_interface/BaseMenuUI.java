@@ -1,10 +1,12 @@
 package com.example.volunteer_platform.user_interface;
 
 import com.example.volunteer_platform.controller.AuthenticationController;
+import com.example.volunteer_platform.controller.VerificationController;
 import com.example.volunteer_platform.model.Customer;
 import com.example.volunteer_platform.model.User;
 import com.example.volunteer_platform.model.Volunteer;
 import com.example.volunteer_platform.utils.CurrentUserContext;
+import com.example.volunteer_platform.utils.InputUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -20,13 +22,16 @@ public class BaseMenuUI {
     private final VolunteerMenuUI volunteerMenuUI;
     private final CustomerMenuUI customerMenuUI;
     private final AuthenticationController authenticationController;
+    private final VerificationController verificationController;
 
     @Autowired
-    public BaseMenuUI(VolunteerMenuUI volunteerMenuUI, CustomerMenuUI customerMenuUI, AuthenticationController authenticationController) {
+    public BaseMenuUI(VolunteerMenuUI volunteerMenuUI, CustomerMenuUI customerMenuUI,
+                      AuthenticationController authenticationController, VerificationController verificationController) {
         this.scanner = new Scanner(System.in);
         this.volunteerMenuUI = volunteerMenuUI;
         this.customerMenuUI = customerMenuUI;
         this.authenticationController = authenticationController;
+        this.verificationController = verificationController;
     }
 
     public void start() {
@@ -79,8 +84,19 @@ public class BaseMenuUI {
     }
 
     private void loginAccount() {
-        System.out.print("Enter email: ");
-        String email = scanner.nextLine();
+        String email = "";
+
+        while (true) {
+            email = InputUtils.getValidEmail(verificationController);
+
+            ResponseEntity<String> emailRegisteredCheck = verificationController.verifyAvailableEmail(email);
+            if (!emailRegisteredCheck.getStatusCode().is2xxSuccessful()) {
+                break;
+            } else {
+                System.out.println("Email is not registered. Please enter a registered email address.");
+            }
+        }
+
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
@@ -88,7 +104,7 @@ public class BaseMenuUI {
 
         System.out.println(response.getBody());
 
-        if (CurrentUserContext.isAuthenticated()){
+        if (CurrentUserContext.isAuthenticated()) {
             Class<? extends User> usersRole = CurrentUserContext.getCurrentUser().getClass();
             if (usersRole.equals(Volunteer.class)) {
                 volunteerMenuUI.start();
@@ -97,4 +113,5 @@ public class BaseMenuUI {
             }
         }
     }
+
 }

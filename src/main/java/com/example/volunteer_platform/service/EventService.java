@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -19,19 +20,18 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Event createEvent(String name, String description, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    public Event createEvent(String name, String description, String location, LocalDate date,
+                             Optional<LocalTime> startTime, Optional<LocalTime> endTime, String customerEmail) {
         boolean eventExists = eventRepository.existsByNameAndDate(name, date);
         if (eventExists) {
             throw new EventAlreadyExistsException("Event with this name already exists on the given date.");
         }
 
-        Event event = Event.builder()
-                .name(name)
-                .description(description)
-                .date(date)
-                .startTime(startTime)
-                .endTime(endTime)
-                .build();
+        LocalTime resolvedStartTime = startTime.orElse(null);
+        LocalTime resolvedEndTime = endTime.orElse(null);
+
+        Event event = Event.builder().name(name).description(description).location(location).date(date).startTime(
+                resolvedStartTime).endTime(resolvedEndTime).customerEmail(customerEmail).build();
 
         return eventRepository.save(event);
     }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -18,24 +19,22 @@ public abstract class UserController<U extends User> {
         this.service = userService;
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = service.getUserByEmail(email);
         return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(null));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email));
     }
 
-    @GetMapping("/username")
-    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
+    @GetMapping("/username/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         Optional<User> user = service.getUserByUsername(username);
         return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(null));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with username: " + username));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestParam String email,
+    public ResponseEntity<?> updateUser(@RequestParam String email,
                                         @RequestParam String newUsername,
                                         @RequestParam String newPassword) {
         User updatedUser = service.updateUser(email, newUsername, newPassword);
@@ -43,13 +42,12 @@ public abstract class UserController<U extends User> {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestParam String email) {
+    public ResponseEntity<?> deleteUser(@RequestParam String email) {
         boolean isDeleted = service.deleteUser(email);
         if (isDeleted) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email);
         }
     }
 }

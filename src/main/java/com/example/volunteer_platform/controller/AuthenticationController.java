@@ -1,11 +1,9 @@
 package com.example.volunteer_platform.controller;
 
-import com.example.volunteer_platform.exeptions.AuthenticationException;
 import com.example.volunteer_platform.model.User;
 import com.example.volunteer_platform.service.AuthenticationService;
 import com.example.volunteer_platform.utils.CurrentUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +23,10 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
-        try {
-            User user = authenticationService.authenticate(email, password);
-            CurrentUserContext.setCurrentUser(user);
-            return ResponseEntity.ok("Welcome " + user.getUsername());
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        User user = authenticationService.authenticate(email, password);
+        CurrentUserContext.setCurrentUser(user);
+        return ResponseEntity.ok("Welcome " + user.getUsername());
     }
 }
+
 

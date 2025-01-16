@@ -1,10 +1,9 @@
 package com.example.volunteer_platform.model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import jakarta.persistence.Entity;
 
 @Entity
 @Table(name = "volunteers")

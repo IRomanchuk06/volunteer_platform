@@ -5,7 +5,10 @@ import com.example.volunteer_platform.service.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/volunteers")
@@ -16,16 +19,14 @@ public class VolunteerController extends UserController<Volunteer> {
         super(volunteerService);
     }
 
-    @PostMapping("/create/volunteer")
-    public ResponseEntity<String> createVolunteer(@RequestParam String email,
+    @PostMapping("/")
+    public ResponseEntity<Volunteer> createVolunteer(@RequestParam String email,
                                                   @RequestParam String password,
                                                   @RequestParam String username) {
-        try {
-            VolunteerService volunteerService = (VolunteerService) service;
-            volunteerService.createUserInstance(email, password, username);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created for " + username);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
-        }
+        VolunteerService volunteerService = (VolunteerService) service;
+        Volunteer volunteer = volunteerService.createUserInstance(email, password, username);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(volunteer);
     }
 }
+

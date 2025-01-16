@@ -1,6 +1,9 @@
 package com.example.volunteer_platform.user_interface;
 
+import com.example.volunteer_platform.controller.VerificationController;
 import com.example.volunteer_platform.controller.VolunteerController;
+import com.example.volunteer_platform.model.Volunteer;
+import com.example.volunteer_platform.utils.InputUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +14,11 @@ public class VolunteerMenuUI {
 
     private final Scanner scanner;
     private final VolunteerController volunteerController;
+    private final VerificationController verificationController;
 
-    public VolunteerMenuUI(VolunteerController volunteerController) {
+    public VolunteerMenuUI(VolunteerController volunteerController, VerificationController verificationController) {
         this.volunteerController = volunteerController;
+        this.verificationController = verificationController;
         this.scanner = new Scanner(System.in);
     }
 
@@ -22,7 +27,7 @@ public class VolunteerMenuUI {
             System.out.println("Volunteer Menu");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 default -> System.out.println("Invalid choice. Please try again.");
@@ -33,8 +38,7 @@ public class VolunteerMenuUI {
     public void createVolunteerAccount() {
         System.out.println("Create Volunteer Account");
 
-        System.out.print("Enter email: ");
-        String email = scanner.next();
+        String email = InputUtils.getRegistrationEmail(verificationController);
 
         System.out.print("Enter password: ");
         String password = scanner.next();
@@ -42,7 +46,9 @@ public class VolunteerMenuUI {
         System.out.print("Enter username: ");
         String username = scanner.next();
 
-        ResponseEntity<String> response = volunteerController.createVolunteer(email, password, username);
+        ResponseEntity<Volunteer> response = volunteerController.createVolunteer(email, password, username);
+
+        // response handling
 
         System.out.println(response.getBody());
     }
