@@ -1,15 +1,17 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.constants.ApiEndpoints;
-import com.example.volunteer_platform.client.constants.MenuConstants;
-import com.example.volunteer_platform.client.utils.ConsoleInputUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.getUserChoice;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
+import static com.example.volunteer_platform.client.constants.MenuConstants.*;
+import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
 
 @Component
 public class BaseMenuClient {
@@ -41,10 +43,10 @@ public class BaseMenuClient {
                         logoutAccount();
                         return;
                     default:
-                        System.out.println(MenuConstants.INVALID_CHOICE);
+                        System.out.println(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
-                System.out.println(MenuConstants.INVALID_CHOICE);
+                System.out.println(INVALID_CHOICE);
             }
         }
     }
@@ -52,28 +54,28 @@ public class BaseMenuClient {
     private void logoutAccount() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
-                ApiEndpoints.BASE_URL + ApiEndpoints.LOGOUT_URL,
+                BASE_URL + LOGOUT_URL,
                 HttpMethod.POST,
                 HttpEntity.EMPTY,
                 String.class
         );
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            System.out.println(MenuConstants.EXIT_MESSAGE);
+            System.out.println(EXIT_MESSAGE);
         } else {
-            System.out.println(MenuConstants.EXIT_ERROR);
+            System.out.println(EXIT_ERROR);
         }
     }
 
     private void showMenu() {
-        System.out.println(MenuConstants.MAIN_MENU_TITLE);
-        System.out.println(MenuConstants.MAIN_MENU_OPTIONS);
+        System.out.println(MAIN_MENU_TITLE);
+        System.out.println(MAIN_MENU_OPTIONS);
     }
 
     private void createAccount() {
-        System.out.println(MenuConstants.SELECT_ACCOUNT_TYPE);
-        System.out.println(MenuConstants.ACCOUNT_TYPE_OPTIONS);
-        int accountType = ConsoleInputUtils.getUserChoice();
+        System.out.println(SELECT_ACCOUNT_TYPE);
+        System.out.println(ACCOUNT_TYPE_OPTIONS);
+        int accountType = getUserChoice();
 
         switch (accountType) {
             case 1:
@@ -83,12 +85,46 @@ public class BaseMenuClient {
                 customerMenuClient.createCustomerAccount();
                 break;
             default:
-                System.out.println(MenuConstants.INVALID_ACCOUNT_TYPE);
+                System.out.println(INVALID_ACCOUNT_TYPE);
                 break;
         }
     }
 
     private void loginAccount() {
+        String email = "";
+        RestTemplate restTemplate = new RestTemplate();
 
+        email = getRegistrationEmail(restTemplate, BASE_URL);
+
+        if (email == null) {
+            System.out.println(EXIT_OPERATION_MESSAGE);
+            return;
+        }
+
+        System.out.println(ENTER_PASSWORD_PROMPT);
+        String password = getUserInputString();
+
+        Map<String, String> loginRequest = new HashMap<>();
+        loginRequest.put("email", email);
+        loginRequest.put("password", password);
+
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(loginRequest);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    BASE_URL + LOGIN_URL,
+                    HttpMethod.POST,
+                    requestEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println(LOGIN_SUCCESS);
+            } else {
+                System.out.println(LOGIN_FAILED + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.out.println(LOGIN_ERROR + e.getMessage());
+        }
     }
 }
