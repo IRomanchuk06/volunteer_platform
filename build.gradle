@@ -1,9 +1,11 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
+    id 'application'
     id 'java'
     id 'org.springframework.boot' version '3.0.0'
     id 'io.spring.dependency-management' version '1.1.7'
 }
-
 
 group = 'com.example.volunteer_platform'
 version = '0.0.1-SNAPSHOT'
@@ -12,10 +14,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-}
-
-compileJava {
-    options.annotationProcessorPath = configurations.annotationProcessor
 }
 
 repositories {
@@ -44,3 +42,29 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+application {
+    mainClass = 'com.example.volunteer_platform.server.VolunteerPlatformApplication'
+}
+
+tasks.register('bootRunServer', BootRun) {
+    group = 'application'
+    description = 'Run the server application'
+    mainClass.set('com.example.volunteer_platform.server.VolunteerPlatformApplication')
+
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['--spring.config.location=src/main/resources/server/application.properties']
+}
+
+tasks.register('bootRunClient', BootRun) {
+    group = 'application'
+    description = 'Run the client application'
+    mainClass.set('com.example.volunteer_platform.client.ClientApplication')
+
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['--spring.config.location=src/main/resources/client/application.properties']
+
+    standardInput = System.in
+}
+
+
