@@ -1,7 +1,5 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.dto.LoginRequest;
-import com.example.volunteer_platform.server.dto.RegistrationRequest;
 import com.example.volunteer_platform.server.dto.UpdateRequest;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.UserService;

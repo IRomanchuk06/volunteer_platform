@@ -1,10 +1,14 @@
 package com.example.volunteer_platform.client.console_ui;
 
+import com.example.volunteer_platform.client.utils.AccountType;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.MenuConstants.*;
@@ -16,10 +20,12 @@ public class BaseMenuClient {
 
     private final VolunteerMenuClient volunteerMenuClient;
     private final CustomerMenuClient customerMenuClient;
+    private final RestTemplate restTemplate;
 
     public BaseMenuClient(VolunteerMenuClient volunteerMenuClient, CustomerMenuClient customerMenuClient) {
         this.volunteerMenuClient = volunteerMenuClient;
         this.customerMenuClient = customerMenuClient;
+        this.restTemplate = new RestTemplate();
     }
 
     public void start() {
@@ -50,7 +56,6 @@ public class BaseMenuClient {
     }
 
     private void logoutAccount() {
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
                 BASE_URL + LOGOUT_URL,
                 HttpMethod.POST,
@@ -73,12 +78,10 @@ public class BaseMenuClient {
     private void createAccount() {
         System.out.println(SELECT_ACCOUNT_TYPE);
         System.out.println(ACCOUNT_TYPE_OPTIONS);
-        int accountType = getUserChoice();
 
-        String email = "";
-        RestTemplate restTemplate = new RestTemplate();
+        AccountType accountType = AccountType.fromValue(getUserChoice());
 
-        email = getRegistrationEmail(restTemplate, BASE_URL);
+        String email = getRegistrationEmail(restTemplate, BASE_URL);
 
         if (email == null) {
             System.out.println(EXIT_OPERATION_MESSAGE);
@@ -92,34 +95,37 @@ public class BaseMenuClient {
         String username = getUserInputString();
 
         HttpEntity<String> requestEntity = null;
+        String accountTypeUrl = null;
 
         switch (accountType) {
-            case 1:
+            case VOLUNTEER:
                 requestEntity = createRegistrationRequest(email,password,username, VOLUNTEER_URL);
+                accountTypeUrl = VOLUNTEER_URL;
                 break;
-            case 2:
+            case CUSTOMER:
                 requestEntity = createRegistrationRequest(email,password,username, CUSTOMER_URL);
+                accountTypeUrl = CUSTOMER_URL;
                 break;
             default:
-                System.out.println(INVALID_ACCOUNT_TYPE);
+                System.out.println(INVALID_ACCOUNT_CHOICE);
                 break;
         }
 
-        System.out.println("Sending request to: " + BASE_URL + (accountType == 1 ? VOLUNTEER_URL : CUSTOMER_URL));
-        System.out.println("Request body: " + requestEntity.getBody());
-
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    BASE_URL + (accountType == 1 ? VOLUNTEER_URL : CUSTOMER_URL),
+            String targetUrl = BASE_URL + accountTypeUrl;
+
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    targetUrl,
                     HttpMethod.POST,
                     requestEntity,
-                    String.class
+                    new ParameterizedTypeReference<>() {}
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(ACCOUNT_CREATION_SUCCESS);
             } else {
                 System.out.println(ACCOUNT_CREATION_FAILED + response.getStatusCode());
+                System.out.println(RESPONSE_BODY + response.getBody());
             }
         } catch (Exception e) {
             System.out.println(ACCOUNT_CREATION_ERROR + e.getMessage());
@@ -127,10 +133,7 @@ public class BaseMenuClient {
     }
 
     private void loginAccount() {
-        String email = "";
-        RestTemplate restTemplate = new RestTemplate();
-
-        email = getValidEmail(restTemplate, BASE_URL);
+        String email = getValidEmail(restTemplate, BASE_URL);
 
         if (email == null) {
             System.out.println(EXIT_OPERATION_MESSAGE);
@@ -143,18 +146,36 @@ public class BaseMenuClient {
         HttpEntity<String> requestEntity = createLoginRequest(email, password);
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                     BASE_URL + LOGIN_URL,
                     HttpMethod.POST,
                     requestEntity,
-                    String.class
+                    new ParameterizedTypeReference<>() {}
             );
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(LOGIN_SUCCESS);
-            } else {
+            if (!response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(LOGIN_FAILED + response.getStatusCode());
+                return;
             }
+
+            System.out.println(LOGIN_SUCCESS);
+
+            Map<String, Object> responseBody = response.getBody();
+
+            if (responseBody == null) {
+                throw new IllegalStateException(NULL_RESPONSE_BODY);
+            }
+
+            String accountType = (String) responseBody.get(ROLE);
+
+            if (VOLUNTEER.equals(accountType)) {
+                volunteerMenuClient.start();
+            } else if (CUSTOMER.equals(accountType)) {
+                customerMenuClient.start();
+            } else {
+                throw new IllegalArgumentException(INVALID_ACCOUNT_TYPE + accountType);
+            }
+
         } catch (Exception e) {
             System.out.println(LOGIN_ERROR + e.getMessage());
         }

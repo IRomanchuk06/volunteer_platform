@@ -26,7 +26,7 @@ public class MenuConstants {
     public static final String ACCOUNT_TYPE_OPTIONS =
             "1. Volunteer\n" +
                     "2. Customer";
-    public static final String INVALID_ACCOUNT_TYPE = "Invalid choice. Returning to the main menu.";
+    public static final String INVALID_ACCOUNT_CHOICE = "Invalid choice. Returning to the main menu.";
 
     public static final String CHOOSE_OPTION = "Choose an option: ";
     public static final String NO_INPUT = "No input entered.";
@@ -39,4 +39,12 @@ public class MenuConstants {
     public static final String ACCOUNT_CREATION_SUCCESS = "Account created successfully!";
     public static final String ACCOUNT_CREATION_FAILED = "Account creation failed. Status: ";
     public static final String ACCOUNT_CREATION_ERROR = "Error during account creation: ";
+
+    public static final String ROLE = "role";
+    public static final String VOLUNTEER = "VOLUNTEER";
+    public static final String CUSTOMER = "CUSTOMER";
+    public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: ";
+
+    public static final String RESPONSE_BODY = "Response body: ";
+    public static final String NULL_RESPONSE_BODY = "Response body is null";
 }

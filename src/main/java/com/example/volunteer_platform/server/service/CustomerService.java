@@ -38,6 +38,7 @@ public class CustomerService extends UserService<Customer> {
                 .email(email)
                 .password(password)
                 .username(username)
+                .role("CUSTOMER")
                 .build();
 
         repository.save(customer);

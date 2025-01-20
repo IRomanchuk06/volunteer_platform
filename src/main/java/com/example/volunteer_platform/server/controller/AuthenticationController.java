@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -20,10 +24,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) {
         User user = authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         CurrentUserContext.setCurrentUser(user);
-        return ResponseEntity.ok("Welcome " + user.getUsername());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Welcome " + user.getUsername());
+        response.put("role", user.getRole());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")

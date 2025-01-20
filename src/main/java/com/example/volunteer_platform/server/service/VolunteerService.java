@@ -28,6 +28,7 @@ public class VolunteerService extends UserService<Volunteer> {
                 .email(email)
                 .password(password)
                 .username(username)
+                .role("VOLUNTEER")
                 .build();
 
         repository.save(volunteer);

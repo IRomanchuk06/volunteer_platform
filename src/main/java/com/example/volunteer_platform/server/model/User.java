@@ -3,10 +3,7 @@ package com.example.volunteer_platform.server.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
@@ -36,4 +33,6 @@ public abstract class User implements Serializable {
     @Email(message = "Invalid email format")
     @Column(nullable = false, unique = true)
     private String email;
+
+    private String role;
 }
