@@ -17,7 +17,7 @@ public class ConsoleInputUtils {
 
     public static int getUserChoice() {
         while (true) {
-            System.out.print(CHOOSE_OPTION);
+            System.out.println(CHOOSE_OPTION);
             String input = getUserInputString();
             if (input.isEmpty()) {
                 System.out.println(NO_INPUT);
@@ -38,7 +38,7 @@ public class ConsoleInputUtils {
         String email;
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print(ENTER_EMAIL_PROMPT);
+            System.out.println(ENTER_EMAIL_PROMPT);
 
             email = scanner.nextLine().trim();
 

@@ -1,5 +1,6 @@
 package com.example.volunteer_platform.server.service;
 
+import com.example.volunteer_platform.server.exeptions.InvalidPasswordException;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,12 @@ public abstract class UserService<U extends User> {
         return Optional.ofNullable(repository.findUserByUsername(username));
     }
 
-    public User updateUser(String email, String newUsername, String newPassword) {
+    public User updateUser(String email, String newUsername, String oldPassword, String newPassword) {
         User user = repository.findUserByEmail(email);
         if (user != null) {
+            if (!user.getPassword().equals(oldPassword)) {
+                throw new InvalidPasswordException("You have entered an incorrect password");
+            }
             user.setUsername(newUsername);
             user.setPassword(newPassword);
             return repository.save(user);

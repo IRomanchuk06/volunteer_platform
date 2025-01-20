@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.MenuConstants.*;
+import static com.example.volunteer_platform.client.utils.AccountRequestBuilder.*;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
 
 @Component
@@ -77,20 +75,6 @@ public class BaseMenuClient {
         System.out.println(ACCOUNT_TYPE_OPTIONS);
         int accountType = getUserChoice();
 
-        switch (accountType) {
-            case 1:
-                volunteerMenuClient.createVolunteerAccount();
-                break;
-            case 2:
-                customerMenuClient.createCustomerAccount();
-                break;
-            default:
-                System.out.println(INVALID_ACCOUNT_TYPE);
-                break;
-        }
-    }
-
-    private void loginAccount() {
         String email = "";
         RestTemplate restTemplate = new RestTemplate();
 
@@ -104,11 +88,59 @@ public class BaseMenuClient {
         System.out.println(ENTER_PASSWORD_PROMPT);
         String password = getUserInputString();
 
-        Map<String, String> loginRequest = new HashMap<>();
-        loginRequest.put("email", email);
-        loginRequest.put("password", password);
+        System.out.println(ENTER_USERNAME_PROMPT);
+        String username = getUserInputString();
 
-        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(loginRequest);
+        HttpEntity<String> requestEntity = null;
+
+        switch (accountType) {
+            case 1:
+                requestEntity = createRegistrationRequest(email,password,username, VOLUNTEER_URL);
+                break;
+            case 2:
+                requestEntity = createRegistrationRequest(email,password,username, CUSTOMER_URL);
+                break;
+            default:
+                System.out.println(INVALID_ACCOUNT_TYPE);
+                break;
+        }
+
+        System.out.println("Sending request to: " + BASE_URL + (accountType == 1 ? VOLUNTEER_URL : CUSTOMER_URL));
+        System.out.println("Request body: " + requestEntity.getBody());
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    BASE_URL + (accountType == 1 ? VOLUNTEER_URL : CUSTOMER_URL),
+                    HttpMethod.POST,
+                    requestEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println(ACCOUNT_CREATION_SUCCESS);
+            } else {
+                System.out.println(ACCOUNT_CREATION_FAILED + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.out.println(ACCOUNT_CREATION_ERROR + e.getMessage());
+        }
+    }
+
+    private void loginAccount() {
+        String email = "";
+        RestTemplate restTemplate = new RestTemplate();
+
+        email = getValidEmail(restTemplate, BASE_URL);
+
+        if (email == null) {
+            System.out.println(EXIT_OPERATION_MESSAGE);
+            return;
+        }
+
+        System.out.println(ENTER_PASSWORD_PROMPT);
+        String password = getUserInputString();
+
+        HttpEntity<String> requestEntity = createLoginRequest(email, password);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(

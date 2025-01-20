@@ -12,8 +12,10 @@ public class MenuConstants {
     public static final String EXIT_MESSAGE = "Exiting...";
     public static final String EXIT_ERROR = "Logout failed. Please try again.";
 
-    public static final String ENTER_PASSWORD_PROMPT = "Enter password: ";
     public static final String ENTER_EMAIL_PROMPT = "Enter email (or type 'exit' to quit): ";
+    public static final String ENTER_PASSWORD_PROMPT = "Enter password: ";
+    public static final String ENTER_USERNAME_PROMPT = "Enter username: ";
+
     public static final String INVALID_EMAIL_FORMAT = "Invalid email format. Please enter a valid email address.";
     public static final String EMAIL_ALREADY_REGISTERED = "Email is already registered. Please enter a different email address.";
     public static final String LOGIN_SUCCESS = "Login successful!";
@@ -33,4 +35,8 @@ public class MenuConstants {
 
     public static final String EMAIL_VALIDATING_ERROR = "Error validating email. Please try again.";
     public static final String EMAIL_AVAILABILITY_ERROR = "Error checking email availability. Please try again.";
+
+    public static final String ACCOUNT_CREATION_SUCCESS = "Account created successfully!";
+    public static final String ACCOUNT_CREATION_FAILED = "Account creation failed. Status: ";
+    public static final String ACCOUNT_CREATION_ERROR = "Error during account creation: ";
 }

@@ -1,5 +1,8 @@
 package com.example.volunteer_platform.server.controller;
 
+import com.example.volunteer_platform.server.dto.LoginRequest;
+import com.example.volunteer_platform.server.dto.RegistrationRequest;
+import com.example.volunteer_platform.server.dto.UpdateRequest;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +37,13 @@ public abstract class UserController<U extends User> {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestParam String email,
-                                        @RequestParam String newUsername,
-                                        @RequestParam String newPassword) {
-        User updatedUser = service.updateUser(email, newUsername, newPassword);
+    public ResponseEntity<?> updateUser(@RequestBody UpdateRequest updateRequest) {
+        User updatedUser = service.updateUser(
+                updateRequest.getEmail(),
+                updateRequest.getUsername(),
+                updateRequest.getOldPassword(),
+                updateRequest.getNewPassword());
+
         return ResponseEntity.ok(updatedUser);
     }
 
