@@ -34,12 +34,8 @@ public class CustomerService extends UserService<Customer> {
             throw new InvalidEmailException("Invalid email format.");
         }
 
-        Customer customer = Customer.builder()
-                .email(email)
-                .password(password)
-                .username(username)
-                .role("CUSTOMER")
-                .build();
+        Customer customer = Customer.builder().email(email).password(password).username(username).role(
+                "CUSTOMER").build();
 
         repository.save(customer);
 
@@ -48,7 +44,8 @@ public class CustomerService extends UserService<Customer> {
 
     public Event createEvent(String name, String description, String location, LocalDate date,
                              Optional<LocalTime> startTime, Optional<LocalTime> endTime) {
-        return eventService.createEvent(name, description, location, date, startTime, endTime,
-                CurrentUserContext.getCurrentUser().getEmail());
+        Customer customer = (Customer) CurrentUserContext.getCurrentUser();
+
+        return eventService.createEvent(name, description, location, date, startTime, endTime, customer);
     }
 }

@@ -3,10 +3,13 @@ package com.example.volunteer_platform.client.utils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
-import static com.example.volunteer_platform.client.constants.MenuConstants.*;
+import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
 public class ConsoleInputUtils {
 
@@ -36,11 +39,10 @@ public class ConsoleInputUtils {
 
     public static String getValidEmail(RestTemplate restTemplate, String baseUrl) {
         String email;
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println(ENTER_EMAIL_PROMPT);
 
-            email = scanner.nextLine().trim();
+            email = getUserInputString();
 
             if ("exit".equalsIgnoreCase(email)) {
                 System.out.println(EXIT_OPERATION_MESSAGE);
@@ -87,5 +89,55 @@ public class ConsoleInputUtils {
             }
         }
         return email;
+    }
+
+    public static LocalDate getValidDate() {
+        Scanner scanner = new Scanner(System.in);
+        LocalDate date;
+        while (true) {
+            System.out.println(ENTER_DATE_PROMPT);
+            String dateInput = scanner.nextLine();
+
+            if ("exit".equalsIgnoreCase(dateInput)) {
+                System.out.println(EXIT_OPERATION_MESSAGE);
+                return null;
+            }
+
+            try {
+                date = LocalDate.parse(dateInput);  // Пробуем распарсить дату
+                return date;
+            } catch (DateTimeParseException e) {
+                System.out.println(INVALID_DATE_FORMAT);
+            }
+        }
+    }
+
+    private static LocalTime getValidTime(String message) {
+        Scanner scanner = new Scanner(System.in);
+        LocalTime time;
+        while (true) {
+            System.out.println(message);
+            String timeInput = scanner.nextLine();
+
+            if ("exit".equalsIgnoreCase(timeInput)) {
+                System.out.println(EXIT_OPERATION_MESSAGE);
+                return null;
+            }
+
+            try {
+                time = LocalTime.parse(timeInput);
+                return time;
+            } catch (DateTimeParseException e) {
+                System.out.println(INVALID_TIME_FORMAT);
+            }
+        }
+    }
+
+    public static LocalTime getValidStartTime() {
+        return getValidTime(ENTER_START_TIME_PROMPT);
+    }
+
+    public static LocalTime getValidEndTime() {
+        return getValidTime(ENTER_END_TIME_PROMPT);
     }
 }

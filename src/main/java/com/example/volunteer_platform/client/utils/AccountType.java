@@ -2,7 +2,7 @@ package com.example.volunteer_platform.client.utils;
 
 import lombok.Getter;
 
-import static com.example.volunteer_platform.client.constants.MenuConstants.INVALID_ACCOUNT_TYPE;
+import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
 @Getter
 public enum AccountType {

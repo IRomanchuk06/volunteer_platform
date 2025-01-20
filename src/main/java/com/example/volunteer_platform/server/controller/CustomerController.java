@@ -1,7 +1,9 @@
 package com.example.volunteer_platform.server.controller;
 
+import com.example.volunteer_platform.server.dto.EventRequest;
 import com.example.volunteer_platform.server.dto.RegistrationRequest;
 import com.example.volunteer_platform.server.model.Customer;
+import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/customers")
@@ -29,6 +37,25 @@ public class CustomerController extends UserController<Customer> {
                 accountRequest.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(customer);
+    }
+
+    @PostMapping("/events")
+    public ResponseEntity<Event> createEvent(@RequestBody EventRequest eventRequest) {
+        CustomerService customerService = (CustomerService) service;
+
+        String dateStr = eventRequest.getDate();
+        String startTimeStr = eventRequest.getStartTime();
+        String endTimeStr = eventRequest.getEndTime();
+
+        Event event = customerService.createEvent(
+                eventRequest.getName(),
+                eventRequest.getDescription(),
+                eventRequest.getLocation(),
+                LocalDate.parse(dateStr),
+                Optional.of(LocalTime.parse(startTimeStr)),
+                Optional.of(LocalTime.parse(endTimeStr)));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 }
 
