@@ -38,4 +38,6 @@ public class MenuConstants {
 
     public static final String RESPONSE_BODY = "Response body: ";
     public static final String NULL_RESPONSE_BODY = "Response body is null";
+
+    public static final String FAILED_GET_COOKIES = "Failed to retrieve a cookie from the response.";
 }

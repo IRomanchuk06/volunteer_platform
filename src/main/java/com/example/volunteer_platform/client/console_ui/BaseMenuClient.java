@@ -1,6 +1,8 @@
 package com.example.volunteer_platform.client.console_ui;
 
 import com.example.volunteer_platform.client.utils.AccountType;
+import com.example.volunteer_platform.client.utils.RestTemplateConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -14,6 +16,7 @@ import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.MenuConstants.*;
 import static com.example.volunteer_platform.client.utils.AccountRequestBuilder.*;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
+import static com.example.volunteer_platform.client.utils.CookieUtils.*;
 
 @Component
 public class BaseMenuClient {
@@ -22,7 +25,9 @@ public class BaseMenuClient {
     private final CustomerMenuClient customerMenuClient;
     private final RestTemplate restTemplate;
 
-    public BaseMenuClient(VolunteerMenuClient volunteerMenuClient, CustomerMenuClient customerMenuClient) {
+    @Autowired
+    public BaseMenuClient(VolunteerMenuClient volunteerMenuClient,
+                          CustomerMenuClient customerMenuClient) {
         this.volunteerMenuClient = volunteerMenuClient;
         this.customerMenuClient = customerMenuClient;
         this.restTemplate = new RestTemplate();
@@ -160,6 +165,13 @@ public class BaseMenuClient {
 
             System.out.println(LOGIN_SUCCESS);
 
+            String sessionId = getSessionIdFromResponse(response);
+            if (sessionId == null) {
+                System.out.println(FAILED_GET_COOKIES);
+                return;
+            }
+            RestTemplate authenticatedRestTemplate = RestTemplateConfig.createRestTemplateWithSessionId(sessionId);
+
             Map<String, Object> responseBody = response.getBody();
 
             if (responseBody == null) {
@@ -169,9 +181,9 @@ public class BaseMenuClient {
             String accountType = (String) responseBody.get(ROLE);
 
             if (VOLUNTEER.equals(accountType)) {
-                volunteerMenuClient.start();
+                volunteerMenuClient.start(authenticatedRestTemplate);
             } else if (CUSTOMER.equals(accountType)) {
-                customerMenuClient.start();
+                customerMenuClient.start(authenticatedRestTemplate);
             } else {
                 throw new IllegalArgumentException(INVALID_ACCOUNT_TYPE + accountType);
             }

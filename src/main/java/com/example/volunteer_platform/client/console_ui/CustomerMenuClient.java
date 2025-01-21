@@ -21,14 +21,10 @@ import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
 @Component
 public class CustomerMenuClient {
 
-    private final RestTemplate restTemplate;
+    private RestTemplate restTemplateWithCookies;
 
-    public CustomerMenuClient() {
-        this.restTemplate = new RestTemplate();
-    }
-
-
-    public void start() {
+    public void start(RestTemplate restTemplateWithCookies) {
+        this.restTemplateWithCookies = restTemplateWithCookies;
         while (true) {
             showMenu();
 
@@ -68,7 +64,7 @@ public class CustomerMenuClient {
         HttpEntity<String> requestEntity = createAddEventRequest(name, description, location, date, startTime, endTime);
 
         try {
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+            ResponseEntity<Map<String, Object>> response = restTemplateWithCookies.exchange(
                     BASE_URL + CUSTOMERS_URL + ADD_EVENT_URL,
                     HttpMethod.POST,
                     requestEntity,

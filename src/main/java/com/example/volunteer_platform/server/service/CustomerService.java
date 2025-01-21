@@ -1,11 +1,13 @@
 package com.example.volunteer_platform.server.service;
 
+import com.example.volunteer_platform.server.exeptions.AuthenticationException;
 import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
 import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Event;
+import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.repository.EventRepository;
 import com.example.volunteer_platform.server.repository.UserRepository;
-import com.example.volunteer_platform.server.utils.CurrentUserContext;
 import com.example.volunteer_platform.shared_utils.VerificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class CustomerService extends UserService<Customer> {
     private final EventService eventService;
 
     @Autowired
-    public CustomerService(UserRepository userRepository, EventService eventService) {
+    public CustomerService(UserRepository userRepository, EventService eventService, EventRepository eventRepository) {
         super(userRepository);
         this.eventService = eventService;
     }
@@ -43,9 +45,7 @@ public class CustomerService extends UserService<Customer> {
     }
 
     public Event createEvent(String name, String description, String location, LocalDate date,
-                             Optional<LocalTime> startTime, Optional<LocalTime> endTime) {
-        Customer customer = (Customer) CurrentUserContext.getCurrentUser();
-
-        return eventService.createEvent(name, description, location, date, startTime, endTime, customer);
+                             Optional<LocalTime> startTime, Optional<LocalTime> endTime, User currentUser) {
+        return eventService.createEvent(name, description, location, date, startTime, endTime, currentUser);
     }
 }
