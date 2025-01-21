@@ -19,4 +19,15 @@ public class UtilsConstants {
     public static final String INVALID_CHOICE = "Invalid choice. Please try again.";
     public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: ";
 
+    public static final String EVENT_DETAILS_HEADER = "Event Details:\n";
+    public static final String NAME_LABEL = "  Name: ";
+    public static final String DESCRIPTION_LABEL = "  Description: ";
+    public static final String LOCATION_LABEL = "  Location: ";
+    public static final String DATE_LABEL = "  Date: ";
+    public static final String TIME_LABEL = "  Time: ";
+    public static final String CUSTOMER_LABEL = "  Customer: ";
+    public static final String NOT_AVAILABLE = "N/A";
+    public static final String EVENT_NOT_AVAILABLE = "Event not available";
+    public static final String NEW_LINE = "\n";
+    public static final String ID_LABEL = "  Id:  ";
 }

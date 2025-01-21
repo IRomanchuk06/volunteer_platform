@@ -104,7 +104,7 @@ public class ConsoleInputUtils {
             }
 
             try {
-                date = LocalDate.parse(dateInput);  // Пробуем распарсить дату
+                date = LocalDate.parse(dateInput);
                 return date;
             } catch (DateTimeParseException e) {
                 System.out.println(INVALID_DATE_FORMAT);

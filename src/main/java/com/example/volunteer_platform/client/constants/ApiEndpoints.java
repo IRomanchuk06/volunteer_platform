@@ -9,10 +9,9 @@ public class ApiEndpoints {
     public static final String LOGIN_URL = "/auth/login";
     public static final String LOGOUT_URL = "/auth/logout";
 
-    public static final String CREATE_VOLUNTEER_URL = "/volunteers/";
-    public static final String CREATE_CUSTOMER_URL = "/customers/";
+    public static final String CREATE_URL = "/";
 
     public static final String VOLUNTEERS_URL = "/volunteers";
     public static final String CUSTOMERS_URL = "/customers";
-    public static final String ADD_EVENT_URL = "/events";
+    public static final String EVENT_URL = "/events";
 }

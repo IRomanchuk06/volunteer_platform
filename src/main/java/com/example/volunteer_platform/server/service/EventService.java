@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class EventService {
@@ -38,5 +39,9 @@ public class EventService {
         eventRepository.save(event);
 
         return event;
+    }
+
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
     }
 }

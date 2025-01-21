@@ -43,7 +43,7 @@ public class CustomerController extends UserController<Customer> {
         return ResponseEntity.status(HttpStatus.CREATED).body(customer);
     }
 
-    @PostMapping("/events")
+    @PostMapping("/events/")
     public ResponseEntity<Event> createEvent(@RequestBody EventRequest eventRequest, HttpServletRequest request) {
         User currentUser = getUserFromSession(request);
 

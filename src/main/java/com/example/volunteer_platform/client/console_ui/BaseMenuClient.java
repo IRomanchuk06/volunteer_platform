@@ -105,11 +105,11 @@ public class BaseMenuClient {
         switch (accountType) {
             case VOLUNTEER:
                 requestEntity = createRegistrationRequest(email,password,username);
-                accountTypeUrl = CREATE_VOLUNTEER_URL;
+                accountTypeUrl = VOLUNTEERS_URL + CREATE_URL;
                 break;
             case CUSTOMER:
                 requestEntity = createRegistrationRequest(email,password,username);
-                accountTypeUrl = CREATE_CUSTOMER_URL;
+                accountTypeUrl = CUSTOMERS_URL + CREATE_URL;
                 break;
             default:
                 System.out.println(INVALID_ACCOUNT_CHOICE);

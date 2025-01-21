@@ -1,5 +1,7 @@
 package com.example.volunteer_platform.client.console_ui;
 
+import com.example.volunteer_platform.client.utils.DisplayFormatter;
+import com.example.volunteer_platform.server.model.Event;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -9,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
@@ -36,12 +39,42 @@ public class CustomerMenuClient {
                     case 1:
                         addEvent();
                         break;
+                    case 2:
+                        showEvents();
+                        break;
+                        
                     default:
                         System.out.println(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
                 System.out.println(INVALID_CHOICE);
             }
+        }
+    }
+
+    private void showEvents() {
+        System.out.println(EVENTS_LIST_TITLE);
+        String url = BASE_URL + EVENT_URL;
+        try {
+            ResponseEntity<List<Event>> response = restTemplateWithCookies.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                List<Event> events = response.getBody();
+                if (events != null && !events.isEmpty()) {
+                    events.forEach(event -> System.out.println(DisplayFormatter.formatEventForDisplay(event)));
+                } else {
+                    System.out.println(NO_EVENTS_FOUND);
+                }
+            } else {
+                System.out.println(FAILED_TO_FETCH_EVENTS + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.out.println(EVENT_FETCH_ERROR + e.getMessage());
         }
     }
 
@@ -65,15 +98,14 @@ public class CustomerMenuClient {
 
         try {
             ResponseEntity<Map<String, Object>> response = restTemplateWithCookies.exchange(
-                    BASE_URL + CUSTOMERS_URL + ADD_EVENT_URL,
+                    BASE_URL + CUSTOMERS_URL + EVENT_URL + CREATE_URL,
                     HttpMethod.POST,
                     requestEntity,
-                    new ParameterizedTypeReference<Map<String, Object>>() {}
+                    new ParameterizedTypeReference<>() {}
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(EVENT_ADDED_SUCCESS);
-                System.out.println(RESPONSE_BODY + response.getBody());
             } else {
                 System.out.println(FAILED_TO_ADD_EVENT + response.getStatusCode());
             }
