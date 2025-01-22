@@ -1,8 +1,9 @@
-package com.example.volunteer_platform.client.utils;
+package com.example.volunteer_platform.client.enums;
 
 import lombok.Getter;
 
-import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
+import static com.example.volunteer_platform.client.constants.UtilsConstants.INVALID_ACCOUNT_TYPE;
+
 
 @Getter
 public enum AccountType {

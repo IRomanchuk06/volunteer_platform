@@ -9,6 +9,8 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 
 import java.io.IOException;
 
+import static com.example.volunteer_platform.client.constants.UtilsConstants.SESSION_ID_COOKIE_NAME;
+
 public class CookieHttpRequestInterceptor implements ClientHttpRequestInterceptor {
 
     private final String sessionId;
@@ -19,7 +21,7 @@ public class CookieHttpRequestInterceptor implements ClientHttpRequestIntercepto
 
     @Override
     public ClientHttpResponse intercept(@NonNull HttpRequest request, @NonNull byte[] body, @NonNull ClientHttpRequestExecution execution) throws IOException {
-        request.getHeaders().add(HttpHeaders.COOKIE, "JSESSIONID=" + sessionId);
+        request.getHeaders().add(HttpHeaders.COOKIE, SESSION_ID_COOKIE_NAME + sessionId);
 
         return execution.execute(request, body);
     }

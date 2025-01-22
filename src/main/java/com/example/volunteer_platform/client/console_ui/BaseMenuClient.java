@@ -1,7 +1,7 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.utils.AccountType;
-import com.example.volunteer_platform.client.utils.RestTemplateConfig;
+import com.example.volunteer_platform.client.enums.AccountType;
+import com.example.volunteer_platform.client.config.RestTemplateConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,9 +14,10 @@ import java.util.Map;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.MenuConstants.*;
-import static com.example.volunteer_platform.client.utils.AccountRequestBuilder.*;
+import static com.example.volunteer_platform.client.request_builder.AccountRequestBuilder.createLoginRequest;
+import static com.example.volunteer_platform.client.request_builder.AccountRequestBuilder.createRegistrationRequest;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
-import static com.example.volunteer_platform.client.utils.CookieUtils.*;
+import static com.example.volunteer_platform.client.utils.CookieUtils.getSessionIdFromResponse;
 
 @Component
 public class BaseMenuClient {

@@ -14,12 +14,12 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
 import static com.example.volunteer_platform.client.constants.MenuConstants.INVALID_CHOICE;
-import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
-import static com.example.volunteer_platform.client.constants.MenuConstants.RESPONSE_BODY;
-import static com.example.volunteer_platform.client.utils.AccountRequestBuilder.createAddEventRequest;
+import static com.example.volunteer_platform.client.request_builder.EventRequestBuilder.createAddEventRequest;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
+
 
 @Component
 public class CustomerMenuClient {
@@ -42,7 +42,7 @@ public class CustomerMenuClient {
                     case 2:
                         showEvents();
                         break;
-                        
+
                     default:
                         System.out.println(INVALID_CHOICE);
                 }
@@ -56,12 +56,9 @@ public class CustomerMenuClient {
         System.out.println(EVENTS_LIST_TITLE);
         String url = BASE_URL + EVENT_URL;
         try {
-            ResponseEntity<List<Event>> response = restTemplateWithCookies.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<>() {}
-            );
+            ResponseEntity<List<Event>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<>() {
+                    });
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 List<Event> events = response.getBody();
@@ -98,11 +95,9 @@ public class CustomerMenuClient {
 
         try {
             ResponseEntity<Map<String, Object>> response = restTemplateWithCookies.exchange(
-                    BASE_URL + CUSTOMERS_URL + EVENT_URL + CREATE_URL,
-                    HttpMethod.POST,
-                    requestEntity,
-                    new ParameterizedTypeReference<>() {}
-            );
+                    BASE_URL + CUSTOMERS_URL + EVENT_URL + CREATE_URL, HttpMethod.POST, requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    });
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(EVENT_ADDED_SUCCESS);

@@ -1,5 +1,6 @@
-package com.example.volunteer_platform.client.utils;
+package com.example.volunteer_platform.client.config;
 
+import com.example.volunteer_platform.client.utils.CookieHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 public class RestTemplateConfig {

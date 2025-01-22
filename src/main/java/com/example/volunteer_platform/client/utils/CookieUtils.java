@@ -4,14 +4,17 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
+
+
 public class CookieUtils {
 
     public static String getSessionIdFromResponse(ResponseEntity<?> response) {
-        List<String> cookies = response.getHeaders().get("Set-Cookie");
+        List<String> cookies = response.getHeaders().get(SET_COOKIE_HEADER);
         if (cookies != null) {
             for (String cookie : cookies) {
-                if (cookie.startsWith("JSESSIONID=")) {
-                    return cookie.split(";")[0].split("=")[1];
+                if (cookie.startsWith(SESSION_ID_COOKIE_NAME)) {
+                    return cookie.split(COOKIE_SEPARATOR)[0].split(COOKIE_VALUE_SEPARATOR)[1];
                 }
             }
         }

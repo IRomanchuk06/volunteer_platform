@@ -30,4 +30,13 @@ public class UtilsConstants {
     public static final String EVENT_NOT_AVAILABLE = "Event not available";
     public static final String NEW_LINE = "\n";
     public static final String ID_LABEL = "  Id:  ";
+    public static final String EXIT = "exit";
+
+    public static final String JSON_CONVERSION_ERROR = "Error while converting parameters to JSON";
+    public static final String NULL_PARAMETER_ERROR = "All parameters must be non-null";
+
+    public static final String SESSION_ID_COOKIE_NAME = "JSESSIONID=";
+    public static final String SET_COOKIE_HEADER = "Set-Cookie";
+    public static final String COOKIE_SEPARATOR = ";";
+    public static final String COOKIE_VALUE_SEPARATOR = "=";
 }

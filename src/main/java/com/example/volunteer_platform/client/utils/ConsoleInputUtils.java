@@ -8,8 +8,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
+import static com.example.volunteer_platform.client.constants.ApiEndpoints.EMAIL_CHECK_AVAILABILITY_URL;
+import static com.example.volunteer_platform.client.constants.ApiEndpoints.EMAIL_VALIDATION_URL;
 import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
+
 
 public class ConsoleInputUtils {
 
@@ -44,7 +46,7 @@ public class ConsoleInputUtils {
 
             email = getUserInputString();
 
-            if ("exit".equalsIgnoreCase(email)) {
+            if (EXIT.equalsIgnoreCase(email)) {
                 System.out.println(EXIT_OPERATION_MESSAGE);
                 return null;
             }
@@ -98,7 +100,7 @@ public class ConsoleInputUtils {
             System.out.println(ENTER_DATE_PROMPT);
             String dateInput = scanner.nextLine();
 
-            if ("exit".equalsIgnoreCase(dateInput)) {
+            if (EXIT.equalsIgnoreCase(dateInput)) {
                 System.out.println(EXIT_OPERATION_MESSAGE);
                 return null;
             }
@@ -119,7 +121,7 @@ public class ConsoleInputUtils {
             System.out.println(message);
             String timeInput = scanner.nextLine();
 
-            if ("exit".equalsIgnoreCase(timeInput)) {
+            if (EXIT.equalsIgnoreCase(timeInput)) {
                 System.out.println(EXIT_OPERATION_MESSAGE);
                 return null;
             }
