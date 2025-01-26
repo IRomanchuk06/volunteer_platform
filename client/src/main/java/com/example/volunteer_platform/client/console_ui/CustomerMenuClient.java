@@ -16,8 +16,6 @@ import java.util.List;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
-import static com.example.volunteer_platform.client.constants.MenuConstants.EXIT_OPERATION_MESSAGE;
-import static com.example.volunteer_platform.client.constants.MenuConstants.INVALID_CHOICE;
 import static com.example.volunteer_platform.client.request_builder.EventRequestBuilder.createAddEventRequest;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
 
@@ -97,7 +95,7 @@ public class CustomerMenuClient {
 
         LocalTime endTime = getValidEndTime();
 
-        int numOfRequiredVolunteers = 2; // add get required
+        int numOfRequiredVolunteers = getUserInputPosNum();
 
         HttpEntity<EventRegistrationDTO> requestEntity = createAddEventRequest(name, description, location, date,
                 startTime, endTime, numOfRequiredVolunteers);

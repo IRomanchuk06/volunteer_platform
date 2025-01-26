@@ -17,5 +17,7 @@ public class CustomerMenuConstants {
     public static final String EVENTS_LIST_TITLE = "--- Events ---";
     public static final String FAILED_TO_FETCH_EVENTS = "Failed to fetch events. Status code: ";
     public static final String NO_EVENTS_FOUND = "No events found.";
+    public static final String INVALID_CHOICE = "Invalid choice. Please try again.";
+    public static final String EXIT_OPERATION_MESSAGE = "Exiting the operation.";
     public static final String EVENT_FETCH_ERROR = "Error while fetching events: ";
 }

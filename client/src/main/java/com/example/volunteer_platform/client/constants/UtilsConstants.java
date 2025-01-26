@@ -18,6 +18,9 @@ public class UtilsConstants {
     public static final String EXIT_OPERATION_MESSAGE = "Exiting the operation.";
     public static final String INVALID_CHOICE = "Invalid choice. Please try again.";
     public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: ";
+    public static final String ENTER_POSITIVE_NUMBER_PROMPT = "Enter a positive number: ";
+    public static final String INVALID_POSITIVE_NUMBER = "Error: the number must be positive. Please try again.";
+    public static final String INVALID_NUMBER_FORMAT = "Error: invalid input. Please enter a valid number.";
 
     public static final String EVENT_DETAILS_HEADER = "Event Details:\n";
     public static final String NAME_LABEL = "  Name: ";

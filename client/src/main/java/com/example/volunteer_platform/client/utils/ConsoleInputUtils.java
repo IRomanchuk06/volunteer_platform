@@ -39,6 +39,30 @@ public class ConsoleInputUtils {
         }
     }
 
+    public static int getUserInputPosNum() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print(ENTER_POSITIVE_NUMBER_PROMPT);
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println(NO_INPUT);
+                continue;
+            }
+
+            try {
+                int number = Integer.parseInt(input);
+                if (number > 0) {
+                    return number;
+                } else {
+                    System.out.println(INVALID_POSITIVE_NUMBER);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_NUMBER_FORMAT);
+            }
+        }
+    }
+
     public static String getValidEmail(RestTemplate restTemplate, String baseUrl) {
         String email;
         while (true) {
