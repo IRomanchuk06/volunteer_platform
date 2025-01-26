@@ -1,10 +1,12 @@
 package com.example.volunteer_platform.client.utils;
 
+import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+
 import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
 public class DisplayFormatter {
 
-    public static String formatEventForDisplay(Event event) {
+    public static String formatEventForDisplay(EventResponseDTO event) {
         if (event == null) {
             return EVENT_NOT_AVAILABLE;
         }

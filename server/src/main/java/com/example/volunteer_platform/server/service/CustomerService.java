@@ -7,6 +7,7 @@ import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.EventRepository;
 import com.example.volunteer_platform.server.repository.UserRepository;
+import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_utils.VerificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,8 @@ public class CustomerService extends UserService<Customer> {
     }
 
     public Event createEvent(String name, String description, String location, LocalDate date,
-                             Optional<LocalTime> startTime, Optional<LocalTime> endTime, User currentUser,
-                             int numOfRequiredVolunteers, int numOfRespondingVolunteers) {
-        return eventService.createEvent(name, description, location, date, startTime, endTime, currentUser, numOfRequiredVolunteers, numOfRespondingVolunteers);
+                                        Optional<LocalTime> startTime, Optional<LocalTime> endTime, User currentUser,
+                                        int numOfRequiredVolunteers) {
+        return eventService.createEvent(name, description, location, date, startTime, endTime, currentUser, numOfRequiredVolunteers);
     }
 }

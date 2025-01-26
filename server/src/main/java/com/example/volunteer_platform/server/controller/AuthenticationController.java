@@ -1,18 +1,18 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.dto.LoginRequest;
+import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.AuthenticationService;
+import com.example.volunteer_platform.shared_dto.UserLoginDTO;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFromSession;
 
@@ -21,14 +21,16 @@ import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFr
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService, UserMapper userMapper) {
         this.authenticationService = authenticationService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginDTO loginRequest, HttpServletRequest request, HttpServletResponse response) {
         User user = authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 
         HttpSession session = request.getSession(true);
@@ -37,22 +39,18 @@ public class AuthenticationController {
         String sessionId = session.getId();
         response.addCookie(new jakarta.servlet.http.Cookie("JSESSIONID", sessionId));
 
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("message", "Welcome " + user.getUsername());
-        responseMap.put("role", user.getRole());
+        UserResponseDTO userResponse = userMapper.toUserResponseDTO(user);
 
-        return ResponseEntity.ok(responseMap);
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Map<String, Object>> getUserProfile(HttpServletRequest request) {
+    public ResponseEntity<UserResponseDTO> getUserProfile(HttpServletRequest request) {
         User user = getUserFromSession(request);
 
-        Map<String, Object> profile = new HashMap<>();
-        profile.put("email", user.getEmail());
-        profile.put("role", user.getRole());
+        UserResponseDTO userResponse = userMapper.toUserResponseDTO(user);
 
-        return ResponseEntity.ok(profile);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PostMapping("/logout")

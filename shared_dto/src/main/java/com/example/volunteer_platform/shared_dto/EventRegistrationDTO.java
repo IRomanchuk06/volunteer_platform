@@ -1,27 +1,17 @@
-package com.example.volunteer_platform.server.model;
+package com.example.volunteer_platform.shared_dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
 @Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
-public class Event {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class EventRegistrationDTO {
     @NotNull(message = "Name cannot be null")
     private String name;
 
@@ -39,11 +29,4 @@ public class Event {
 
     @PositiveOrZero(message = "Number of required volunteers must be positive or zero")
     private int numOfRequiredVolunteers;
-
-    @PositiveOrZero(message = "Number of responding volunteers must be positive or zero")
-    private int numOfRespondingVolunteers;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
 }

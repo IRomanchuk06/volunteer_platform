@@ -1,6 +1,8 @@
 package com.example.volunteer_platform.client.console_ui;
 
 import com.example.volunteer_platform.client.utils.DisplayFormatter;
+import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
+import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -11,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
@@ -56,12 +57,12 @@ public class CustomerMenuClient {
         System.out.println(EVENTS_LIST_TITLE);
         String url = BASE_URL + EVENT_URL;
         try {
-            ResponseEntity<List<Event>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<>() {
+            ResponseEntity<List<EventResponseDTO>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET,
+                    null, new ParameterizedTypeReference<>() {
                     });
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                List<Event> events = response.getBody();
+                List<EventResponseDTO> events = response.getBody();
                 if (events != null && !events.isEmpty()) {
                     events.forEach(event -> System.out.println(DisplayFormatter.formatEventForDisplay(event)));
                 } else {
@@ -96,17 +97,15 @@ public class CustomerMenuClient {
 
         LocalTime endTime = getValidEndTime();
 
-        int numOfRequiredVolunteers = 2;
-        int numOfRespondingVolunteers = 3;
+        int numOfRequiredVolunteers = 2; // add get required
 
-        HttpEntity<String> requestEntity = createAddEventRequest(name, description, location, date,
-                startTime, endTime, numOfRequiredVolunteers, numOfRespondingVolunteers);
+        HttpEntity<EventRegistrationDTO> requestEntity = createAddEventRequest(name, description, location, date,
+                startTime, endTime, numOfRequiredVolunteers);
 
         try {
-            ResponseEntity<Map<String, Object>> response = restTemplateWithCookies.exchange(
+            ResponseEntity<EventResponseDTO> response = restTemplateWithCookies.exchange(
                     BASE_URL + CUSTOMERS_URL + EVENT_URL + CREATE_URL, HttpMethod.POST, requestEntity,
-                    new ParameterizedTypeReference<>() {
-                    });
+                    EventResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(EVENT_ADDED_SUCCESS);

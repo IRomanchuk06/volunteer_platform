@@ -1,9 +1,11 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.enums.AccountType;
 import com.example.volunteer_platform.client.config.RestTemplateConfig;
+import com.example.volunteer_platform.client.enums.AccountType;
+import com.example.volunteer_platform.shared_dto.UserLoginDTO;
+import com.example.volunteer_platform.shared_dto.UserRegistrationDTO;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,7 @@ public class BaseMenuClient {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public BaseMenuClient(VolunteerMenuClient volunteerMenuClient,
-                          CustomerMenuClient customerMenuClient) {
+    public BaseMenuClient(VolunteerMenuClient volunteerMenuClient, CustomerMenuClient customerMenuClient) {
         this.volunteerMenuClient = volunteerMenuClient;
         this.customerMenuClient = customerMenuClient;
         this.restTemplate = new RestTemplate();
@@ -62,12 +63,8 @@ public class BaseMenuClient {
     }
 
     private void logoutAccount() {
-        ResponseEntity<String> response = restTemplate.exchange(
-                BASE_URL + LOGOUT_URL,
-                HttpMethod.POST,
-                HttpEntity.EMPTY,
-                String.class
-        );
+        ResponseEntity<String> response = restTemplate.exchange(BASE_URL + LOGOUT_URL, HttpMethod.POST,
+                HttpEntity.EMPTY, String.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
             System.out.println(EXIT_MESSAGE);
@@ -100,16 +97,16 @@ public class BaseMenuClient {
         System.out.println(ENTER_USERNAME_PROMPT);
         String username = getUserInputString();
 
-        HttpEntity<String> requestEntity = null;
+        HttpEntity<UserRegistrationDTO> requestEntity = null;
         String accountTypeUrl = null;
 
         switch (accountType) {
             case VOLUNTEER:
-                requestEntity = createRegistrationRequest(email,password,username);
+                requestEntity = createRegistrationRequest(email, password, username);
                 accountTypeUrl = VOLUNTEERS_URL + CREATE_URL;
                 break;
             case CUSTOMER:
-                requestEntity = createRegistrationRequest(email,password,username);
+                requestEntity = createRegistrationRequest(email, password, username);
                 accountTypeUrl = CUSTOMERS_URL + CREATE_URL;
                 break;
             default:
@@ -120,12 +117,8 @@ public class BaseMenuClient {
         try {
             String targetUrl = BASE_URL + accountTypeUrl;
 
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    targetUrl,
-                    HttpMethod.POST,
-                    requestEntity,
-                    new ParameterizedTypeReference<>() {}
-            );
+            ResponseEntity<UserResponseDTO> response = restTemplate.exchange(targetUrl, HttpMethod.POST, requestEntity,
+                    UserResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(ACCOUNT_CREATION_SUCCESS);
@@ -149,15 +142,11 @@ public class BaseMenuClient {
         System.out.println(ENTER_PASSWORD_PROMPT);
         String password = getUserInputString();
 
-        HttpEntity<String> requestEntity = createLoginRequest(email, password);
+        HttpEntity<UserLoginDTO> requestEntity = createLoginRequest(email, password);
 
         try {
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    BASE_URL + LOGIN_URL,
-                    HttpMethod.POST,
-                    requestEntity,
-                    new ParameterizedTypeReference<>() {}
-            );
+            ResponseEntity<UserResponseDTO> response = restTemplate.exchange(BASE_URL + LOGIN_URL, HttpMethod.POST,
+                    requestEntity, UserResponseDTO.class);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(LOGIN_FAILED + response.getStatusCode());
@@ -173,13 +162,13 @@ public class BaseMenuClient {
             }
             RestTemplate authenticatedRestTemplate = RestTemplateConfig.createRestTemplateWithSessionId(sessionId);
 
-            Map<String, Object> responseBody = response.getBody();
+            UserResponseDTO responseBody = response.getBody();
 
             if (responseBody == null) {
                 throw new IllegalStateException(NULL_RESPONSE_BODY);
             }
 
-            String accountType = (String) responseBody.get(ROLE);
+            String accountType = responseBody.getRole();
 
             if (VOLUNTEER.equals(accountType)) {
                 volunteerMenuClient.start(authenticatedRestTemplate);

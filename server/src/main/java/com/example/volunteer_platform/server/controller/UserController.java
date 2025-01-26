@@ -1,8 +1,11 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.dto.UpdateRequest;
+import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.UserService;
+import com.example.volunteer_platform.shared_dto.UpdateUserDTO;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,12 @@ import java.util.Optional;
 public abstract class UserController<U extends User> {
 
     protected final UserService<U> service;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService<U> userService) {
+    public UserController(UserService<U> userService, UserMapper userMapper) {
         this.service = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/email/{email}")
@@ -35,14 +40,16 @@ public abstract class UserController<U extends User> {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateRequest updateRequest) {
+    public ResponseEntity<UserResponseDTO> updateUser(@Valid @RequestBody UpdateUserDTO updateRequest) {
         User updatedUser = service.updateUser(
                 updateRequest.getEmail(),
                 updateRequest.getUsername(),
                 updateRequest.getOldPassword(),
                 updateRequest.getNewPassword());
 
-        return ResponseEntity.ok(updatedUser);
+        UserResponseDTO response = userMapper.toUserResponseDTO(updatedUser);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete")
