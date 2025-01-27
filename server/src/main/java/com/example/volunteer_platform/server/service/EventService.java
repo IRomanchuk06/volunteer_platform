@@ -3,15 +3,16 @@ package com.example.volunteer_platform.server.service;
 import com.example.volunteer_platform.server.exeptions.EventAlreadyExistsException;
 import com.example.volunteer_platform.server.exeptions.EventNotExistsException;
 import com.example.volunteer_platform.server.exeptions.EventVolunteerLimitException;
-import com.example.volunteer_platform.server.exeptions.VolunteerAlreadyParticipatingException;
 import com.example.volunteer_platform.server.mapper.EventMapper;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.EventRepository;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -60,21 +61,17 @@ public class EventService {
                 .toList();
     }
 
-    public EventResponseDTO responseToEvent(Long eventId, User user) {
+    @Transactional
+    public EventResponseDTO responseToEvent(Long eventId, Long userId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotExistsException("The event with this id does not exist"));
+                .orElseThrow(() -> new EventNotExistsException("Event not found"));
 
-        int eventResponding = event.getNumOfRespondingVolunteers();
-        int eventRequired = event.getNumOfRequiredVolunteers();
-        if(eventRequired < eventResponding) {
-            throw new EventVolunteerLimitException("Volunteers for the event have already been recruited");
-        } else if (event.getVolunteers().contains(user)) {
-            throw new VolunteerAlreadyParticipatingException("A volunteer is already participating in the event.");
+        int updated = eventRepository.incrementRespondingVolunteers(eventId);
+        if (updated == 0) {
+            throw new EventVolunteerLimitException("Volunteer limit reached");
         }
 
-        event.setNumOfRespondingVolunteers(eventResponding + 1);
-        event.getVolunteers().add(user);
-
+        eventRepository.addVolunteerToEvent(eventId, userId);
         eventRepository.save(event);
 
         return eventMapper.toResponseDTO(event);

@@ -1,5 +1,6 @@
 package com.example.volunteer_platform.server.controller;
 
+import com.example.volunteer_platform.server.exeptions.AcessErrorException;
 import com.example.volunteer_platform.server.mapper.EventMapper;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.Event;
@@ -42,7 +43,7 @@ public class VolunteerController extends UserController<Volunteer> {
         VolunteerService volunteerService = (VolunteerService) service;
         User currentUser = getUserFromSession(request);
 
-        EventResponseDTO eventResponse = volunteerService.responseToEvent(eventId, currentUser);
+        EventResponseDTO eventResponse = volunteerService.responseToEvent(eventId, currentUser.getId());
 
         return ResponseEntity.ok(eventResponse);
     }

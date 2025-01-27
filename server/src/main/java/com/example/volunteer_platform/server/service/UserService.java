@@ -13,32 +13,32 @@ import java.util.Optional;
 @Service("userService")
 public abstract class UserService<U extends User> {
 
-    protected final UserRepository repository;
+    protected final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper) {
-        this.repository = userRepository;
+        this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
 
     public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(repository.findUserByEmail(email));
+        return Optional.ofNullable(userRepository.findUserByEmail(email));
     }
 
     public Optional<User> getUserByUsername(String username) {
-        return Optional.ofNullable(repository.findUserByUsername(username));
+        return Optional.ofNullable(userRepository.findUserByUsername(username));
     }
 
     public UserResponseDTO updateUser(String email, String newUsername, String oldPassword, String newPassword) {
-        User user = repository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email);
         if (user != null) {
             if (!user.getPassword().equals(oldPassword)) {
                 throw new InvalidPasswordException("You have entered an incorrect password");
             }
             user.setUsername(newUsername);
             user.setPassword(newPassword);
-            repository.save(user);
+            userRepository.save(user);
 
             return userMapper.toUserResponseDTO(user);
         }
@@ -46,9 +46,9 @@ public abstract class UserService<U extends User> {
     }
 
     public boolean deleteUser(String email) {
-        User user = repository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email);
         if (user != null) {
-            repository.delete(user);
+            userRepository.delete(user);
             return true;
         }
         return false;

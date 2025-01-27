@@ -26,6 +26,8 @@ public class EventController {
     public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
         List<EventResponseDTO> eventsResponses = eventService.getAllEvents();
 
+        System.out.println(eventsResponses);
+
         return ResponseEntity.ok(eventsResponses);
     }
 }

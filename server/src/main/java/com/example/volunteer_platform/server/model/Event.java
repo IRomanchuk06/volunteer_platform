@@ -45,9 +45,9 @@ public class Event {
     @PositiveOrZero(message = "Number of responding volunteers must be positive or zero")
     private int numOfRespondingVolunteers;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
+    private Customer customer;
 
     @ManyToMany
     @JoinTable(
@@ -55,5 +55,5 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> volunteers = new HashSet<>();
+    private Set<Volunteer> volunteers = new HashSet<>();
 }

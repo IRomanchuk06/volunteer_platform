@@ -4,7 +4,6 @@ import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsExcepti
 import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.Customer;
-import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
@@ -31,7 +30,7 @@ public class CustomerService extends UserService<Customer> {
 
     @Override
     public UserResponseDTO createUserInstance(String email, String password, String username) {
-        if (repository.findUserByEmail(email) != null) {
+        if (userRepository.findUserByEmail(email) != null) {
             throw new EmailAlreadyExistsException(email + " this email is already registered.");
         }
 
@@ -42,7 +41,7 @@ public class CustomerService extends UserService<Customer> {
         Customer customer = Customer.builder().email(email).password(password).username(username).role(
                 "CUSTOMER").build();
 
-        repository.save(customer);
+        userRepository.save(customer);
 
         return userMapper.toUserResponseDTO(customer);
     }

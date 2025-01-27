@@ -2,8 +2,8 @@ package com.example.volunteer_platform.server.service;
 
 import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
 import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
+import com.example.volunteer_platform.server.exeptions.VolunteerAlreadyParticipatingException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
-import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.repository.UserRepository;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
@@ -25,7 +25,7 @@ public class VolunteerService extends UserService<Volunteer> {
 
     @Override
     public UserResponseDTO createUserInstance(String email, String password, String username) {
-        if (repository.findUserByEmail(email) != null) {
+        if (userRepository.findUserByEmail(email) != null) {
             throw new EmailAlreadyExistsException(email + " this email is already registered.");
         }
 
@@ -40,12 +40,18 @@ public class VolunteerService extends UserService<Volunteer> {
                 .role("VOLUNTEER")
                 .build();
 
-        repository.save(volunteer);
+        userRepository.save(volunteer);
 
         return userMapper.toUserResponseDTO(volunteer);
     }
 
-    public EventResponseDTO responseToEvent(Long eventId, User user) {
-        return eventService.responseToEvent(eventId, user);
+    public EventResponseDTO responseToEvent(Long eventId, Long userId) {
+        boolean isParticipating = userRepository.existsByEventIdAndVolunteerId(eventId, userId);
+
+        if (isParticipating) {
+            throw new VolunteerAlreadyParticipatingException("Volunteer already participating");
+        }
+
+        return eventService.responseToEvent(eventId, userId);
     }
 }

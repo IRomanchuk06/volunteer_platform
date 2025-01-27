@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,4 +20,5 @@ public class EventResponseDTO {
     private int numOfRequiredVolunteers;
     private int numOfRespondingVolunteers;
     private UserResponseDTO customer;
+    private List<EventParticipantResponseDTO> volunteers;
 }
