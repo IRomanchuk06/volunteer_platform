@@ -18,9 +18,10 @@ public class UtilsConstants {
     public static final String EXIT_OPERATION_MESSAGE = "Exiting the operation.";
     public static final String INVALID_CHOICE = "Invalid choice. Please try again.";
     public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: ";
-    public static final String ENTER_POSITIVE_NUMBER_PROMPT = "Enter a positive number: ";
+    public static final String ENTER_POSITIVE_NUMBER_PROMPT = "Enter a number of required volunteers: ";
     public static final String INVALID_POSITIVE_NUMBER = "Error: the number must be positive. Please try again.";
     public static final String INVALID_NUMBER_FORMAT = "Error: invalid input. Please enter a valid number.";
+    public static final String ENTER_EVENT_ID_PROMPT = "Enter the event ID: ";
 
     public static final String EVENT_DETAILS_HEADER = "Event Details:\n";
     public static final String NAME_LABEL = "  Name: ";
@@ -32,11 +33,10 @@ public class UtilsConstants {
     public static final String NOT_AVAILABLE = "N/A";
     public static final String EVENT_NOT_AVAILABLE = "Event not available";
     public static final String NEW_LINE = "\n";
-    public static final String ID_LABEL = "  Id:  ";
+    public static final String ID_LABEL = "  Id: ";
     public static final String EXIT = "exit";
-    public static final String EVENT_VOLUNTEER_TEAM = "Volunteer team: ";
+    public static final String EVENT_VOLUNTEER_TEAM = "  Volunteer team: ";
 
-    public static final String JSON_CONVERSION_ERROR = "Error while converting parameters to JSON";
     public static final String NULL_PARAMETER_ERROR = "All parameters must be non-null";
 
     public static final String SESSION_ID_COOKIE_NAME = "JSESSIONID=";

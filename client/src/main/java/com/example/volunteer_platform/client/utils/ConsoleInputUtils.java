@@ -39,11 +39,32 @@ public class ConsoleInputUtils {
         }
     }
 
+    public static Long getUserInputLong() {
+        while (true) {
+            System.out.print(ENTER_EVENT_ID_PROMPT);
+            String input = getUserInputString();
+
+            if (input.isEmpty()) {
+                System.out.println(NO_INPUT);
+                continue;
+            }
+
+            if (EXIT.equals(input)) {
+                return null;
+            }
+
+            try {
+                return Long.parseLong(input);
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_NUMBER_FORMAT);
+            }
+        }
+    }
+
     public static int getUserInputPosNum() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print(ENTER_POSITIVE_NUMBER_PROMPT);
-            String input = scanner.nextLine().trim();
+            String input = getUserInputString();
 
             if (input.isEmpty()) {
                 System.out.println(NO_INPUT);
@@ -71,7 +92,6 @@ public class ConsoleInputUtils {
             email = getUserInputString();
 
             if (EXIT.equalsIgnoreCase(email)) {
-                System.out.println(EXIT_OPERATION_MESSAGE);
                 return null;
             }
 
@@ -125,7 +145,6 @@ public class ConsoleInputUtils {
             String dateInput = scanner.nextLine();
 
             if (EXIT.equalsIgnoreCase(dateInput)) {
-                System.out.println(EXIT_OPERATION_MESSAGE);
                 return null;
             }
 
@@ -146,7 +165,6 @@ public class ConsoleInputUtils {
             String timeInput = scanner.nextLine();
 
             if (EXIT.equalsIgnoreCase(timeInput)) {
-                System.out.println(EXIT_OPERATION_MESSAGE);
                 return null;
             }
 

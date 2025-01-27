@@ -2,26 +2,35 @@ package com.example.volunteer_platform.server.service;
 
 import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
 import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
+import com.example.volunteer_platform.server.mapper.UserMapper;
+import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.repository.UserRepository;
+import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import com.example.volunteer_platform.shared_utils.VerificationUtils;
 import org.springframework.stereotype.Service;
 
 @Service("volunteerService")
 public class VolunteerService extends UserService<Volunteer> {
 
-    public VolunteerService(UserRepository repository) {
-        super(repository);
+    private final EventService eventService;
+    private final UserMapper userMapper;
+
+    public VolunteerService(UserRepository repository, EventService eventService, UserMapper userMapper) {
+        super(repository, userMapper);
+        this.eventService = eventService;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public Volunteer createUserInstance(String email, String password, String username) {
+    public UserResponseDTO createUserInstance(String email, String password, String username) {
         if (repository.findUserByEmail(email) != null) {
             throw new EmailAlreadyExistsException(email + " this email is already registered.");
         }
 
         if (!VerificationUtils.isValidEmail(email)) {
-            throw new InvalidEmailException("Invalid email format.");
+            throw new InvalidEmailException("Invalid email format: " + email);
         }
 
         Volunteer volunteer = Volunteer.builder()
@@ -33,6 +42,10 @@ public class VolunteerService extends UserService<Volunteer> {
 
         repository.save(volunteer);
 
-        return volunteer;
+        return userMapper.toUserResponseDTO(volunteer);
+    }
+
+    public EventResponseDTO responseToEvent(Long eventId, User user) {
+        return eventService.responseToEvent(eventId, user);
     }
 }

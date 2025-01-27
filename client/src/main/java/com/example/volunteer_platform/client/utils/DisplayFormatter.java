@@ -28,6 +28,7 @@ public class DisplayFormatter {
         if(event.getNumOfRequiredVolunteers() != 0) {
             builder.append(event.getNumOfRespondingVolunteers()).append(BACKSLASH).append(event.getNumOfRequiredVolunteers());
         } else builder.append(NOT_AVAILABLE);
+        builder.append(NEW_LINE);
         builder.append(ID_LABEL).append(event.getId());
 
         return builder.toString();

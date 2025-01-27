@@ -16,22 +16,16 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController {
     private final EventService eventService;
-    private final EventMapper eventMapper;
 
     @Autowired
     public EventController(EventService eventService, EventMapper eventMapper) {
         this.eventService = eventService;
-        this.eventMapper = eventMapper;
     }
 
     @GetMapping
     public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
-        List<Event> events = eventService.getAllEvents();
+        List<EventResponseDTO> eventsResponses = eventService.getAllEvents();
 
-        List<EventResponseDTO> eventResponses = events.stream()
-                .map(eventMapper::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(eventResponses);
+        return ResponseEntity.ok(eventsResponses);
     }
 }

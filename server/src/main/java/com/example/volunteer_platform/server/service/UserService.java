@@ -1,8 +1,10 @@
 package com.example.volunteer_platform.server.service;
 
 import com.example.volunteer_platform.server.exeptions.InvalidPasswordException;
+import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import java.util.Optional;
 public abstract class UserService<U extends User> {
 
     protected final UserRepository repository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.repository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public Optional<User> getUserByEmail(String email) {
@@ -26,7 +30,7 @@ public abstract class UserService<U extends User> {
         return Optional.ofNullable(repository.findUserByUsername(username));
     }
 
-    public User updateUser(String email, String newUsername, String oldPassword, String newPassword) {
+    public UserResponseDTO updateUser(String email, String newUsername, String oldPassword, String newPassword) {
         User user = repository.findUserByEmail(email);
         if (user != null) {
             if (!user.getPassword().equals(oldPassword)) {
@@ -34,7 +38,9 @@ public abstract class UserService<U extends User> {
             }
             user.setUsername(newUsername);
             user.setPassword(newPassword);
-            return repository.save(user);
+            repository.save(user);
+
+            return userMapper.toUserResponseDTO(user);
         }
         return null;
     }
@@ -48,5 +54,5 @@ public abstract class UserService<U extends User> {
         return false;
     }
 
-    public abstract U createUserInstance(String email, String password, String username);
+    public abstract UserResponseDTO createUserInstance(String email, String password, String username);
 }

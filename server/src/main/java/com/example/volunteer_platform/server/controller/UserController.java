@@ -1,6 +1,5 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.UserService;
 import com.example.volunteer_platform.shared_dto.UpdateUserDTO;
@@ -17,12 +16,10 @@ import java.util.Optional;
 public abstract class UserController<U extends User> {
 
     protected final UserService<U> service;
-    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService<U> userService, UserMapper userMapper) {
+    public UserController(UserService<U> userService) {
         this.service = userService;
-        this.userMapper = userMapper;
     }
 
     @GetMapping("/email/{email}")
@@ -41,15 +38,13 @@ public abstract class UserController<U extends User> {
 
     @PutMapping("/update")
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @RequestBody UpdateUserDTO updateRequest) {
-        User updatedUser = service.updateUser(
+        UserResponseDTO updatedUserResponse = service.updateUser(
                 updateRequest.getEmail(),
                 updateRequest.getUsername(),
                 updateRequest.getOldPassword(),
                 updateRequest.getNewPassword());
 
-        UserResponseDTO response = userMapper.toUserResponseDTO(updatedUser);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(updatedUserResponse);
     }
 
     @DeleteMapping("/delete")

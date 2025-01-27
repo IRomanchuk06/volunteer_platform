@@ -14,4 +14,6 @@ public class ApiEndpoints {
     public static final String VOLUNTEERS_URL = "/volunteers";
     public static final String CUSTOMERS_URL = "/customers";
     public static final String EVENT_URL = "/events";
+
+    public static final String RESPONSE_TO_EVENT = "/response/events/";
 }

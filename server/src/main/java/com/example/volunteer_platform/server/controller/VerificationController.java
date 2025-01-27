@@ -24,7 +24,7 @@ public class VerificationController {
     @GetMapping("/emails/valid")
     public ResponseEntity<String> verifyValidEmail(@RequestParam String email) {
         if (!verificationService.isValidEmail(email)) {
-            throw new InvalidEmailException("Invalid email format.");
+            throw new InvalidEmailException("Invalid email format: " + email);
         }
         return ResponseEntity.ok("Email is valid.");
     }

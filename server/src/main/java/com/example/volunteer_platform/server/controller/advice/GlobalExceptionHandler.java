@@ -1,15 +1,10 @@
 package com.example.volunteer_platform.server.controller.advice;
 
-import com.example.volunteer_platform.server.exeptions.AuthenticationException;
-import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
-import com.example.volunteer_platform.server.exeptions.EventAlreadyExistsException;
-import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
+import com.example.volunteer_platform.server.exeptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.example.volunteer_platform.server.exeptions.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,6 +28,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidEmailException(InvalidEmailException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<String> handleInvalidPasswordException(InvalidPasswordException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -48,9 +44,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
+    @ExceptionHandler(EventNotExistsException.class)
+    public ResponseEntity<String> handleEventNotExistsException(EventNotExistsException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(EventVolunteerLimitException.class)
+    public ResponseEntity<String> handleEventVolunteerLimitException(EventVolunteerLimitException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(VolunteerAlreadyParticipatingException.class)
+    public ResponseEntity<String> handleVolunteerAlreadyParticipatingException(
+            VolunteerAlreadyParticipatingException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                "An unexpected error occurred: " + e.getMessage());
     }
 }

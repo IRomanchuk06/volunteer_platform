@@ -1,9 +1,8 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.utils.DisplayFormatter;
+import com.example.volunteer_platform.client.utils.BaseUserMenuUtils;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
@@ -41,6 +39,9 @@ public class CustomerMenuClient {
                     case 2:
                         showEvents();
                         break;
+                    case 3:
+                        showEventsResponses();
+                        break;
 
                     default:
                         System.out.println(INVALID_CHOICE);
@@ -51,27 +52,11 @@ public class CustomerMenuClient {
         }
     }
 
-    private void showEvents() {
-        System.out.println(EVENTS_LIST_TITLE);
-        String url = BASE_URL + EVENT_URL;
-        try {
-            ResponseEntity<List<EventResponseDTO>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET,
-                    null, new ParameterizedTypeReference<>() {
-                    });
+    private void showEventsResponses() {
+    }
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                List<EventResponseDTO> events = response.getBody();
-                if (events != null && !events.isEmpty()) {
-                    events.forEach(event -> System.out.println(DisplayFormatter.formatEventForDisplay(event)));
-                } else {
-                    System.out.println(NO_EVENTS_FOUND);
-                }
-            } else {
-                System.out.println(FAILED_TO_FETCH_EVENTS + response.getStatusCode());
-            }
-        } catch (Exception e) {
-            System.out.println(EVENT_FETCH_ERROR + e.getMessage());
-        }
+    private void showEvents() {
+        BaseUserMenuUtils.showEvents(restTemplateWithCookies);
     }
 
     private void addEvent() {

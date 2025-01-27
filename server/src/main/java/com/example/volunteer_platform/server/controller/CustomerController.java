@@ -27,27 +27,20 @@ import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFr
 @RequestMapping("/customers")
 public class CustomerController extends UserController<Customer> {
 
-    private final EventMapper eventMapper;
-    private final UserMapper userMapper;
-
     @Autowired
-    public CustomerController(CustomerService customerService, EventMapper eventMapper, UserMapper userMapper) {
-        super(customerService, userMapper);
-        this.eventMapper = eventMapper;
-        this.userMapper = userMapper;
+    public CustomerController(CustomerService customerService) {
+        super(customerService);
     }
 
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createCustomer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
         CustomerService customerService = (CustomerService) service;
-        Customer customer = customerService.createUserInstance(
+        UserResponseDTO userResponse = customerService.createUserInstance(
                 accountRequest.getEmail(),
                 accountRequest.getPassword(),
                 accountRequest.getUsername());
 
-        UserResponseDTO response = userMapper.toUserResponseDTO(customer);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PostMapping("/events/")
@@ -56,7 +49,7 @@ public class CustomerController extends UserController<Customer> {
 
         CustomerService customerService = (CustomerService) service;
 
-        Event event = customerService.createEvent(
+        EventResponseDTO eventResponse = customerService.createEvent(
                 eventRequest.getName(),
                 eventRequest.getDescription(),
                 eventRequest.getLocation(),
@@ -66,8 +59,6 @@ public class CustomerController extends UserController<Customer> {
                 currentUser,
                 eventRequest.getNumOfRequiredVolunteers()
                 );
-
-        EventResponseDTO eventResponse = eventMapper.toResponseDTO(event);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
     }

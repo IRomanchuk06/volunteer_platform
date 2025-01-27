@@ -7,10 +7,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "customers")
@@ -18,8 +15,8 @@ import java.util.Map;
 @NoArgsConstructor
 public class Customer extends User {
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", orphanRemoval = true)
     @Builder.Default
-    private List<Event> events = new ArrayList<>();
+    private Set<Event> events = new HashSet<>();
 
 }

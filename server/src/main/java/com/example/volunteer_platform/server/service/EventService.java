@@ -1,6 +1,9 @@
 package com.example.volunteer_platform.server.service;
 
 import com.example.volunteer_platform.server.exeptions.EventAlreadyExistsException;
+import com.example.volunteer_platform.server.exeptions.EventNotExistsException;
+import com.example.volunteer_platform.server.exeptions.EventVolunteerLimitException;
+import com.example.volunteer_platform.server.exeptions.VolunteerAlreadyParticipatingException;
 import com.example.volunteer_platform.server.mapper.EventMapper;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Event;
@@ -27,7 +30,7 @@ public class EventService {
         this.eventMapper = eventMapper;
     }
 
-    public Event createEvent(String name, String description, String location, LocalDate date,
+    public EventResponseDTO createEvent(String name, String description, String location, LocalDate date,
                                         Optional<LocalTime> startTime, Optional<LocalTime> endTime, User currentUser,
                                         int numOfRequiredVolunteers) {
         boolean eventExists = eventRepository.existsByNameAndDate(name, date);
@@ -42,10 +45,38 @@ public class EventService {
                 resolvedStartTime).endTime(resolvedEndTime).customer((Customer) currentUser).numOfRequiredVolunteers(
                 numOfRequiredVolunteers).build();
 
-        return eventRepository.save(event);
+        eventRepository.save(event);
+
+        return eventMapper.toResponseDTO(event);
     }
 
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public List<EventResponseDTO> getAllEvents() {
+        List<Event> events = eventRepository.findAll();
+
+        System.out.println(events);
+
+        return events.stream()
+                .map(eventMapper::toResponseDTO)
+                .toList();
+    }
+
+    public EventResponseDTO responseToEvent(Long eventId, User user) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotExistsException("The event with this id does not exist"));
+
+        int eventResponding = event.getNumOfRespondingVolunteers();
+        int eventRequired = event.getNumOfRequiredVolunteers();
+        if(eventRequired < eventResponding) {
+            throw new EventVolunteerLimitException("Volunteers for the event have already been recruited");
+        } else if (event.getVolunteers().contains(user)) {
+            throw new VolunteerAlreadyParticipatingException("A volunteer is already participating in the event.");
+        }
+
+        event.setNumOfRespondingVolunteers(eventResponding + 1);
+        event.getVolunteers().add(user);
+
+        eventRepository.save(event);
+
+        return eventMapper.toResponseDTO(event);
     }
 }
