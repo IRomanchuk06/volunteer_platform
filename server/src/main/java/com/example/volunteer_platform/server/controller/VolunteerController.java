@@ -1,9 +1,5 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.exeptions.AcessErrorException;
-import com.example.volunteer_platform.server.mapper.EventMapper;
-import com.example.volunteer_platform.server.mapper.UserMapper;
-import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.service.VolunteerService;
@@ -30,7 +26,7 @@ public class VolunteerController extends UserController<Volunteer> {
 
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createVolunteer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
-        VolunteerService volunteerService = (VolunteerService) service;
+        VolunteerService volunteerService = (VolunteerService) userService;
         UserResponseDTO userResponse = volunteerService.createUserInstance(accountRequest.getEmail(),
                 accountRequest.getPassword(), accountRequest.getUsername());
 
@@ -40,7 +36,7 @@ public class VolunteerController extends UserController<Volunteer> {
     @PostMapping("/response/events/{eventId}")
     public ResponseEntity<EventResponseDTO> responseToEvent(@PathVariable Long eventId,
                                                             HttpServletRequest request) {
-        VolunteerService volunteerService = (VolunteerService) service;
+        VolunteerService volunteerService = (VolunteerService) userService;
         User currentUser = getUserFromSession(request);
 
         EventResponseDTO eventResponse = volunteerService.responseToEvent(eventId, currentUser.getId());

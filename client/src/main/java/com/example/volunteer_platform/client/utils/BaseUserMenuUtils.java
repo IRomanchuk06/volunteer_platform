@@ -1,17 +1,19 @@
 package com.example.volunteer_platform.client.utils;
 
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+import com.example.volunteer_platform.shared_dto.MessageRegistrationDTO;
+import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static com.example.volunteer_platform.client.constants.ApiEndpoints.BASE_URL;
-import static com.example.volunteer_platform.client.constants.ApiEndpoints.EVENT_URL;
-import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
-import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.EVENT_FETCH_ERROR;
+import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
+import static com.example.volunteer_platform.client.constants.BaseUserMenuConstants.*;
+import static com.example.volunteer_platform.client.request_builder.MessageRequestBuilder.createMessageRequest;
 
 public class BaseUserMenuUtils {
     public static void showEvents(RestTemplate restTemplateWithCookies) {
@@ -34,6 +36,29 @@ public class BaseUserMenuUtils {
             }
         } catch (Exception e) {
             System.out.println(EVENT_FETCH_ERROR + e.getMessage());
+        }
+    }
+
+    public static void sendMessage(RestTemplate restTemplateWithCookies) {
+        System.out.println(RECIPIENT_PROMPT);
+        String recipientEmail = ConsoleInputUtils.getValidEmail(restTemplateWithCookies, BASE_URL);
+
+        System.out.println(MESSAGE_PROMPT);
+        String message = ConsoleInputUtils.getUserInputString();
+
+        String url = BASE_URL + USERS_URL + MESSAGE_URL + CREATE_URL;
+        HttpEntity<MessageRegistrationDTO> requestEntity = createMessageRequest(message, recipientEmail);
+        try {
+            ResponseEntity<NotificationResponseDTO> response = restTemplateWithCookies.exchange(url, HttpMethod.POST,
+                    requestEntity, NotificationResponseDTO.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println(MESSAGE_SENT_SUCCESS);
+            } else {
+                System.out.println(MESSAGE_SENT_FAILED + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.out.println(MESSAGE_SENT_ERROR + e.getMessage());
         }
     }
 }

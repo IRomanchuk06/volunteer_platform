@@ -1,9 +1,6 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.mapper.EventMapper;
-import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.Customer;
-import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.CustomerService;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
@@ -34,7 +31,7 @@ public class CustomerController extends UserController<Customer> {
 
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createCustomer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
-        CustomerService customerService = (CustomerService) service;
+        CustomerService customerService = (CustomerService) userService;
         UserResponseDTO userResponse = customerService.createUserInstance(
                 accountRequest.getEmail(),
                 accountRequest.getPassword(),
@@ -47,7 +44,7 @@ public class CustomerController extends UserController<Customer> {
     public ResponseEntity<EventResponseDTO> createEvent(@Valid @RequestBody EventRegistrationDTO eventRequest, HttpServletRequest request) {
         User currentUser = getUserFromSession(request);
 
-        CustomerService customerService = (CustomerService) service;
+        CustomerService customerService = (CustomerService) userService;
 
         EventResponseDTO eventResponse = customerService.createEvent(
                 eventRequest.getName(),

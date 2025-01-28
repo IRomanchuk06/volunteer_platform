@@ -2,8 +2,11 @@ package com.example.volunteer_platform.server.controller;
 
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.UserService;
+import com.example.volunteer_platform.shared_dto.MessageRegistrationDTO;
+import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
 import com.example.volunteer_platform.shared_dto.UpdateUserDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,47 +16,56 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFromSession;
+
+@RequestMapping("/users")
 public abstract class UserController<U extends User> {
 
-    protected final UserService<U> service;
+    protected final UserService<U> userService;
 
     @Autowired
     public UserController(UserService<U> userService) {
-        this.service = userService;
+        this.userService = userService;
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        Optional<User> user = service.getUserByEmail(email);
-        return user.map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email));
+        Optional<User> user = userService.getUserByEmail(email);
+        return user.map(ResponseEntity::ok).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email));
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        Optional<User> user = service.getUserByUsername(username);
-        return user.map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with username: " + username));
+        Optional<User> user = userService.getUserByUsername(username);
+        return user.map(ResponseEntity::ok).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with username: " + username));
     }
 
     @PutMapping("/update")
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @RequestBody UpdateUserDTO updateRequest) {
-        UserResponseDTO updatedUserResponse = service.updateUser(
-                updateRequest.getEmail(),
-                updateRequest.getUsername(),
-                updateRequest.getOldPassword(),
-                updateRequest.getNewPassword());
+        UserResponseDTO updatedUserResponse = userService.updateUser(updateRequest.getEmail(),
+                updateRequest.getUsername(), updateRequest.getOldPassword(), updateRequest.getNewPassword());
 
         return ResponseEntity.ok(updatedUserResponse);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestParam String email) {
-        boolean isDeleted = service.deleteUser(email);
+        boolean isDeleted = userService.deleteUser(email);
         if (isDeleted) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email);
         }
+    }
+
+    @PostMapping("/message/")
+    public ResponseEntity<NotificationResponseDTO> sendMessage(MessageRegistrationDTO messageRequest,
+                                                               HttpServletRequest request) {
+        User currentUser = getUserFromSession(request);
+        NotificationResponseDTO responseDTO = userService.sendMessage(messageRequest.getMessage(),
+                messageRequest.getRecipientEmail(), currentUser.getEmail());
+        return ResponseEntity.ok(responseDTO);
     }
 }

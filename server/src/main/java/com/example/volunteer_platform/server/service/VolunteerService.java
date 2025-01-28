@@ -16,11 +16,14 @@ public class VolunteerService extends UserService<Volunteer> {
 
     private final EventService eventService;
     private final UserMapper userMapper;
+    private final MessageService messageService;
 
-    public VolunteerService(UserRepository repository, EventService eventService, UserMapper userMapper) {
-        super(repository, userMapper);
+    public VolunteerService(UserRepository repository, EventService eventService, UserMapper userMapper,
+                            MessageService messageService) {
+        super(repository, userMapper, messageService);
         this.eventService = eventService;
         this.userMapper = userMapper;
+        this.messageService = messageService;
     }
 
     @Override

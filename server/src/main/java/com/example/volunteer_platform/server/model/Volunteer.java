@@ -14,7 +14,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "volunteers")
 @NoArgsConstructor
 @SuperBuilder
 public class Volunteer extends User {

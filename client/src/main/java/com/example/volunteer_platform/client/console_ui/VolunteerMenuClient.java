@@ -33,6 +33,7 @@ public class VolunteerMenuClient {
                         showEvents();
                         break;
                     case 3:
+                        sendMessage();
                         break;
 
                     default:
@@ -68,6 +69,10 @@ public class VolunteerMenuClient {
 
     private void showEvents() {
         BaseUserMenuUtils.showEvents(restTemplateWithCookies);
+    }
+
+    private void sendMessage() {
+        BaseUserMenuUtils.sendMessage(restTemplateWithCookies);
     }
 
     private void showMenu() {

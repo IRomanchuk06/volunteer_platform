@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 import java.util.*;
 
 @Entity
-@Table(name = "customers")
 @SuperBuilder
 @NoArgsConstructor
 public class Customer extends User {

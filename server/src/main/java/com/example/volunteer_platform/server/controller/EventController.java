@@ -1,7 +1,5 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.mapper.EventMapper;
-import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.service.EventService;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +16,13 @@ public class EventController {
     private final EventService eventService;
 
     @Autowired
-    public EventController(EventService eventService, EventMapper eventMapper) {
+    public EventController(EventService eventService) {
         this.eventService = eventService;
     }
 
     @GetMapping
     public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
         List<EventResponseDTO> eventsResponses = eventService.getAllEvents();
-
-        System.out.println(eventsResponses);
-
         return ResponseEntity.ok(eventsResponses);
     }
 }

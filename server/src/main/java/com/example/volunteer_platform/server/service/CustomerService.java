@@ -20,12 +20,15 @@ import java.util.Optional;
 public class CustomerService extends UserService<Customer> {
     private final EventService eventService;
     private final UserMapper userMapper;
+    private final MessageService messageService;
 
     @Autowired
-    public CustomerService(UserRepository userRepository, EventService eventService, UserMapper userMapper) {
-        super(userRepository, userMapper);
+    public CustomerService(UserRepository userRepository, EventService eventService, UserMapper userMapper,
+                           MessageService messageService) {
+        super(userRepository, userMapper, messageService);
         this.eventService = eventService;
         this.userMapper = userMapper;
+        this.messageService = messageService;
     }
 
     @Override
