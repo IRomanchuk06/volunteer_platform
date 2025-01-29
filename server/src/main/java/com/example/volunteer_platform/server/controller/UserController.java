@@ -18,13 +18,14 @@ import java.util.Optional;
 
 import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFromSession;
 
+@RestController
 @RequestMapping("/users")
-public abstract class UserController<U extends User> {
+public class UserController {
 
-    protected final UserService<U> userService;
+    protected final UserService userService;
 
     @Autowired
-    public UserController(UserService<U> userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -61,8 +62,10 @@ public abstract class UserController<U extends User> {
     }
 
     @PostMapping("/message/")
-    public ResponseEntity<NotificationResponseDTO> sendMessage(MessageRegistrationDTO messageRequest,
+    public ResponseEntity<NotificationResponseDTO> sendMessage(@RequestBody MessageRegistrationDTO messageRequest,
                                                                HttpServletRequest request) {
+        System.out.println(messageRequest);
+
         User currentUser = getUserFromSession(request);
         NotificationResponseDTO responseDTO = userService.sendMessage(messageRequest.getMessage(),
                 messageRequest.getRecipientEmail(), currentUser.getEmail());

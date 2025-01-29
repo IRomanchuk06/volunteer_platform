@@ -17,10 +17,9 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 @Service("customerService")
-public class CustomerService extends UserService<Customer> {
+public class CustomerService extends UserService {
     private final EventService eventService;
     private final UserMapper userMapper;
-    private final MessageService messageService;
 
     @Autowired
     public CustomerService(UserRepository userRepository, EventService eventService, UserMapper userMapper,
@@ -28,11 +27,9 @@ public class CustomerService extends UserService<Customer> {
         super(userRepository, userMapper, messageService);
         this.eventService = eventService;
         this.userMapper = userMapper;
-        this.messageService = messageService;
     }
 
-    @Override
-    public UserResponseDTO createUserInstance(String email, String password, String username) {
+    public UserResponseDTO createCustomer(String email, String password, String username) {
         if (userRepository.findUserByEmail(email) != null) {
             throw new EmailAlreadyExistsException(email + " this email is already registered.");
         }

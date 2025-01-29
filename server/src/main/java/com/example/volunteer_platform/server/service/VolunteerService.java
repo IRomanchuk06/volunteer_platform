@@ -12,22 +12,19 @@ import com.example.volunteer_platform.shared_utils.VerificationUtils;
 import org.springframework.stereotype.Service;
 
 @Service("volunteerService")
-public class VolunteerService extends UserService<Volunteer> {
+public class VolunteerService extends UserService {
 
     private final EventService eventService;
     private final UserMapper userMapper;
-    private final MessageService messageService;
 
     public VolunteerService(UserRepository repository, EventService eventService, UserMapper userMapper,
                             MessageService messageService) {
         super(repository, userMapper, messageService);
         this.eventService = eventService;
         this.userMapper = userMapper;
-        this.messageService = messageService;
     }
 
-    @Override
-    public UserResponseDTO createUserInstance(String email, String password, String username) {
+    public UserResponseDTO createVolunteer(String email, String password, String username) {
         if (userRepository.findUserByEmail(email) != null) {
             throw new EmailAlreadyExistsException(email + " this email is already registered.");
         }

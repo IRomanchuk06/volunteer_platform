@@ -1,5 +1,6 @@
 package com.example.volunteer_platform.server.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -49,6 +50,7 @@ public class Event {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    @JsonBackReference
     @ManyToMany
     @JoinTable(
             name = "event_volunteers",

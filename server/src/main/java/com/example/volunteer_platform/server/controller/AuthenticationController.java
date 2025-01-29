@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFromSession;
 
+// TODO: check exceptions messages
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {

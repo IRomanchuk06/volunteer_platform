@@ -82,7 +82,7 @@ public class BaseMenuClient {
 
         AccountType accountType = AccountType.fromValue(getUserChoice());
 
-        String email = getRegistrationEmail(restTemplate, BASE_URL);
+        String email = getRegistrationEmail(BASE_URL);
 
         if (email == null) {
             System.out.println(EXIT_OPERATION_MESSAGE);
@@ -130,7 +130,7 @@ public class BaseMenuClient {
     }
 
     private void loginAccount() {
-        String email = getValidEmail(restTemplate, BASE_URL);
+        String email = getValidEmail(BASE_URL);
 
         if (email == null) {
             System.out.println(EXIT_OPERATION_MESSAGE);
@@ -167,6 +167,8 @@ public class BaseMenuClient {
             }
 
             String accountType = responseBody.getRole();
+
+            System.out.println(responseBody);
 
             if (VOLUNTEER.equals(accountType)) {
                 volunteerMenuClient.start(authenticatedRestTemplate);

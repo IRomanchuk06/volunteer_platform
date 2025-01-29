@@ -15,6 +15,8 @@ import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
 public class ConsoleInputUtils {
 
+    private static final RestTemplate consoleUtilsRestTemplate = new RestTemplate();
+
     public static String getUserInputString() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine().trim();
@@ -84,7 +86,7 @@ public class ConsoleInputUtils {
         }
     }
 
-    public static String getValidEmail(RestTemplate restTemplate, String baseUrl) {
+    public static String getValidEmail(String baseUrl) {
         String email;
         while (true) {
             System.out.println(ENTER_EMAIL_PROMPT);
@@ -98,13 +100,13 @@ public class ConsoleInputUtils {
             String url = baseUrl + EMAIL_VALIDATION_URL + email;
 
             try {
-                ResponseEntity<String> emailValidationResponse = restTemplate.getForEntity(url, String.class);
+                ResponseEntity<String> emailValidationResponse = consoleUtilsRestTemplate.getForEntity(url, String.class);
                 if (!emailValidationResponse.getStatusCode().is2xxSuccessful()) {
                     System.out.println(INVALID_EMAIL_FORMAT);
                     continue;
                 }
             } catch (Exception e) {
-                System.out.println(EMAIL_VALIDATING_ERROR);
+                System.out.println(EMAIL_VALIDATING_ERROR + e.getMessage());
                 continue;
             }
 
@@ -112,10 +114,10 @@ public class ConsoleInputUtils {
         }
     }
 
-    public static String getRegistrationEmail(RestTemplate restTemplate, String baseUrl) {
+    public static String getRegistrationEmail(String baseUrl) {
         String email;
         while (true) {
-            email = getValidEmail(restTemplate, baseUrl);
+            email = getValidEmail(baseUrl);
 
             if (email == null) {
                 return null;
@@ -123,7 +125,7 @@ public class ConsoleInputUtils {
 
             String url = baseUrl + EMAIL_CHECK_AVAILABILITY_URL + email;
             try {
-                ResponseEntity<String> emailRegisteredCheck = restTemplate.getForEntity(url, String.class);
+                ResponseEntity<String> emailRegisteredCheck = consoleUtilsRestTemplate.getForEntity(url, String.class);
 
                 if (emailRegisteredCheck.getStatusCode().is2xxSuccessful()) {
                     break;

@@ -1,7 +1,6 @@
 package com.example.volunteer_platform.server.controller;
 
 import com.example.volunteer_platform.server.model.User;
-import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.service.VolunteerService;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserRegistrationDTO;
@@ -17,7 +16,7 @@ import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFr
 
 @RestController
 @RequestMapping("/volunteers")
-public class VolunteerController extends UserController<Volunteer> {
+public class VolunteerController extends UserController {
 
     @Autowired
     public VolunteerController(VolunteerService volunteerService) {
@@ -27,7 +26,7 @@ public class VolunteerController extends UserController<Volunteer> {
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createVolunteer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
         VolunteerService volunteerService = (VolunteerService) userService;
-        UserResponseDTO userResponse = volunteerService.createUserInstance(accountRequest.getEmail(),
+        UserResponseDTO userResponse = volunteerService.createVolunteer(accountRequest.getEmail(),
                 accountRequest.getPassword(), accountRequest.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);

@@ -1,6 +1,5 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.CustomerService;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
@@ -22,7 +21,7 @@ import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFr
 
 @RestController
 @RequestMapping("/customers")
-public class CustomerController extends UserController<Customer> {
+public class CustomerController extends UserController {
 
     @Autowired
     public CustomerController(CustomerService customerService) {
@@ -32,7 +31,7 @@ public class CustomerController extends UserController<Customer> {
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createCustomer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
         CustomerService customerService = (CustomerService) userService;
-        UserResponseDTO userResponse = customerService.createUserInstance(
+        UserResponseDTO userResponse = customerService.createCustomer(
                 accountRequest.getEmail(),
                 accountRequest.getPassword(),
                 accountRequest.getUsername());

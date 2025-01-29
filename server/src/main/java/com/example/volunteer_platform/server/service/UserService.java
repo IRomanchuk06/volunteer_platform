@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service("userService")
-public abstract class UserService<U extends User> {
+public class UserService {
 
     protected final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -62,6 +62,4 @@ public abstract class UserService<U extends User> {
         User recipient = userRepository.findUserByEmail(recipientEmail);
         return messageService.sendMessage(message, sender, recipient);
     }
-
-    public abstract UserResponseDTO createUserInstance(String email, String password, String username);
 }

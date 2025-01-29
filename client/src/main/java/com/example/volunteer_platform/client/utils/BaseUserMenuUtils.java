@@ -41,13 +41,18 @@ public class BaseUserMenuUtils {
 
     public static void sendMessage(RestTemplate restTemplateWithCookies) {
         System.out.println(RECIPIENT_PROMPT);
-        String recipientEmail = ConsoleInputUtils.getValidEmail(restTemplateWithCookies, BASE_URL);
+        String recipientEmail = ConsoleInputUtils.getValidEmail(BASE_URL);
 
         System.out.println(MESSAGE_PROMPT);
         String message = ConsoleInputUtils.getUserInputString();
 
         String url = BASE_URL + USERS_URL + MESSAGE_URL + CREATE_URL;
+
+        System.out.println("path: " + url);
+
         HttpEntity<MessageRegistrationDTO> requestEntity = createMessageRequest(message, recipientEmail);
+
+        System.out.println("message" + requestEntity);
         try {
             ResponseEntity<NotificationResponseDTO> response = restTemplateWithCookies.exchange(url, HttpMethod.POST,
                     requestEntity, NotificationResponseDTO.class);
