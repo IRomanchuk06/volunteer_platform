@@ -1,17 +1,17 @@
 package com.example.volunteer_platform.server.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,43 +19,47 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@ToString(exclude = {"responses", "volunteers", "customer"})
+@EqualsAndHashCode(exclude = {"responses", "volunteers", "customer"})
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Name cannot be null")
+    @NotNull
     private String name;
 
-    @NotNull(message = "Description cannot be null")
+    @NotNull
     private String description;
 
-    @NotNull(message = "Location cannot be null")
+    @NotNull
     private String location;
 
-    @NotNull(message = "Date cannot be null")
+    @NotNull
     private LocalDate date;
 
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @PositiveOrZero(message = "Number of required volunteers must be positive or zero")
+    @PositiveOrZero
     private int numOfRequiredVolunteers;
-
-    @PositiveOrZero(message = "Number of responding volunteers must be positive or zero")
-    private int numOfRespondingVolunteers;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "event_volunteers",
             joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "volunteer_id")
     )
     private Set<Volunteer> volunteers = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Response> responses = new ArrayList<>();
 }
+

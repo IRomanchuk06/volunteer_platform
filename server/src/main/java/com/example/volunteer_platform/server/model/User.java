@@ -1,13 +1,12 @@
 package com.example.volunteer_platform.server.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,29 +17,38 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@ToString
-public abstract class User implements Serializable {
+@Data
+@ToString(exclude = "notifications")
+@EqualsAndHashCode(exclude = "notifications")
+public abstract class User {
+    public enum UserRole {
+        CUSTOMER,
+        VOLUNTEER
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Username cannot be null")
-    @Column(nullable = false)
+    @NotNull
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @NotNull(message = "Password cannot be null")
+    @NotNull
     @Column(nullable = false)
     private String password;
 
-    @NotNull(message = "Email cannot be null")
-    @Email(message = "Invalid email format")
+    @NotNull
+    @Email
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonManagedReference
+    @OneToMany(mappedBy = "recipient")
     private List<Notification> notifications = new ArrayList<>();
 }
+

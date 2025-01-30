@@ -1,9 +1,8 @@
 package com.example.volunteer_platform.server.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -14,8 +13,7 @@ import java.util.*;
 @NoArgsConstructor
 public class Customer extends User {
 
-    @OneToMany(mappedBy = "customer", orphanRemoval = true)
-    @Builder.Default
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> events = new HashSet<>();
-
 }
+

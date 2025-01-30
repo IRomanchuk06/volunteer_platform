@@ -48,13 +48,13 @@ public class DisplayFormatter {
         builder.append(TYPE_LABEL).append(notification.getType()).append(NEW_LINE);
 
         builder.append(SENDER_LABEL)
-                .append(notification.getSender() != null ?
-                        notification.getSender().getUsername() : NOT_AVAILABLE)
+                .append(notification.getSenderEmail() != null ?
+                        notification.getSenderEmail() : NOT_AVAILABLE)
                 .append(NEW_LINE);
 
         builder.append(RECIPIENT_LABEL)
-                .append(notification.getRecipient() != null ?
-                        notification.getRecipient().getUsername() : NOT_AVAILABLE)
+                .append(notification.getRecipientEmail() != null ?
+                        notification.getRecipientEmail() : NOT_AVAILABLE)
                 .append(NEW_LINE);
 
         builder.append(DATE_LABEL)

@@ -4,6 +4,7 @@ import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsExcepti
 import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
 import com.example.volunteer_platform.server.exeptions.VolunteerAlreadyParticipatingException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
+import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.repository.UserRepository;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
@@ -33,12 +34,8 @@ public class VolunteerService extends UserService {
             throw new InvalidEmailException("Invalid email format: " + email);
         }
 
-        Volunteer volunteer = Volunteer.builder()
-                .email(email)
-                .password(password)
-                .username(username)
-                .role("VOLUNTEER")
-                .build();
+        Volunteer volunteer = Volunteer.builder().email(email).password(password).username(username).role(
+                User.UserRole.VOLUNTEER).build();
 
         userRepository.save(volunteer);
 

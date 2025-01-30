@@ -66,14 +66,12 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotExistsException("Event not found"));
 
-        int updated = eventRepository.incrementRespondingVolunteers(eventId);
-        if (updated == 0) {
-            throw new EventVolunteerLimitException("Volunteer limit reached");
+        if (event.getVolunteers().size() < event.getNumOfRequiredVolunteers()) {
+            eventRepository.addVolunteerToEvent(eventId, userId);
+            eventRepository.save(event);
+
+            return eventMapper.toResponseDTO(event);
         }
-
-        eventRepository.addVolunteerToEvent(eventId, userId);
-        eventRepository.save(event);
-
-        return eventMapper.toResponseDTO(event);
+        throw new EventVolunteerLimitException("Volunteer limit reached");
     }
 }

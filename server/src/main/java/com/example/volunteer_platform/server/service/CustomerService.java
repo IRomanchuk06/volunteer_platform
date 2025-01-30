@@ -39,7 +39,7 @@ public class CustomerService extends UserService {
         }
 
         Customer customer = Customer.builder().email(email).password(password).username(username).role(
-                "CUSTOMER").build();
+                User.UserRole.CUSTOMER).build();
 
         userRepository.save(customer);
 

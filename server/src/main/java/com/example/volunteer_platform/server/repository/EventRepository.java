@@ -15,9 +15,8 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long> {
     boolean existsByNameAndDate(String name, LocalDate date);
 
-    @Modifying
-    @Query("UPDATE Event e SET e.numOfRespondingVolunteers = e.numOfRespondingVolunteers + 1 WHERE e.id = :eventId AND e.numOfRespondingVolunteers < e.numOfRequiredVolunteers")
-    int incrementRespondingVolunteers(@Param("eventId") Long eventId);
+    @Query("SELECT COUNT(v) FROM Event e JOIN e.volunteers v WHERE e.id = :eventId")
+    int getRespondingVolunteersCount(@Param("eventId") Long eventId);
 
     @Modifying
     @Query(

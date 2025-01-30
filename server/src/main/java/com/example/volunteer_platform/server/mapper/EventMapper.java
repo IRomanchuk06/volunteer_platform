@@ -29,7 +29,7 @@ public interface EventMapper {
                 volunteer.getId(),
                 volunteer.getUsername(),
                 volunteer.getEmail(),
-                volunteer.getRole()
+                volunteer.getRole().name()
         );
     }
 }

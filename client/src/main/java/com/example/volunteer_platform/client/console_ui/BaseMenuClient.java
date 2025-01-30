@@ -168,8 +168,6 @@ public class BaseMenuClient {
 
             String accountType = responseBody.getRole();
 
-            System.out.println(responseBody);
-
             if (VOLUNTEER.equals(accountType)) {
                 volunteerMenuClient.start(authenticatedRestTemplate);
             } else if (CUSTOMER.equals(accountType)) {

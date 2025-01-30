@@ -47,7 +47,7 @@ public class NotificationController {
     public ResponseEntity<List<NotificationResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
         User user = getUserFromSession(request);
 
-        if (!user.getRole().equals("VOLUNTEER")) {
+        if (!user.getRole().equals(User.UserRole.VOLUNTEER)) {
             throw new AccessDeniedException("Event feedback is only available to the customer.");
         }
 

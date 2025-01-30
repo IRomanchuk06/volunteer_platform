@@ -1,5 +1,6 @@
 package com.example.volunteer_platform.server.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Notification {
+
     public enum NotificationType {
         MESSAGE, VOLUNTEER_RESPONSE, SYSTEM_ALERT
     }
@@ -22,12 +24,14 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id")
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_id")
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "recipient_id", nullable = false)
     private User recipient;
 
     private String message;
@@ -38,3 +42,4 @@ public class Notification {
     private LocalDateTime createdAt;
     private boolean isRead;
 }
+
