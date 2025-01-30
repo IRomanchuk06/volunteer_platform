@@ -37,6 +37,12 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.getReceivedNotifications(user));
     }
 
+    @GetMapping("/received/messages")
+    public ResponseEntity<List<NotificationResponseDTO>> getReceivedMessages(HttpServletRequest request) {
+        User user = getUserFromSession(request);
+        return ResponseEntity.ok(notificationService.getReceivedMessages(user));
+    }
+
     @GetMapping("/responses")
     public ResponseEntity<List<NotificationResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
         User user = getUserFromSession(request);

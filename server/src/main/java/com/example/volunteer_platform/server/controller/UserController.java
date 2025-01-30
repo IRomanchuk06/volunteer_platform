@@ -61,7 +61,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/message/")
+    @PostMapping("/messages/")
     public ResponseEntity<NotificationResponseDTO> sendMessage(@RequestBody MessageRegistrationDTO messageRequest,
                                                                HttpServletRequest request) {
         System.out.println(messageRequest);

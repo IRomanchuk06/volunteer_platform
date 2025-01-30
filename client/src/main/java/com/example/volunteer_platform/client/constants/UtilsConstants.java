@@ -15,7 +15,6 @@ public class UtilsConstants {
     public static final String CHOOSE_OPTION = "Choose an option: ";
     public static final String NO_INPUT = "No input entered.";
     public static final String READING_ERROR = "Error reading input. Exiting...";
-    public static final String EXIT_OPERATION_MESSAGE = "Exiting the operation.";
     public static final String INVALID_CHOICE = "Invalid choice. Please try again.";
     public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: ";
     public static final String ENTER_POSITIVE_NUMBER_PROMPT = "Enter a number of required volunteers: ";
@@ -45,4 +44,12 @@ public class UtilsConstants {
     public static final String COOKIE_VALUE_SEPARATOR = "=";
     public static final String DASH = " - ";
     public static final String BACKSLASH = "\\";
+
+    public static final String NOTIFICATION_NOT_AVAILABLE = "Notification not available";
+    public static final String NOTIFICATION_HEADER = "=== Notification Details ===\n";
+    public static final String SENDER_LABEL = "From: ";
+    public static final String RECIPIENT_LABEL = "To: ";
+    public static final String TYPE_LABEL = "Type: ";
+    public static final String STATUS_LABEL = "Read: ";
+    public static final String MESSAGE_HEADER = "\nMessage:\n";
 }

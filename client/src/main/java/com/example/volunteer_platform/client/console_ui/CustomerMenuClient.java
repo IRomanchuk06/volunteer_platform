@@ -42,6 +42,12 @@ public class CustomerMenuClient {
                     case 3:
                         showEventsResponses();
                         break;
+                    case 4:
+                        sendMessage();
+                        break;
+                    case 5:
+                        checkMailbox();
+                        break;
 
                     default:
                         System.out.println(INVALID_CHOICE);
@@ -52,11 +58,19 @@ public class CustomerMenuClient {
         }
     }
 
+    private void checkMailbox() {
+        BaseUserMenuUtils.checkMailbox(restTemplateWithCookies);
+    }
+
     private void showEventsResponses() {
     }
 
     private void showEvents() {
         BaseUserMenuUtils.showEvents(restTemplateWithCookies);
+    }
+
+    private void sendMessage() {
+        BaseUserMenuUtils.sendMessage(restTemplateWithCookies);
     }
 
     private void addEvent() {

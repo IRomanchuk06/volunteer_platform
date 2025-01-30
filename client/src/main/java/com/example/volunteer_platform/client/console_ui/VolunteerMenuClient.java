@@ -1,5 +1,6 @@
 package com.example.volunteer_platform.client.console_ui;
 
+import com.example.volunteer_platform.client.constants.UtilsConstants;
 import com.example.volunteer_platform.client.utils.BaseUserMenuUtils;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,9 @@ public class VolunteerMenuClient {
                     case 3:
                         sendMessage();
                         break;
+                    case 4:
+                        checkMailbox();
+                        break;
 
                     default:
                         System.out.println(INVALID_CHOICE);
@@ -43,6 +47,10 @@ public class VolunteerMenuClient {
                 System.out.println(INVALID_CHOICE);
             }
         }
+    }
+
+    private void checkMailbox() {
+        BaseUserMenuUtils.checkMailbox(restTemplateWithCookies);
     }
 
     private void responseToEvent() {
@@ -54,7 +62,7 @@ public class VolunteerMenuClient {
 
         try {
             ResponseEntity<EventResponseDTO> response = restTemplateWithCookies.exchange(
-                    BASE_URL + VOLUNTEERS_URL + RESPONSE_TO_EVENT + eventId, HttpMethod.POST, null,
+                    BASE_URL + VOLUNTEERS_URL + RESPONSE_TO_EVENT_URL + eventId, HttpMethod.POST, null,
                     EventResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {

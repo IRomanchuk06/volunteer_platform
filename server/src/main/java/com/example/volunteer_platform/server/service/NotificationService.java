@@ -35,13 +35,19 @@ public class NotificationService {
     }
 
     public List<NotificationResponseDTO> getReceivedNotifications(User recipient) {
-        List<Notification> notifications = notificationRepository.findBySender(recipient);
+        List<Notification> notifications = notificationRepository.findByRecipient(recipient);
         return notificationMapper.toNotificationResponseDTOList(notifications);
     }
 
     public List<NotificationResponseDTO> getVolunteerResponses(User recipient) {
         List<Notification> notifications = notificationRepository.findByRecipientAndType(recipient,
                 Notification.NotificationType.VOLUNTEER_RESPONSE);
+        return notificationMapper.toNotificationResponseDTOList(notifications);
+    }
+
+    public List<NotificationResponseDTO> getReceivedMessages(User recipient) {
+        List<Notification> notifications = notificationRepository.findByRecipientAndType(recipient,
+                Notification.NotificationType.MESSAGE);
         return notificationMapper.toNotificationResponseDTOList(notifications);
     }
 }

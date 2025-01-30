@@ -46,13 +46,8 @@ public class BaseUserMenuUtils {
         System.out.println(MESSAGE_PROMPT);
         String message = ConsoleInputUtils.getUserInputString();
 
-        String url = BASE_URL + USERS_URL + MESSAGE_URL + CREATE_URL;
-
-        System.out.println("path: " + url);
-
+        String url = BASE_URL + USERS_URL + MESSAGES_URL + CREATE_URL;
         HttpEntity<MessageRegistrationDTO> requestEntity = createMessageRequest(message, recipientEmail);
-
-        System.out.println("message" + requestEntity);
         try {
             ResponseEntity<NotificationResponseDTO> response = restTemplateWithCookies.exchange(url, HttpMethod.POST,
                     requestEntity, NotificationResponseDTO.class);
@@ -64,6 +59,30 @@ public class BaseUserMenuUtils {
             }
         } catch (Exception e) {
             System.out.println(MESSAGE_SENT_ERROR + e.getMessage());
+        }
+    }
+
+    public static void checkMailbox(RestTemplate restTemplateWithCookies) {
+        System.out.println(MAILBOX_TITLE);
+        String url = BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + MESSAGES_URL;
+        try {
+            ResponseEntity<List<NotificationResponseDTO>> response = restTemplateWithCookies.exchange(url,
+                    HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                    });
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                List<NotificationResponseDTO> messages = response.getBody();
+                if (messages != null && !messages.isEmpty()) {
+                    messages.forEach(
+                            message -> System.out.println(DisplayFormatter.formatNotificationForDisplay(message)));
+                } else {
+                    System.out.println(NO_MESSAGES_FOUND);
+                }
+            } else {
+                System.out.println(MAILBOX_FAILED + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.out.println(MAILBOX_ERROR + e.getMessage());
         }
     }
 }

@@ -15,7 +15,9 @@ public class ApiEndpoints {
     public static final String CUSTOMERS_URL = "/customers";
     public static final String EVENT_URL = "/events";
     public static final String USERS_URL = "/users";
-    public static final String MESSAGE_URL = "/message";
+    public static final String NOTIFICATIONS_URL = "/notifications";
+    public static final String RECEIVED_URL = "/received";
+    public static final String MESSAGES_URL = "/messages";
 
-    public static final String RESPONSE_TO_EVENT = "/response/events/";
+    public static final String RESPONSE_TO_EVENT_URL = "/response/events/";
 }
