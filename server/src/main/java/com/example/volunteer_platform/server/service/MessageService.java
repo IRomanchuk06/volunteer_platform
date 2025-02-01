@@ -42,4 +42,7 @@ public class MessageService {
 
         return notificationMapper.toNotificationResponseDTO(savedNotification);
     }
+
+    public void responseToEvent(Long eventId, Long userId) {
+    }
 }

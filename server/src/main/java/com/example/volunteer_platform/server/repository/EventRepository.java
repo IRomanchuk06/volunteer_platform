@@ -20,7 +20,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Modifying
     @Query(
-            value = "INSERT INTO event_volunteers (event_id, user_id) VALUES (:eventId, :volunteerId)",
+            value = "INSERT INTO event_volunteers (event_id, volunteer_id) VALUES (:eventId, :volunteerId)",
             nativeQuery = true
     )
     void addVolunteerToEvent(

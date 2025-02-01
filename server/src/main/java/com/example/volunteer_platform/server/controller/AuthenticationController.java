@@ -34,24 +34,15 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginDTO loginRequest, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("0");
         User user = authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 
-        System.out.println("1");
         HttpSession session = request.getSession(true);
         session.setAttribute("currentUser", user);
 
-        System.out.println("2");
         String sessionId = session.getId();
         response.addCookie(new jakarta.servlet.http.Cookie("JSESSIONID", sessionId));
 
-        System.out.println("3");
-        System.out.println(user);
-        System.out.println("2");
         UserResponseDTO userResponse = userMapper.toUserResponseDTO(user);
-
-        System.out.println(user);
-        System.out.println(userResponse);
 
         return ResponseEntity.ok(userResponse);
     }

@@ -6,7 +6,7 @@ public class CustomerMenuConstants {
             "1. Add an Event\n" +
             "2. Show Events\n" +
             "3. Show Events Responses\n" +
-            "4. Send Message" +
+            "4. Send Message\n" +
             "5. Check Mailbox";
 
     public static final String ENTER_NAME_PROMPT = "Enter event name: ";
@@ -19,4 +19,6 @@ public class CustomerMenuConstants {
 
     public static final String INVALID_CHOICE = "Invalid choice. Please try again.";
     public static final String EXIT_OPERATION_MESSAGE = "Exiting the operation.";
+
+    public static final String VOLUNTEER_RESPONSES = "--- Volunteer responses ---";
 }

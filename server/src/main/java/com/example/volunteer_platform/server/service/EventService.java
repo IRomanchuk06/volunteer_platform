@@ -24,11 +24,16 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final NotificationService notificationService;
+    private final MessageService messageService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, EventMapper eventMapper) {
+    public EventService(EventRepository eventRepository, EventMapper eventMapper,
+                        NotificationService notificationService, MessageService messageService) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
+        this.notificationService = notificationService;
+        this.messageService = messageService;
     }
 
     public EventResponseDTO createEvent(String name, String description, String location, LocalDate date,
@@ -69,6 +74,8 @@ public class EventService {
         if (event.getVolunteers().size() < event.getNumOfRequiredVolunteers()) {
             eventRepository.addVolunteerToEvent(eventId, userId);
             eventRepository.save(event);
+
+            messageService.responseToEvent(eventId, userId);
 
             return eventMapper.toResponseDTO(event);
         }

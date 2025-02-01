@@ -5,6 +5,7 @@ import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.NotificationService;
 import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +44,11 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.getReceivedMessages(user));
     }
 
-    @GetMapping("/responses")
-    public ResponseEntity<List<NotificationResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
+    @GetMapping("/received/responses")
+    public ResponseEntity<List<VolunteerResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
         User user = getUserFromSession(request);
 
-        if (!user.getRole().equals(User.UserRole.VOLUNTEER)) {
+        if (!user.getRole().equals(User.UserRole.CUSTOMER)) {
             throw new AccessDeniedException("Event feedback is only available to the customer.");
         }
 

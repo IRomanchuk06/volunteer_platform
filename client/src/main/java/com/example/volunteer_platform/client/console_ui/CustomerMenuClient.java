@@ -1,8 +1,12 @@
 package com.example.volunteer_platform.client.console_ui;
 
 import com.example.volunteer_platform.client.utils.BaseUserMenuUtils;
+import com.example.volunteer_platform.client.utils.DisplayFormatter;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.CustomerMenuConstants.*;
@@ -63,6 +68,29 @@ public class CustomerMenuClient {
     }
 
     private void showEventsResponses() {
+        System.out.println(VOLUNTEER_RESPONSES);
+
+        try {
+            ResponseEntity<List<VolunteerResponseDTO>> response = restTemplateWithCookies.exchange(
+                    BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + RESPONSES_URL, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<>() {
+                    });
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                List<VolunteerResponseDTO> volunteerResponses = response.getBody();
+                if (volunteerResponses != null && !volunteerResponses.isEmpty()) {
+                    volunteerResponses.forEach(volunteerResponse -> System.out.println(
+                            DisplayFormatter.formatVolunteerResponseForDisplay(volunteerResponse)));
+                } else {
+                    System.out.println("Not found");
+                }
+            } else {
+                System.out.println("failed" + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.out.println("error" + e.getMessage());
+        }
+
     }
 
     private void showEvents() {

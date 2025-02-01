@@ -1,20 +1,14 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.events.VolunteerRespondedEvent;
 import com.example.volunteer_platform.server.mapper.NotificationMapper;
-import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
-import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.repository.NotificationRepository;
 import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,10 +33,10 @@ public class NotificationService {
         return notificationMapper.toNotificationResponseDTOList(notifications);
     }
 
-    public List<NotificationResponseDTO> getVolunteerResponses(User recipient) {
-        List<Notification> notifications = notificationRepository.findByRecipientAndType(recipient,
+    public List<VolunteerResponseDTO> getVolunteerResponses(User recipient) {
+        List<Notification> volunteerResponses = notificationRepository.findByRecipientAndType(recipient,
                 Notification.NotificationType.VOLUNTEER_RESPONSE);
-        return notificationMapper.toNotificationResponseDTOList(notifications);
+        return notificationMapper.toVolunteerResponseDTOList(volunteerResponses);
     }
 
     public List<NotificationResponseDTO> getReceivedMessages(User recipient) {

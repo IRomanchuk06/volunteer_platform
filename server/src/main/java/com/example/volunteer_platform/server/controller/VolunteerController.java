@@ -38,6 +38,8 @@ public class VolunteerController extends UserController {
         VolunteerService volunteerService = (VolunteerService) userService;
         User currentUser = getUserFromSession(request);
 
+        System.out.println(currentUser.getId());
+
         EventResponseDTO eventResponse = volunteerService.responseToEvent(eventId, currentUser.getId());
 
         return ResponseEntity.ok(eventResponse);

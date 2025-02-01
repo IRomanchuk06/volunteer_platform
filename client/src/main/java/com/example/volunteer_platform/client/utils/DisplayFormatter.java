@@ -2,6 +2,7 @@ package com.example.volunteer_platform.client.utils;
 
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
 
 import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
@@ -69,6 +70,45 @@ public class DisplayFormatter {
         builder.append(MESSAGE_HEADER)
                 .append(notification.getMessage() != null ?
                         notification.getMessage() : "No message content")
+                .append(NEW_LINE);
+
+        return builder.toString();
+    }
+
+    public static String formatVolunteerResponseForDisplay(VolunteerResponseDTO response) {
+        if (response == null) {
+            return VOLUNTEER_RESPONSE_NOT_AVAILABLE;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(VOLUNTEER_RESPONSE_HEADER);
+
+        builder.append(ID_LABEL).append(response.getId()).append(NEW_LINE);
+
+        builder.append(VOLUNTEER_LABEL)
+                .append(response.getVolunteerName() != null ?
+                        response.getVolunteerName() + " (ID: " + response.getVolunteerId() + ")" :
+                        NOT_AVAILABLE)
+                .append(NEW_LINE);
+
+        builder.append(EVENT_LABEL)
+                .append(response.getEventName() != null ?
+                        response.getEventName() : NOT_AVAILABLE)
+                .append(NEW_LINE);
+
+        builder.append(STATUS_LABEL)
+                .append(response.getStatus() != null ?
+                        response.getStatus().toUpperCase() : NOT_AVAILABLE)
+                .append(NEW_LINE);
+
+        builder.append(RESPONSE_TIME_LABEL)
+                .append(response.getCreatedAt() != null ?
+                        response.getCreatedAt() : NOT_AVAILABLE)
+                .append(NEW_LINE);
+
+        builder.append(MESSAGE_HEADER)
+                .append(response.getMessage() != null ?
+                        response.getMessage() : "No message content")
                 .append(NEW_LINE);
 
         return builder.toString();
