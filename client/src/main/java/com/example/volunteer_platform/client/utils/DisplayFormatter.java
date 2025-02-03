@@ -1,8 +1,8 @@
 package com.example.volunteer_platform.client.utils;
 
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
-import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
+import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 
 import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
@@ -36,46 +36,45 @@ public class DisplayFormatter {
         return builder.toString();
     }
 
-    public static String formatNotificationForDisplay(NotificationResponseDTO notification) {
-        if (notification == null) {
-            return NOTIFICATION_NOT_AVAILABLE;
+    public static String formatNotificationForDisplay(MessageResponseDTO message) {
+        if (message == null) {
+            return MESSAGE_NOT_AVAILABLE;
         }
 
         StringBuilder builder = new StringBuilder();
 
         builder.append(NOTIFICATION_HEADER);
 
-        builder.append(ID_LABEL).append(notification.getId()).append(NEW_LINE);
-        builder.append(TYPE_LABEL).append(notification.getType()).append(NEW_LINE);
+        builder.append(ID_LABEL).append(message.getId()).append(NEW_LINE);
 
         builder.append(SENDER_LABEL)
-                .append(notification.getSenderEmail() != null ?
-                        notification.getSenderEmail() : NOT_AVAILABLE)
+                .append(message.getSenderEmail() != null ?
+                        message.getSenderEmail() : NOT_AVAILABLE)
                 .append(NEW_LINE);
 
         builder.append(RECIPIENT_LABEL)
-                .append(notification.getRecipientEmail() != null ?
-                        notification.getRecipientEmail() : NOT_AVAILABLE)
+                .append(message.getRecipientEmail() != null ?
+                        message.getRecipientEmail() : NOT_AVAILABLE)
                 .append(NEW_LINE);
 
         builder.append(DATE_LABEL)
-                .append(notification.getCreatedAt() != null ?
-                        notification.getCreatedAt() : NOT_AVAILABLE)
+                .append(message.getCreatedAt() != null ?
+                        message.getCreatedAt() : NOT_AVAILABLE)
                 .append(NEW_LINE);
 
         builder.append(STATUS_LABEL)
-                .append(notification.isRead() ? "Yes" : "No")
+                .append(message.isRead() ? "Yes" : "No")
                 .append(NEW_LINE);
 
         builder.append(MESSAGE_HEADER)
-                .append(notification.getMessage() != null ?
-                        notification.getMessage() : "No message content")
+                .append(message.getMessage() != null ?
+                        message.getMessage() : "No message content")
                 .append(NEW_LINE);
 
         return builder.toString();
     }
 
-    public static String formatVolunteerResponseForDisplay(VolunteerResponseDTO response) {
+    public static String formatVolunteerResponseForDisplay(VolunteerEventResponseDTO response) {
         if (response == null) {
             return VOLUNTEER_RESPONSE_NOT_AVAILABLE;
         }
@@ -104,11 +103,6 @@ public class DisplayFormatter {
         builder.append(RESPONSE_TIME_LABEL)
                 .append(response.getCreatedAt() != null ?
                         response.getCreatedAt() : NOT_AVAILABLE)
-                .append(NEW_LINE);
-
-        builder.append(MESSAGE_HEADER)
-                .append(response.getMessage() != null ?
-                        response.getMessage() : "No message content")
                 .append(NEW_LINE);
 
         return builder.toString();

@@ -2,7 +2,7 @@ package com.example.volunteer_platform.client.utils;
 
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.MessageRegistrationDTO;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
+import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -49,8 +49,8 @@ public class BaseUserMenuUtils {
         String url = BASE_URL + USERS_URL + MESSAGES_URL + CREATE_URL;
         HttpEntity<MessageRegistrationDTO> requestEntity = createMessageRequest(message, recipientEmail);
         try {
-            ResponseEntity<NotificationResponseDTO> response = restTemplateWithCookies.exchange(url, HttpMethod.POST,
-                    requestEntity, NotificationResponseDTO.class);
+            ResponseEntity<MessageResponseDTO> response = restTemplateWithCookies.exchange(url, HttpMethod.POST,
+                    requestEntity, MessageResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println(MESSAGE_SENT_SUCCESS);
@@ -66,12 +66,12 @@ public class BaseUserMenuUtils {
         System.out.println(MAILBOX_TITLE);
         String url = BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + MESSAGES_URL;
         try {
-            ResponseEntity<List<NotificationResponseDTO>> response = restTemplateWithCookies.exchange(url,
+            ResponseEntity<List<MessageResponseDTO>> response = restTemplateWithCookies.exchange(url,
                     HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                     });
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                List<NotificationResponseDTO> messages = response.getBody();
+                List<MessageResponseDTO> messages = response.getBody();
                 if (messages != null && !messages.isEmpty()) {
                     messages.forEach(
                             message -> System.out.println(DisplayFormatter.formatNotificationForDisplay(message)));

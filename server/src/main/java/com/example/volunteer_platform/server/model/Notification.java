@@ -13,11 +13,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Notification {
+public abstract class Notification {
 
     public enum NotificationType {
-        MESSAGE, VOLUNTEER_RESPONSE, SYSTEM_ALERT
+        MESSAGE,
+        VOLUNTEER_RESPONSE,
+        SYSTEM_ALERT
     }
 
     @Id
@@ -33,8 +34,6 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "recipient_id", nullable = false)
     private User recipient;
-
-    private String message;
 
     @Enumerated(EnumType.STRING)
     private NotificationType type;

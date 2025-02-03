@@ -19,6 +19,6 @@ public class EventResponseDTO {
     private LocalTime endTime;
     private int numOfRequiredVolunteers;
     private int numOfRespondingVolunteers;
-    private UserResponseDTO customer;
+    private EventParticipantResponseDTO customer;
     private List<EventParticipantResponseDTO> volunteers;
 }

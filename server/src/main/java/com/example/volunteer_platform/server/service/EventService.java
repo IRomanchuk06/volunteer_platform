@@ -4,9 +4,7 @@ import com.example.volunteer_platform.server.exeptions.EventAlreadyExistsExcepti
 import com.example.volunteer_platform.server.exeptions.EventNotExistsException;
 import com.example.volunteer_platform.server.exeptions.EventVolunteerLimitException;
 import com.example.volunteer_platform.server.mapper.EventMapper;
-import com.example.volunteer_platform.server.model.Customer;
-import com.example.volunteer_platform.server.model.Event;
-import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.model.*;
 import com.example.volunteer_platform.server.repository.EventRepository;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 
@@ -24,16 +22,13 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final NotificationService notificationService;
-    private final MessageService messageService;
+    private final ResponseService responseService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, EventMapper eventMapper,
-                        NotificationService notificationService, MessageService messageService) {
+    public EventService(EventRepository eventRepository, EventMapper eventMapper, MessageService messageService, ResponseService responseService) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
-        this.notificationService = notificationService;
-        this.messageService = messageService;
+        this.responseService = responseService;
     }
 
     public EventResponseDTO createEvent(String name, String description, String location, LocalDate date,
@@ -67,15 +62,15 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO responseToEvent(Long eventId, Long userId) {
+    public EventResponseDTO responseToEvent(Long eventId, Volunteer volunteer) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotExistsException("Event not found"));
 
         if (event.getVolunteers().size() < event.getNumOfRequiredVolunteers()) {
-            eventRepository.addVolunteerToEvent(eventId, userId);
+            eventRepository.addVolunteerToEvent(eventId, volunteer.getId());
             eventRepository.save(event);
 
-            messageService.responseToEvent(eventId, userId);
+            responseService.responseToEvent(event, volunteer);
 
             return eventMapper.toResponseDTO(event);
         }

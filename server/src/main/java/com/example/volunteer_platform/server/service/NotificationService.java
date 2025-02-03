@@ -1,11 +1,12 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.mapper.NotificationMapper;
+import com.example.volunteer_platform.server.mapper.MessageMapper;
+import com.example.volunteer_platform.server.mapper.VolunteerResponseMapper;
 import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.NotificationRepository;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
-import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
+import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,34 +15,26 @@ import java.util.List;
 @Service
 public class NotificationService {
     private final NotificationRepository notificationRepository;
-    private final NotificationMapper notificationMapper;
+    private final VolunteerResponseMapper volunteerResponseMapper;
+    private final MessageMapper messageMapper;
 
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository,
-                               NotificationMapper notificationMapper) {
+    public NotificationService(NotificationRepository notificationRepository, VolunteerResponseMapper volunteerResponseMapper,
+                               MessageMapper messageMapper) {
         this.notificationRepository = notificationRepository;
-        this.notificationMapper = notificationMapper;
+        this.volunteerResponseMapper = volunteerResponseMapper;
+        this.messageMapper = messageMapper;
     }
 
-    public List<NotificationResponseDTO> getSentNotifications(User sender) {
-        List<Notification> notifications = notificationRepository.findBySender(sender);
-        return notificationMapper.toNotificationResponseDTOList(notifications);
-    }
-
-    public List<NotificationResponseDTO> getReceivedNotifications(User recipient) {
-        List<Notification> notifications = notificationRepository.findByRecipient(recipient);
-        return notificationMapper.toNotificationResponseDTOList(notifications);
-    }
-
-    public List<VolunteerResponseDTO> getVolunteerResponses(User recipient) {
+    public List<VolunteerEventResponseDTO> getVolunteerResponses(User recipient) {
         List<Notification> volunteerResponses = notificationRepository.findByRecipientAndType(recipient,
                 Notification.NotificationType.VOLUNTEER_RESPONSE);
-        return notificationMapper.toVolunteerResponseDTOList(volunteerResponses);
+        return volunteerResponseMapper.toVolunteerResponseDTOList(volunteerResponses);
     }
 
-    public List<NotificationResponseDTO> getReceivedMessages(User recipient) {
+    public List<MessageResponseDTO> getReceivedMessages(User recipient) {
         List<Notification> notifications = notificationRepository.findByRecipientAndType(recipient,
                 Notification.NotificationType.MESSAGE);
-        return notificationMapper.toNotificationResponseDTOList(notifications);
+        return messageMapper.toMessageResponseDTOList(notifications);
     }
 }

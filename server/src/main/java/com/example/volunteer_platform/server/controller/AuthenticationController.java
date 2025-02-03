@@ -2,7 +2,6 @@ package com.example.volunteer_platform.server.controller;
 
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
-import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.service.AuthenticationService;
 import com.example.volunteer_platform.shared_dto.UserLoginDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;

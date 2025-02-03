@@ -1,13 +1,11 @@
 package com.example.volunteer_platform.server.controller;
 
 import com.example.volunteer_platform.server.exeptions.AccessDeniedException;
-import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.NotificationService;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
-import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
+import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,26 +24,14 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/sent")
-    public ResponseEntity<List<NotificationResponseDTO>> getSentNotifications(HttpServletRequest request) {
-        User user = getUserFromSession(request);
-        return ResponseEntity.ok(notificationService.getSentNotifications(user));
-    }
-
-    @GetMapping("/received")
-    public ResponseEntity<List<NotificationResponseDTO>> getReceivedNotifications(HttpServletRequest request) {
-        User user = getUserFromSession(request);
-        return ResponseEntity.ok(notificationService.getReceivedNotifications(user));
-    }
-
     @GetMapping("/received/messages")
-    public ResponseEntity<List<NotificationResponseDTO>> getReceivedMessages(HttpServletRequest request) {
+    public ResponseEntity<List<MessageResponseDTO>> getReceivedMessages(HttpServletRequest request) {
         User user = getUserFromSession(request);
         return ResponseEntity.ok(notificationService.getReceivedMessages(user));
     }
 
     @GetMapping("/received/responses")
-    public ResponseEntity<List<VolunteerResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
+    public ResponseEntity<List<VolunteerEventResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
         User user = getUserFromSession(request);
 
         if (!user.getRole().equals(User.UserRole.CUSTOMER)) {

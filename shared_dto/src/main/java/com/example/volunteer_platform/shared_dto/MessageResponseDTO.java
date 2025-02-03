@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationResponseDTO {
+public class MessageResponseDTO {
     private Long id;
     private String senderEmail;
     private String recipientEmail;

@@ -9,12 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VolunteerResponseDTO {
+public class VolunteerEventResponseDTO {
     private Long id;
     private Long volunteerId;
     private String volunteerName;
     private String eventName;
     private String status;
     private LocalDateTime createdAt;
-    private String message;
 }

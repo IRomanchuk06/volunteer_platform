@@ -4,7 +4,7 @@ import com.example.volunteer_platform.server.exeptions.InvalidPasswordException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
+import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,9 +57,9 @@ public class UserService {
         return false;
     }
 
-    public NotificationResponseDTO sendMessage(String message, String senderEmail, String recipientEmail) {
+    public MessageResponseDTO sendMessage(String messageText, String senderEmail, String recipientEmail) {
         User sender = userRepository.findUserByEmail(senderEmail);
         User recipient = userRepository.findUserByEmail(recipientEmail);
-        return messageService.sendMessage(message, sender, recipient);
+        return messageService.sendMessage(messageText, sender, recipient);
     }
 }

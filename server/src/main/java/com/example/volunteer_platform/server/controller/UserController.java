@@ -2,10 +2,7 @@ package com.example.volunteer_platform.server.controller;
 
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.UserService;
-import com.example.volunteer_platform.shared_dto.MessageRegistrationDTO;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
-import com.example.volunteer_platform.shared_dto.UpdateUserDTO;
-import com.example.volunteer_platform.shared_dto.UserResponseDTO;
+import com.example.volunteer_platform.shared_dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +59,12 @@ public class UserController {
     }
 
     @PostMapping("/messages/")
-    public ResponseEntity<NotificationResponseDTO> sendMessage(@RequestBody MessageRegistrationDTO messageRequest,
-                                                               HttpServletRequest request) {
+    public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody MessageRegistrationDTO messageRequest,
+                                                          HttpServletRequest request) {
         System.out.println(messageRequest);
 
         User currentUser = getUserFromSession(request);
-        NotificationResponseDTO responseDTO = userService.sendMessage(messageRequest.getMessage(),
+        MessageResponseDTO responseDTO = userService.sendMessage(messageRequest.getMessage(),
                 messageRequest.getRecipientEmail(), currentUser.getEmail());
         return ResponseEntity.ok(responseDTO);
     }

@@ -1,7 +1,5 @@
 package com.example.volunteer_platform.client.constants;
 
-import java.time.format.DateTimeFormatter;
-
 public class UtilsConstants {
     public static final String ENTER_DATE_PROMPT = "Enter event date YYYY-MM-DD (exit to abort): ";
     public static final String ENTER_START_TIME_PROMPT = "Enter event start HH:MM (exit to abort): ";
@@ -47,11 +45,10 @@ public class UtilsConstants {
     public static final String DASH = " - ";
     public static final String BACKSLASH = "\\";
 
-    public static final String NOTIFICATION_NOT_AVAILABLE = "Notification not available";
+    public static final String MESSAGE_NOT_AVAILABLE = "Message not available";
     public static final String NOTIFICATION_HEADER = "=== Message Details ===\n";
     public static final String SENDER_LABEL = "From: ";
     public static final String RECIPIENT_LABEL = "To: ";
-    public static final String TYPE_LABEL = "Type: ";
     public static final String STATUS_LABEL = "Read: ";
     public static final String MESSAGE_HEADER = "\nMessage:\n";
 

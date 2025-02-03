@@ -4,8 +4,7 @@ import com.example.volunteer_platform.client.utils.BaseUserMenuUtils;
 import com.example.volunteer_platform.client.utils.DisplayFormatter;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
-import com.example.volunteer_platform.shared_dto.NotificationResponseDTO;
-import com.example.volunteer_platform.shared_dto.VolunteerResponseDTO;
+import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -71,13 +70,13 @@ public class CustomerMenuClient {
         System.out.println(VOLUNTEER_RESPONSES);
 
         try {
-            ResponseEntity<List<VolunteerResponseDTO>> response = restTemplateWithCookies.exchange(
+            ResponseEntity<List<VolunteerEventResponseDTO>> response = restTemplateWithCookies.exchange(
                     BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + RESPONSES_URL, HttpMethod.GET, null,
                     new ParameterizedTypeReference<>() {
                     });
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                List<VolunteerResponseDTO> volunteerResponses = response.getBody();
+                List<VolunteerEventResponseDTO> volunteerResponses = response.getBody();
                 if (volunteerResponses != null && !volunteerResponses.isEmpty()) {
                     volunteerResponses.forEach(volunteerResponse -> System.out.println(
                             DisplayFormatter.formatVolunteerResponseForDisplay(volunteerResponse)));

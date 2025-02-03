@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.service;
 
 import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
 import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
+import com.example.volunteer_platform.server.exeptions.UserNotExistsException;
 import com.example.volunteer_platform.server.exeptions.VolunteerAlreadyParticipatingException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
@@ -11,6 +12,8 @@ import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import com.example.volunteer_platform.shared_utils.VerificationUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service("volunteerService")
 public class VolunteerService extends UserService {
@@ -45,10 +48,15 @@ public class VolunteerService extends UserService {
     public EventResponseDTO responseToEvent(Long eventId, Long userId) {
         boolean isParticipating = userRepository.existsByEventIdAndVolunteerId(eventId, userId);
 
+        Optional<User> volunteer = userRepository.findById(userId);
+        if(volunteer.isEmpty()) {
+            throw new UserNotExistsException("Volunteer with this id is not found");
+        }
+
         if (isParticipating) {
             throw new VolunteerAlreadyParticipatingException("Volunteer already participating");
         }
 
-        return eventService.responseToEvent(eventId, userId);
+        return eventService.responseToEvent(eventId, (Volunteer) volunteer.get());
     }
 }
