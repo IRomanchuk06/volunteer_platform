@@ -14,6 +14,6 @@ public class VolunteerEventResponseDTO {
     private Long volunteerId;
     private String volunteerName;
     private String eventName;
-    private String status;
+    private boolean isRead;
     private LocalDateTime createdAt;
 }

@@ -2,7 +2,6 @@ package com.example.volunteer_platform.server.mapper;
 
 import com.example.volunteer_platform.server.model.Message;
 import com.example.volunteer_platform.server.model.Notification;
-import com.example.volunteer_platform.server.model.Response;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

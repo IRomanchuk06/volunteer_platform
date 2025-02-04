@@ -16,7 +16,7 @@ public interface VolunteerResponseMapper {
     @Mapping(target = "volunteerId", expression = "java(response.getSender().getId())")
     @Mapping(target = "volunteerName", expression = "java(response.getSender().getUsername())")
     @Mapping(target = "eventName", expression = "java(response.getEvent().getName())")
-    @Mapping(target = "status", expression = "java(response.getType().name())")
+    @Mapping(target = "read", expression = "java(response.isRead())")
     @Mapping(target = "createdAt", expression = "java(response.getCreatedAt())")
     VolunteerEventResponseDTO toVolunteerResponseDTO(Response response);
 

@@ -56,7 +56,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Boolean> logout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
@@ -65,10 +65,10 @@ public class AuthenticationController {
             logoutCookie.setPath("/");
             response.addCookie(logoutCookie);
 
-            return ResponseEntity.ok("User logged out successfully");
+            return ResponseEntity.ok(true);
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active session to log out");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
     }
 
 }

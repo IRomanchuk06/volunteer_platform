@@ -7,7 +7,8 @@ public class CustomerMenuConstants {
             "2. Show Events\n" +
             "3. Show Events Responses\n" +
             "4. Send Message\n" +
-            "5. Check Mailbox";
+            "5. Check Mailbox\n" +
+            "6. Exit";
 
     public static final String ENTER_NAME_PROMPT = "Enter event name: ";
     public static final String ENTER_DESCRIPTION_PROMPT = "Enter event description: ";

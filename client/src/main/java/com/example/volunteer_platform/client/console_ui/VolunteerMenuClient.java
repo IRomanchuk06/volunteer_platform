@@ -39,6 +39,9 @@ public class VolunteerMenuClient {
                     case 4:
                         checkMailbox();
                         break;
+                    case 5:
+                        Logout();
+                        return;
 
                     default:
                         System.out.println(INVALID_CHOICE);
@@ -47,6 +50,10 @@ public class VolunteerMenuClient {
                 System.out.println(INVALID_CHOICE);
             }
         }
+    }
+
+    private void Logout() {
+        BaseUserMenuUtils.Exit(restTemplateWithCookies);
     }
 
     private void checkMailbox() {

@@ -7,6 +7,10 @@ public class UtilsConstants {
     public static final String INVALID_DATE_FORMAT = "Invalid date format. Please use YYYY-MM-DD.";
     public static final String INVALID_TIME_FORMAT = "Invalid time format. Please use HH:mm.";
 
+    public static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final String TIME_FORMAT = "HH:mm";
+    public static final String DATE_TIME_FORMAT = "HH:mm dd.MM.yyyy";
+
     public static final String ENTER_EMAIL_PROMPT = "Enter email (exit to abort): ";
     public static final String EMAIL_VALIDATING_ERROR = "Error validating email. Please try again.";
     public static final String EMAIL_AVAILABILITY_ERROR = "Error checking email availability. Please try again.";

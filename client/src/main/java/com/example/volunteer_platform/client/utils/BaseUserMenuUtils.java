@@ -3,6 +3,7 @@ package com.example.volunteer_platform.client.utils;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.MessageRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -66,8 +67,8 @@ public class BaseUserMenuUtils {
         System.out.println(MAILBOX_TITLE);
         String url = BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + MESSAGES_URL;
         try {
-            ResponseEntity<List<MessageResponseDTO>> response = restTemplateWithCookies.exchange(url,
-                    HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+            ResponseEntity<List<MessageResponseDTO>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET,
+                    null, new ParameterizedTypeReference<>() {
                     });
 
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -83,6 +84,20 @@ public class BaseUserMenuUtils {
             }
         } catch (Exception e) {
             System.out.println(MAILBOX_ERROR + e.getMessage());
+        }
+    }
+
+    public static void Exit(RestTemplate restTemplateWithCookies) {
+        try {
+            ResponseEntity<Boolean> response = restTemplateWithCookies.exchange(BASE_URL + LOGOUT_URL,
+                    HttpMethod.POST, null, Boolean.class);
+            if(response.getStatusCode().is2xxSuccessful()) {
+                System.out.println("Logout successful");
+            } else {
+                System.out.println("Logout failed");
+            }
+        } catch (Exception e) {
+            System.out.println("Logout error" + e.getMessage());
         }
     }
 }
