@@ -71,6 +71,7 @@ public class BaseMenuClient {
     }
 
     private void showMenu() {
+        System.out.println("ff");
         AppLogger.CLIENT_LOGGER.info(MAIN_MENU_TITLE);
         AppLogger.CLIENT_LOGGER.info(MAIN_MENU_OPTIONS);
     }
