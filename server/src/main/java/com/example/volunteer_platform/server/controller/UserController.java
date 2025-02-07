@@ -61,8 +61,6 @@ public class UserController {
     @PostMapping("/messages/")
     public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody MessageRegistrationDTO messageRequest,
                                                           HttpServletRequest request) {
-        System.out.println(messageRequest);
-
         User currentUser = getUserFromSession(request);
         MessageResponseDTO responseDTO = userService.sendMessage(messageRequest.getMessage(),
                 messageRequest.getRecipientEmail(), currentUser.getEmail());

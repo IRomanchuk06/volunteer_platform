@@ -2,6 +2,7 @@ package com.example.volunteer_platform.client.console_ui;
 
 import com.example.volunteer_platform.client.config.RestTemplateConfig;
 import com.example.volunteer_platform.client.enums.AccountType;
+import com.example.volunteer_platform.client.logging.AppLogger;
 import com.example.volunteer_platform.shared_dto.UserLoginDTO;
 import com.example.volunteer_platform.shared_dto.UserRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
@@ -36,11 +37,9 @@ public class BaseMenuClient {
     public void start() {
         while (true) {
             showMenu();
-
             int choice = getUserChoice();
 
             try {
-
                 switch (choice) {
                     case 1:
                         createAccount();
@@ -52,10 +51,10 @@ public class BaseMenuClient {
                         logoutAccount();
                         return;
                     default:
-                        System.out.println(INVALID_CHOICE);
+                        AppLogger.CLIENT_LOGGER.warn(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
-                System.out.println(INVALID_CHOICE);
+                AppLogger.CLIENT_LOGGER.error(INVALID_CHOICE, e);
             }
         }
     }
@@ -65,67 +64,50 @@ public class BaseMenuClient {
                 HttpEntity.EMPTY, String.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            System.out.println(EXIT_MESSAGE);
+            AppLogger.CLIENT_LOGGER.info(EXIT_MESSAGE);
         } else {
-            System.out.println(EXIT_ERROR);
+            AppLogger.CLIENT_LOGGER.error(EXIT_ERROR);
         }
     }
 
     private void showMenu() {
-        System.out.println(MAIN_MENU_TITLE);
-        System.out.println(MAIN_MENU_OPTIONS);
+        AppLogger.CLIENT_LOGGER.info(MAIN_MENU_TITLE);
+        AppLogger.CLIENT_LOGGER.info(MAIN_MENU_OPTIONS);
     }
 
     private void createAccount() {
-        System.out.println(SELECT_ACCOUNT_TYPE);
-        System.out.println(ACCOUNT_TYPE_OPTIONS);
+        AppLogger.CLIENT_LOGGER.info(SELECT_ACCOUNT_TYPE);
+        AppLogger.CLIENT_LOGGER.info(ACCOUNT_TYPE_OPTIONS);
 
         AccountType accountType = AccountType.fromValue(getUserChoice());
-
         String email = getRegistrationEmail(BASE_URL);
 
         if (email == null) {
-            System.out.println(EXIT_OPERATION_MESSAGE);
+            AppLogger.CLIENT_LOGGER.warn(EXIT_OPERATION_MESSAGE);
             return;
         }
 
-        System.out.println(ENTER_PASSWORD_PROMPT);
+        AppLogger.CLIENT_LOGGER.info(ENTER_PASSWORD_PROMPT);
         String password = getUserInputString();
 
-        System.out.println(ENTER_USERNAME_PROMPT);
+        AppLogger.CLIENT_LOGGER.info(ENTER_USERNAME_PROMPT);
         String username = getUserInputString();
 
-        HttpEntity<UserRegistrationDTO> requestEntity = null;
-        String accountTypeUrl = null;
-
-        switch (accountType) {
-            case VOLUNTEER:
-                requestEntity = createRegistrationRequest(email, password, username);
-                accountTypeUrl = VOLUNTEERS_URL + CREATE_URL;
-                break;
-            case CUSTOMER:
-                requestEntity = createRegistrationRequest(email, password, username);
-                accountTypeUrl = CUSTOMERS_URL + CREATE_URL;
-                break;
-            default:
-                System.out.println(INVALID_ACCOUNT_CHOICE);
-                break;
-        }
+        HttpEntity<UserRegistrationDTO> requestEntity = createRegistrationRequest(email, password, username);
+        String accountTypeUrl = accountType == AccountType.VOLUNTEER ? VOLUNTEERS_URL + CREATE_URL : CUSTOMERS_URL + CREATE_URL;
 
         try {
-            String targetUrl = BASE_URL + accountTypeUrl;
-
-            ResponseEntity<UserResponseDTO> response = restTemplate.exchange(targetUrl, HttpMethod.POST, requestEntity,
+            ResponseEntity<UserResponseDTO> response = restTemplate.exchange(BASE_URL + accountTypeUrl, HttpMethod.POST, requestEntity,
                     UserResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(ACCOUNT_CREATION_SUCCESS);
+                AppLogger.CLIENT_LOGGER.info(ACCOUNT_CREATION_SUCCESS);
             } else {
-                System.out.println(ACCOUNT_CREATION_FAILED + response.getStatusCode());
-                System.out.println(RESPONSE_BODY + response.getBody());
+                AppLogger.CLIENT_LOGGER.warn(ACCOUNT_CREATION_FAILED + response.getStatusCode());
+                AppLogger.CLIENT_LOGGER.warn(RESPONSE_BODY + response.getBody());
             }
         } catch (Exception e) {
-            System.out.println(ACCOUNT_CREATION_ERROR + e.getMessage());
+            AppLogger.CLIENT_LOGGER.error(ACCOUNT_CREATION_ERROR, e);
         }
     }
 
@@ -133,13 +115,12 @@ public class BaseMenuClient {
         String email = getValidEmail(BASE_URL);
 
         if (email == null) {
-            System.out.println(EXIT_OPERATION_MESSAGE);
+            AppLogger.CLIENT_LOGGER.warn(EXIT_OPERATION_MESSAGE);
             return;
         }
 
-        System.out.println(ENTER_PASSWORD_PROMPT);
+        AppLogger.CLIENT_LOGGER.info(ENTER_PASSWORD_PROMPT);
         String password = getUserInputString();
-
         HttpEntity<UserLoginDTO> requestEntity = createLoginRequest(email, password);
 
         try {
@@ -147,19 +128,17 @@ public class BaseMenuClient {
                     requestEntity, UserResponseDTO.class);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(LOGIN_FAILED + response.getStatusCode());
+                AppLogger.CLIENT_LOGGER.warn(LOGIN_FAILED + "{}", response.getStatusCode());
                 return;
             }
 
-            System.out.println(LOGIN_SUCCESS);
-
+            AppLogger.CLIENT_LOGGER.info(LOGIN_SUCCESS);
             String sessionId = getSessionIdFromResponse(response);
             if (sessionId == null) {
-                System.out.println(FAILED_GET_COOKIES);
+                AppLogger.CLIENT_LOGGER.warn(FAILED_GET_COOKIES);
                 return;
             }
             RestTemplate authenticatedRestTemplate = RestTemplateConfig.createRestTemplateWithSessionId(sessionId);
-
             UserResponseDTO responseBody = response.getBody();
 
             if (responseBody == null) {
@@ -167,7 +146,6 @@ public class BaseMenuClient {
             }
 
             String accountType = responseBody.getRole();
-
             if (VOLUNTEER.equals(accountType)) {
                 volunteerMenuClient.start(authenticatedRestTemplate);
             } else if (CUSTOMER.equals(accountType)) {
@@ -177,7 +155,7 @@ public class BaseMenuClient {
             }
 
         } catch (Exception e) {
-            System.out.println(LOGIN_ERROR + e.getMessage());
+            AppLogger.CLIENT_LOGGER.error(LOGIN_ERROR, e);
         }
     }
 }

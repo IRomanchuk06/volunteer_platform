@@ -1,9 +1,12 @@
-package com.example.volunteer_platform.client.utils;
+package com.example.volunteer_platform.client.console_ui;
 
+import com.example.volunteer_platform.client.utils.ConsoleInputUtils;
+import com.example.volunteer_platform.client.utils.DisplayFormatter;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.MessageRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
-import com.example.volunteer_platform.shared_dto.UserResponseDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -16,9 +19,12 @@ import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.constants.BaseUserMenuConstants.*;
 import static com.example.volunteer_platform.client.request_builder.MessageRequestBuilder.createMessageRequest;
 
-public class BaseUserMenuUtils {
+public class BaseUserMenu {
+
+    private static final Logger logger = LoggerFactory.getLogger(BaseUserMenu.class);
+
     public static void showEvents(RestTemplate restTemplateWithCookies) {
-        System.out.println(EVENTS_LIST_TITLE);
+        logger.info(EVENTS_LIST_TITLE);
         String url = BASE_URL + EVENT_URL;
         try {
             ResponseEntity<List<EventResponseDTO>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET,
@@ -28,23 +34,23 @@ public class BaseUserMenuUtils {
             if (response.getStatusCode().is2xxSuccessful()) {
                 List<EventResponseDTO> events = response.getBody();
                 if (events != null && !events.isEmpty()) {
-                    events.forEach(event -> System.out.println(DisplayFormatter.formatEventForDisplay(event)));
+                    events.forEach(event -> logger.info(DisplayFormatter.formatEventForDisplay(event)));
                 } else {
-                    System.out.println(NO_EVENTS_FOUND);
+                    logger.info(NO_EVENTS_FOUND);
                 }
             } else {
-                System.out.println(FAILED_TO_FETCH_EVENTS + response.getStatusCode());
+                logger.error(FAILED_TO_FETCH_EVENTS + "{}", response.getStatusCode());
             }
         } catch (Exception e) {
-            System.out.println(EVENT_FETCH_ERROR + e.getMessage());
+            logger.error(EVENT_FETCH_ERROR, e);
         }
     }
 
     public static void sendMessage(RestTemplate restTemplateWithCookies) {
-        System.out.println(RECIPIENT_PROMPT);
+        logger.info(RECIPIENT_PROMPT);
         String recipientEmail = ConsoleInputUtils.getValidEmail(BASE_URL);
 
-        System.out.println(MESSAGE_PROMPT);
+        logger.info(MESSAGE_PROMPT);
         String message = ConsoleInputUtils.getUserInputString();
 
         String url = BASE_URL + USERS_URL + MESSAGES_URL + CREATE_URL;
@@ -54,17 +60,17 @@ public class BaseUserMenuUtils {
                     requestEntity, MessageResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(MESSAGE_SENT_SUCCESS);
+                logger.info(MESSAGE_SENT_SUCCESS);
             } else {
-                System.out.println(MESSAGE_SENT_FAILED + response.getStatusCode());
+                logger.error(MESSAGE_SENT_FAILED + "{}", response.getStatusCode());
             }
         } catch (Exception e) {
-            System.out.println(MESSAGE_SENT_ERROR + e.getMessage());
+            logger.error(MESSAGE_SENT_ERROR, e);
         }
     }
 
     public static void checkMailbox(RestTemplate restTemplateWithCookies) {
-        System.out.println(MAILBOX_TITLE);
+        logger.info(MAILBOX_TITLE);
         String url = BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + MESSAGES_URL;
         try {
             ResponseEntity<List<MessageResponseDTO>> response = restTemplateWithCookies.exchange(url, HttpMethod.GET,
@@ -75,15 +81,15 @@ public class BaseUserMenuUtils {
                 List<MessageResponseDTO> messages = response.getBody();
                 if (messages != null && !messages.isEmpty()) {
                     messages.forEach(
-                            message -> System.out.println(DisplayFormatter.formatNotificationForDisplay(message)));
+                            message -> logger.info(DisplayFormatter.formatNotificationForDisplay(message)));
                 } else {
-                    System.out.println(NO_MESSAGES_FOUND);
+                    logger.info(NO_MESSAGES_FOUND);
                 }
             } else {
-                System.out.println(MAILBOX_FAILED + response.getStatusCode());
+                logger.error(MAILBOX_FAILED + "{}", response.getStatusCode());
             }
         } catch (Exception e) {
-            System.out.println(MAILBOX_ERROR + e.getMessage());
+            logger.error(MAILBOX_ERROR, e);
         }
     }
 
@@ -92,12 +98,12 @@ public class BaseUserMenuUtils {
             ResponseEntity<Boolean> response = restTemplateWithCookies.exchange(BASE_URL + LOGOUT_URL,
                     HttpMethod.POST, null, Boolean.class);
             if(response.getStatusCode().is2xxSuccessful()) {
-                System.out.println("Logout successful");
+                logger.info("Logout successful");
             } else {
-                System.out.println("Logout failed");
+                logger.error("Logout failed");
             }
         } catch (Exception e) {
-            System.out.println("Logout error" + e.getMessage());
+            logger.error("Logout error", e);
         }
     }
 }

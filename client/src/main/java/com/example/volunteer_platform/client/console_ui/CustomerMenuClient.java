@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.utils.BaseUserMenuUtils;
+import com.example.volunteer_platform.client.logging.AppLogger;
 import com.example.volunteer_platform.client.utils.DisplayFormatter;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
@@ -21,7 +21,6 @@ import static com.example.volunteer_platform.client.constants.CustomerMenuConsta
 import static com.example.volunteer_platform.client.request_builder.EventRequestBuilder.createAddEventRequest;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.*;
 
-
 @Component
 public class CustomerMenuClient {
 
@@ -35,7 +34,6 @@ public class CustomerMenuClient {
             int choice = getUserChoice();
 
             try {
-
                 switch (choice) {
                     case 1:
                         addEvent();
@@ -53,81 +51,81 @@ public class CustomerMenuClient {
                         checkMailbox();
                         break;
                     case 6:
-                        Logout();
+                        logout();
                         return;
 
                     default:
-                        System.out.println(INVALID_CHOICE);
+                        AppLogger.CLIENT_LOGGER.warn(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
-                System.out.println(INVALID_CHOICE);
+                AppLogger.CLIENT_LOGGER.error("Invalid number format: {}", e.getMessage(), e);
             }
         }
     }
 
-    private void Logout() {
-        BaseUserMenuUtils.Exit(restTemplateWithCookies);
+    private void logout() {
+        AppLogger.CLIENT_LOGGER.info("Logging out...");
+        BaseUserMenu.Exit(restTemplateWithCookies);
     }
 
     private void checkMailbox() {
-        BaseUserMenuUtils.checkMailbox(restTemplateWithCookies);
+        AppLogger.CLIENT_LOGGER.info("Checking mailbox...");
+        BaseUserMenu.checkMailbox(restTemplateWithCookies);
     }
 
     private void showEventsResponses() {
-        System.out.println(VOLUNTEER_RESPONSES);
+        AppLogger.CLIENT_LOGGER.info(VOLUNTEER_RESPONSES);
 
         try {
             ResponseEntity<List<VolunteerEventResponseDTO>> response = restTemplateWithCookies.exchange(
                     BASE_URL + NOTIFICATIONS_URL + RECEIVED_URL + RESPONSES_URL, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<>() {
-                    });
+                    new ParameterizedTypeReference<>() {});
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 List<VolunteerEventResponseDTO> volunteerResponses = response.getBody();
                 if (volunteerResponses != null && !volunteerResponses.isEmpty()) {
-                    volunteerResponses.forEach(volunteerResponse -> System.out.println(
-                            DisplayFormatter.formatVolunteerResponseForDisplay(volunteerResponse)));
+                    volunteerResponses.forEach(volunteerResponse ->
+                            AppLogger.CLIENT_LOGGER.info(DisplayFormatter.formatVolunteerResponseForDisplay(volunteerResponse))
+                    );
                 } else {
-                    System.out.println("Not found");
+                    AppLogger.CLIENT_LOGGER.warn("No volunteer responses found.");
                 }
             } else {
-                System.out.println("failed" + response.getStatusCode());
+                AppLogger.CLIENT_LOGGER.error("Failed to fetch responses. Status: {}", response.getStatusCode());
             }
         } catch (Exception e) {
-            System.out.println("error" + e.getMessage());
+            AppLogger.CLIENT_LOGGER.error("Error fetching volunteer responses: {}", e.getMessage(), e);
         }
-
     }
 
     private void showEvents() {
-        BaseUserMenuUtils.showEvents(restTemplateWithCookies);
+        AppLogger.CLIENT_LOGGER.info("Fetching events...");
+        BaseUserMenu.showEvents(restTemplateWithCookies);
     }
 
     private void sendMessage() {
-        BaseUserMenuUtils.sendMessage(restTemplateWithCookies);
+        AppLogger.CLIENT_LOGGER.info("Sending message...");
+        BaseUserMenu.sendMessage(restTemplateWithCookies);
     }
 
     private void addEvent() {
-        System.out.println(ENTER_NAME_PROMPT);
+        AppLogger.CLIENT_LOGGER.info(ENTER_NAME_PROMPT);
         String name = getUserInputString();
 
-        System.out.println(ENTER_DESCRIPTION_PROMPT);
+        AppLogger.CLIENT_LOGGER.info(ENTER_DESCRIPTION_PROMPT);
         String description = getUserInputString();
 
-        System.out.println(ENTER_LOCATION_PROMPT);
+        AppLogger.CLIENT_LOGGER.info(ENTER_LOCATION_PROMPT);
         String location = getUserInputString();
 
         LocalDate date = getValidDate();
-
         if (date == null) {
-            System.out.println(EXIT_OPERATION_MESSAGE);
+            AppLogger.CLIENT_LOGGER.warn(EXIT_OPERATION_MESSAGE);
             return;
         }
 
         LocalTime startTime = getValidStartTime();
-
         LocalTime endTime = getValidEndTime();
-
         int numOfRequiredVolunteers = getUserInputPosNum();
 
         HttpEntity<EventRegistrationDTO> requestEntity = createAddEventRequest(name, description, location, date,
@@ -139,17 +137,17 @@ public class CustomerMenuClient {
                     EventResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(EVENT_ADDED_SUCCESS);
+                AppLogger.CLIENT_LOGGER.info(EVENT_ADDED_SUCCESS);
             } else {
-                System.out.println(FAILED_TO_ADD_EVENT + response.getStatusCode());
+                AppLogger.CLIENT_LOGGER.error(FAILED_TO_ADD_EVENT + "{}", response.getStatusCode());
             }
         } catch (Exception e) {
-            System.out.println(EVENT_ADD_ERROR + e.getMessage());
+            AppLogger.CLIENT_LOGGER.error(EVENT_ADD_ERROR + "{}", e.getMessage(), e);
         }
     }
 
     private void showMenu() {
-        System.out.println(CUSTOMER_MENU_TITLE);
-        System.out.println(CUSTOMER_MENU_OPTIONS);
+        AppLogger.CLIENT_LOGGER.info(CUSTOMER_MENU_TITLE);
+        AppLogger.CLIENT_LOGGER.info(CUSTOMER_MENU_OPTIONS);
     }
 }

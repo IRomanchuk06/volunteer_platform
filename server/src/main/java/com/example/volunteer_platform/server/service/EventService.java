@@ -54,8 +54,6 @@ public class EventService {
     public List<EventResponseDTO> getAllEvents() {
         List<Event> events = eventRepository.findAll();
 
-        System.out.println(events);
-
         return events.stream()
                 .map(eventMapper::toResponseDTO)
                 .toList();

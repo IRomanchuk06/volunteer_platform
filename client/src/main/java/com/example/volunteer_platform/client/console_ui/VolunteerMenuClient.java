@@ -1,21 +1,20 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.constants.UtilsConstants;
-import com.example.volunteer_platform.client.utils.BaseUserMenuUtils;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import static com.example.volunteer_platform.client.constants.VolunteerMenuConstants.*;
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.getUserChoice;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.getUserInputLong;
+import com.example.volunteer_platform.client.logging.AppLogger;
 
 @Component
 public class VolunteerMenuClient {
     private RestTemplate restTemplateWithCookies;
+    private static final org.slf4j.Logger logger = AppLogger.CLIENT_LOGGER;
 
     public void start(RestTemplate restTemplateWithCookies) {
         this.restTemplateWithCookies = restTemplateWithCookies;
@@ -25,7 +24,6 @@ public class VolunteerMenuClient {
             int choice = getUserChoice();
 
             try {
-
                 switch (choice) {
                     case 1:
                         responseToEvent();
@@ -44,20 +42,20 @@ public class VolunteerMenuClient {
                         return;
 
                     default:
-                        System.out.println(INVALID_CHOICE);
+                        logger.warn(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
-                System.out.println(INVALID_CHOICE);
+                logger.error(INVALID_CHOICE, e);
             }
         }
     }
 
     private void Logout() {
-        BaseUserMenuUtils.Exit(restTemplateWithCookies);
+        BaseUserMenu.Exit(restTemplateWithCookies);
     }
 
     private void checkMailbox() {
-        BaseUserMenuUtils.checkMailbox(restTemplateWithCookies);
+        BaseUserMenu.checkMailbox(restTemplateWithCookies);
     }
 
     private void responseToEvent() {
@@ -73,25 +71,25 @@ public class VolunteerMenuClient {
                     EventResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(EVENT_RESPONSE_SUCCESS);
+                logger.info(EVENT_RESPONSE_SUCCESS);
             } else {
-                System.out.println(EVENT_RESPONSE_ERROR + response.getStatusCode());
+                logger.error(EVENT_RESPONSE_ERROR + "{}", response.getStatusCode());
             }
         } catch (Exception e) {
-            System.out.println(EVENT_RESPONSE_ERROR + e.getMessage());
+            logger.error(EVENT_RESPONSE_ERROR, e);
         }
     }
 
     private void showEvents() {
-        BaseUserMenuUtils.showEvents(restTemplateWithCookies);
+        BaseUserMenu.showEvents(restTemplateWithCookies);
     }
 
     private void sendMessage() {
-        BaseUserMenuUtils.sendMessage(restTemplateWithCookies);
+        BaseUserMenu.sendMessage(restTemplateWithCookies);
     }
 
     private void showMenu() {
-        System.out.println(VOLUNTEER_MENU_TITLE);
-        System.out.println(VOLUNTEER_MENU_OPTIONS);
+        logger.info(VOLUNTEER_MENU_TITLE);
+        logger.info(VOLUNTEER_MENU_OPTIONS);
     }
 }

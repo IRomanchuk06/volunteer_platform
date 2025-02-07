@@ -2,6 +2,8 @@ package com.example.volunteer_platform.client.utils;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,9 +14,9 @@ import static com.example.volunteer_platform.client.constants.ApiEndpoints.EMAIL
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.EMAIL_VALIDATION_URL;
 import static com.example.volunteer_platform.client.constants.UtilsConstants.*;
 
-
 public class ConsoleInputUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(ConsoleInputUtils.class);
     private static final RestTemplate consoleUtilsRestTemplate = new RestTemplate();
 
     public static String getUserInputString() {
@@ -24,18 +26,18 @@ public class ConsoleInputUtils {
 
     public static int getUserChoice() {
         while (true) {
-            System.out.println(CHOOSE_OPTION);
+            logger.info(CHOOSE_OPTION);
             String input = getUserInputString();
             if (input.isEmpty()) {
-                System.out.println(NO_INPUT);
+                logger.warn(NO_INPUT);
                 continue;
             }
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println(INVALID_CHOICE);
+                logger.error(INVALID_CHOICE, e);
             } catch (Exception e) {
-                System.out.println(READING_ERROR);
+                logger.error(READING_ERROR, e);
                 return -1;
             }
         }
@@ -43,11 +45,11 @@ public class ConsoleInputUtils {
 
     public static Long getUserInputLong() {
         while (true) {
-            System.out.print(ENTER_EVENT_ID_PROMPT);
+            logger.info(ENTER_EVENT_ID_PROMPT);
             String input = getUserInputString();
 
             if (input.isEmpty()) {
-                System.out.println(NO_INPUT);
+                logger.warn(NO_INPUT);
                 continue;
             }
 
@@ -58,18 +60,18 @@ public class ConsoleInputUtils {
             try {
                 return Long.parseLong(input);
             } catch (NumberFormatException e) {
-                System.out.println(INVALID_NUMBER_FORMAT);
+                logger.error(INVALID_NUMBER_FORMAT, e);
             }
         }
     }
 
     public static int getUserInputPosNum() {
         while (true) {
-            System.out.print(ENTER_POSITIVE_NUMBER_PROMPT);
+            logger.info(ENTER_POSITIVE_NUMBER_PROMPT);
             String input = getUserInputString();
 
             if (input.isEmpty()) {
-                System.out.println(NO_INPUT);
+                logger.warn(NO_INPUT);
                 continue;
             }
 
@@ -78,10 +80,10 @@ public class ConsoleInputUtils {
                 if (number > 0) {
                     return number;
                 } else {
-                    System.out.println(INVALID_POSITIVE_NUMBER);
+                    logger.warn(INVALID_POSITIVE_NUMBER);
                 }
             } catch (NumberFormatException e) {
-                System.out.println(INVALID_NUMBER_FORMAT);
+                logger.error(INVALID_NUMBER_FORMAT, e);
             }
         }
     }
@@ -89,8 +91,7 @@ public class ConsoleInputUtils {
     public static String getValidEmail(String baseUrl) {
         String email;
         while (true) {
-            System.out.println(ENTER_EMAIL_PROMPT);
-
+            logger.info(ENTER_EMAIL_PROMPT);
             email = getUserInputString();
 
             if (EXIT.equalsIgnoreCase(email)) {
@@ -102,11 +103,11 @@ public class ConsoleInputUtils {
             try {
                 ResponseEntity<String> emailValidationResponse = consoleUtilsRestTemplate.getForEntity(url, String.class);
                 if (!emailValidationResponse.getStatusCode().is2xxSuccessful()) {
-                    System.out.println(INVALID_EMAIL_FORMAT);
+                    logger.warn(INVALID_EMAIL_FORMAT);
                     continue;
                 }
             } catch (Exception e) {
-                System.out.println(EMAIL_VALIDATING_ERROR + e.getMessage());
+                logger.error(EMAIL_VALIDATING_ERROR, e);
                 continue;
             }
 
@@ -130,10 +131,10 @@ public class ConsoleInputUtils {
                 if (emailRegisteredCheck.getStatusCode().is2xxSuccessful()) {
                     break;
                 } else {
-                    System.out.println(EMAIL_ALREADY_REGISTERED);
+                    logger.warn(EMAIL_ALREADY_REGISTERED);
                 }
             } catch (Exception e) {
-                System.out.println(EMAIL_AVAILABILITY_ERROR);
+                logger.error(EMAIL_AVAILABILITY_ERROR, e);
             }
         }
         return email;
@@ -143,7 +144,7 @@ public class ConsoleInputUtils {
         Scanner scanner = new Scanner(System.in);
         LocalDate date;
         while (true) {
-            System.out.println(ENTER_DATE_PROMPT);
+            logger.info(ENTER_DATE_PROMPT);
             String dateInput = scanner.nextLine();
 
             if (EXIT.equalsIgnoreCase(dateInput)) {
@@ -154,7 +155,7 @@ public class ConsoleInputUtils {
                 date = LocalDate.parse(dateInput);
                 return date;
             } catch (DateTimeParseException e) {
-                System.out.println(INVALID_DATE_FORMAT);
+                logger.error(INVALID_DATE_FORMAT, e);
             }
         }
     }
@@ -163,7 +164,7 @@ public class ConsoleInputUtils {
         Scanner scanner = new Scanner(System.in);
         LocalTime time;
         while (true) {
-            System.out.println(message);
+            logger.info(message);
             String timeInput = scanner.nextLine();
 
             if (EXIT.equalsIgnoreCase(timeInput)) {
@@ -178,7 +179,7 @@ public class ConsoleInputUtils {
                 time = LocalTime.parse(timeInput);
                 return time;
             } catch (DateTimeParseException e) {
-                System.out.println(INVALID_TIME_FORMAT);
+                logger.error(INVALID_TIME_FORMAT, e);
             }
         }
     }
