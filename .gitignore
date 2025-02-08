@@ -37,3 +37,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+server/logs/
+client/logs/
