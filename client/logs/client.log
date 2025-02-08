@@ -1,8 +1,0 @@
-[2025-02-08 02:00:15] [INFO] c.e.v.client.ClientApplication - Starting ClientApplication using Java 21.0.5 with PID 122144 (/home/iromanchuk/volunteer-platform/client/build/classes/java/main started by iromanchuk in /home/iromanchuk/volunteer-platform/client)
-[2025-02-08 02:00:15] [INFO] c.e.v.client.ClientApplication - No active profile set, falling back to 1 default profile: "default"
-[2025-02-08 02:00:16] [INFO] c.e.v.client.ClientApplication - Started ClientApplication in 1.025 seconds (process running for 1.36)
-[2025-02-08 02:00:16] [INFO] ClientLogger - --- Volunteer Platform Console ---
-[2025-02-08 02:00:16] [INFO] ClientLogger - 1. Create Account
-2. Login Account
-3. Exit
-[2025-02-08 02:00:16] [INFO] c.e.v.client.utils.ConsoleInputUtils - Choose an option: 

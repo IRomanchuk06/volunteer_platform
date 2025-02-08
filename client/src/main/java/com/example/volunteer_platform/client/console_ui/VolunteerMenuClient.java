@@ -9,12 +9,10 @@ import static com.example.volunteer_platform.client.constants.VolunteerMenuConst
 import static com.example.volunteer_platform.client.constants.ApiEndpoints.*;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.getUserChoice;
 import static com.example.volunteer_platform.client.utils.ConsoleInputUtils.getUserInputLong;
-import com.example.volunteer_platform.client.logging.AppLogger;
 
 @Component
 public class VolunteerMenuClient {
     private RestTemplate restTemplateWithCookies;
-    private static final org.slf4j.Logger logger = AppLogger.CLIENT_LOGGER;
 
     public void start(RestTemplate restTemplateWithCookies) {
         this.restTemplateWithCookies = restTemplateWithCookies;
@@ -42,10 +40,10 @@ public class VolunteerMenuClient {
                         return;
 
                     default:
-                        logger.warn(INVALID_CHOICE);
+                        System.out.println(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
-                logger.error(INVALID_CHOICE, e);
+                System.out.println(INVALID_CHOICE + e.getMessage());
             }
         }
     }
@@ -71,12 +69,12 @@ public class VolunteerMenuClient {
                     EventResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                logger.info(EVENT_RESPONSE_SUCCESS);
+                System.out.println(EVENT_RESPONSE_SUCCESS);
             } else {
-                logger.error(EVENT_RESPONSE_ERROR + "{}", response.getStatusCode());
+                System.out.println(EVENT_RESPONSE_ERROR + response.getStatusCode());
             }
         } catch (Exception e) {
-            logger.error(EVENT_RESPONSE_ERROR, e);
+            System.out.println(EVENT_RESPONSE_ERROR + e.getMessage());
         }
     }
 
@@ -89,7 +87,7 @@ public class VolunteerMenuClient {
     }
 
     private void showMenu() {
-        logger.info(VOLUNTEER_MENU_TITLE);
-        logger.info(VOLUNTEER_MENU_OPTIONS);
+        System.out.println(VOLUNTEER_MENU_TITLE);
+        System.out.println(VOLUNTEER_MENU_OPTIONS);
     }
 }

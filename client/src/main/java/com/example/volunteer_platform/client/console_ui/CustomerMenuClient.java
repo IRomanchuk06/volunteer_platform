@@ -1,6 +1,5 @@
 package com.example.volunteer_platform.client.console_ui;
 
-import com.example.volunteer_platform.client.logging.AppLogger;
 import com.example.volunteer_platform.client.utils.DisplayFormatter;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
@@ -55,26 +54,24 @@ public class CustomerMenuClient {
                         return;
 
                     default:
-                        AppLogger.CLIENT_LOGGER.warn(INVALID_CHOICE);
+                        System.out.println(INVALID_CHOICE);
                 }
             } catch (NumberFormatException e) {
-                AppLogger.CLIENT_LOGGER.error("Invalid number format: {}", e.getMessage(), e);
+                System.out.println(INVALID_CHOICE + e.getMessage());
             }
         }
     }
 
     private void logout() {
-        AppLogger.CLIENT_LOGGER.info("Logging out...");
         BaseUserMenu.Exit(restTemplateWithCookies);
     }
 
     private void checkMailbox() {
-        AppLogger.CLIENT_LOGGER.info("Checking mailbox...");
         BaseUserMenu.checkMailbox(restTemplateWithCookies);
     }
 
     private void showEventsResponses() {
-        AppLogger.CLIENT_LOGGER.info(VOLUNTEER_RESPONSES);
+        System.out.println(VOLUNTEER_RESPONSES);
 
         try {
             ResponseEntity<List<VolunteerEventResponseDTO>> response = restTemplateWithCookies.exchange(
@@ -85,42 +82,40 @@ public class CustomerMenuClient {
                 List<VolunteerEventResponseDTO> volunteerResponses = response.getBody();
                 if (volunteerResponses != null && !volunteerResponses.isEmpty()) {
                     volunteerResponses.forEach(volunteerResponse ->
-                            AppLogger.CLIENT_LOGGER.info(DisplayFormatter.formatVolunteerResponseForDisplay(volunteerResponse))
+                            System.out.println(DisplayFormatter.formatVolunteerResponseForDisplay(volunteerResponse))
                     );
                 } else {
-                    AppLogger.CLIENT_LOGGER.warn("No volunteer responses found.");
+                    System.out.println("No volunteer responses found.");
                 }
             } else {
-                AppLogger.CLIENT_LOGGER.error("Failed to fetch responses. Status: {}", response.getStatusCode());
+                System.out.println("Failed to fetch responses. Status: " + response.getStatusCode());
             }
         } catch (Exception e) {
-            AppLogger.CLIENT_LOGGER.error("Error fetching volunteer responses: {}", e.getMessage(), e);
+            System.out.println("Error fetching volunteer responses: " + e.getMessage());
         }
     }
 
     private void showEvents() {
-        AppLogger.CLIENT_LOGGER.info("Fetching events...");
         BaseUserMenu.showEvents(restTemplateWithCookies);
     }
 
     private void sendMessage() {
-        AppLogger.CLIENT_LOGGER.info("Sending message...");
         BaseUserMenu.sendMessage(restTemplateWithCookies);
     }
 
     private void addEvent() {
-        AppLogger.CLIENT_LOGGER.info(ENTER_NAME_PROMPT);
+        System.out.println(ENTER_NAME_PROMPT);
         String name = getUserInputString();
 
-        AppLogger.CLIENT_LOGGER.info(ENTER_DESCRIPTION_PROMPT);
+        System.out.println(ENTER_DESCRIPTION_PROMPT);
         String description = getUserInputString();
 
-        AppLogger.CLIENT_LOGGER.info(ENTER_LOCATION_PROMPT);
+        System.out.println(ENTER_LOCATION_PROMPT);
         String location = getUserInputString();
 
         LocalDate date = getValidDate();
         if (date == null) {
-            AppLogger.CLIENT_LOGGER.warn(EXIT_OPERATION_MESSAGE);
+            System.out.println(EXIT_OPERATION_MESSAGE);
             return;
         }
 
@@ -137,17 +132,17 @@ public class CustomerMenuClient {
                     EventResponseDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                AppLogger.CLIENT_LOGGER.info(EVENT_ADDED_SUCCESS);
+                System.out.println(EVENT_ADDED_SUCCESS);
             } else {
-                AppLogger.CLIENT_LOGGER.error(FAILED_TO_ADD_EVENT + "{}", response.getStatusCode());
+                System.out.println(FAILED_TO_ADD_EVENT + response.getStatusCode());
             }
         } catch (Exception e) {
-            AppLogger.CLIENT_LOGGER.error(EVENT_ADD_ERROR + "{}", e.getMessage(), e);
+            System.out.println(EVENT_ADD_ERROR + e.getMessage());
         }
     }
 
     private void showMenu() {
-        AppLogger.CLIENT_LOGGER.info(CUSTOMER_MENU_TITLE);
-        AppLogger.CLIENT_LOGGER.info(CUSTOMER_MENU_OPTIONS);
+        System.out.println(CUSTOMER_MENU_TITLE);
+        System.out.println(CUSTOMER_MENU_OPTIONS);
     }
 }

@@ -26,7 +26,7 @@ public class VolunteerController extends UserController {
 
     @Autowired
     public VolunteerController(VolunteerService volunteerService) {
-        super(volunteerService);  // Assuming the base class handles basic user-related functionalities
+        super(volunteerService);
         this.volunteerService = volunteerService;
     }
 
