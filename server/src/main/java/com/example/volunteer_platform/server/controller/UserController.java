@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @PostMapping("/messages/")
-    public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody MessageRegistrationDTO messageRequest,
+    public ResponseEntity<MessageResponseDTO> sendMessage(@Valid @RequestBody MessageRegistrationDTO messageRequest,
                                                           HttpServletRequest request) {
         logger.info("Incoming request to /users/messages with data: {}", messageRequest);
 

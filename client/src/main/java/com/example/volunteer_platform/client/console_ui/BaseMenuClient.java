@@ -127,7 +127,7 @@ public class BaseMenuClient {
                     requestEntity, UserResponseDTO.class);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(LOGIN_FAILED + response.getStatusCode());
+                System.out.println(LOGIN_FAILED + response.getBody());
                 return;
             }
 
