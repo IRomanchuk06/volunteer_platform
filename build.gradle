@@ -34,10 +34,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'mysql:mysql-connector-java:8.0.33'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
-tasks.named('test') {
-    enabled = false
+tasks.register('testAll') {
+    dependsOn ':server:test', ':client:test', ':shared_dto:test', ':shared_utils:test'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "failed", "skipped"
+        showStandardStreams = true
+    }
 }
 
 application {
