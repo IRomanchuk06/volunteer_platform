@@ -5,6 +5,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.example.volunteer_platform'
@@ -47,9 +48,10 @@ tasks.register('testAll') {
 test {
     useJUnitPlatform()
     testLogging {
-        events "passed", "failed", "skipped"
-        showStandardStreams = true
+        events "passed", "skipped", "failed", "standardOut", "standardError"
     }
+    outputs.upToDateWhen { false }
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification
 }
 
 application {
@@ -72,8 +74,34 @@ tasks.register('bootRunClient', BootRun) {
 
     classpath = sourceSets.main.runtimeClasspath
     args = ['--spring.config.location=src/main/resources/client/application.properties']
-
     standardInput = System.in
 }
 
+jacoco {
+    toolVersion = "0.8.10"
+    reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+}
 
+tasks.jacocoTestReport {
+    dependsOn test
+    onlyIf { test.getDidWork() }
+
+    executionData.from = fileTree(dir: layout.buildDirectory.dir("jacoco"), includes: ["*.exec"])
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.8
+            }
+        }
+    }
+}
