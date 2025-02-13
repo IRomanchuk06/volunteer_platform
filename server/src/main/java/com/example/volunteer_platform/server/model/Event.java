@@ -51,6 +51,7 @@ public class Event {
 
     @JsonManagedReference
     @ManyToMany
+    @Builder.Default
     @JoinTable(
             name = "event_volunteers",
             joinColumns = @JoinColumn(name = "event_id"),
@@ -59,6 +60,7 @@ public class Event {
     private Set<Volunteer> volunteers = new HashSet<>();
 
     @JsonManagedReference
+    @Builder.Default
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Response> responses = new ArrayList<>();
 }

@@ -49,6 +49,7 @@ public abstract class User {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "recipient")
+    @Builder.Default
     private List<Notification> notifications = new ArrayList<>();
 }
 

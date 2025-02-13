@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
@@ -23,5 +20,6 @@ public class Volunteer extends User {
 
     @JsonBackReference
     @ManyToMany(mappedBy = "volunteers")
+    @Builder.Default
     private Set<Event> events = new HashSet<>();
 }
