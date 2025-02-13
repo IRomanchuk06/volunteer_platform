@@ -47,6 +47,7 @@ public class NotificationController {
         logger.info("Incoming request to /notifications/received/responses");
 
         User user = getUserFromSession(request);
+        logger.info(String.valueOf(user.getRole()));
 
         if (!user.getRole().equals(User.UserRole.CUSTOMER)) {
             logger.warn("Access denied for user with role: {}", user.getRole());

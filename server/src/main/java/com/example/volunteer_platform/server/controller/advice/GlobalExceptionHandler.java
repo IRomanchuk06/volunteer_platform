@@ -71,6 +71,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
+        AppLogger.SERVER_LOGGER.error("AccessDeniedException occurred: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception e) {
         AppLogger.SERVER_LOGGER.error("An unexpected error occurred: {}", e.getMessage(), e);
