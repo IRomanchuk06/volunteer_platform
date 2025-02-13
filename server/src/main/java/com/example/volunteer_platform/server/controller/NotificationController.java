@@ -7,6 +7,7 @@ import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import com.example.volunteer_platform.server.logging.AppLogger;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+    @Autowired
     public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
