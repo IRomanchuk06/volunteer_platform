@@ -1,8 +1,8 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.exeptions.EventAlreadyExistsException;
-import com.example.volunteer_platform.server.exeptions.EventNotExistsException;
-import com.example.volunteer_platform.server.exeptions.EventVolunteerLimitException;
+import com.example.volunteer_platform.server.exсeptions.EventAlreadyExistsException;
+import com.example.volunteer_platform.server.exсeptions.EventNotExistsException;
+import com.example.volunteer_platform.server.exсeptions.EventVolunteerLimitException;
 import com.example.volunteer_platform.server.mapper.EventMapper;
 import com.example.volunteer_platform.server.model.*;
 import com.example.volunteer_platform.server.repository.EventRepository;

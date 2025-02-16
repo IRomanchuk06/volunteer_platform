@@ -1,7 +1,7 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
-import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
+import com.example.volunteer_platform.server.exсeptions.EmailAlreadyExistsException;
+import com.example.volunteer_platform.server.exсeptions.InvalidEmailException;
 import com.example.volunteer_platform.server.service.VerificationService;
 import com.example.volunteer_platform.server.logging.AppLogger;
 import org.slf4j.Logger;

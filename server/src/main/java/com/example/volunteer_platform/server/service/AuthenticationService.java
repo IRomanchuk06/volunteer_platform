@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.exeptions.AuthenticationException;
+import com.example.volunteer_platform.server.exсeptions.AuthenticationException;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

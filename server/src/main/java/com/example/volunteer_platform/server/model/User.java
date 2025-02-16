@@ -39,7 +39,6 @@ public abstract class User {
     private String password;
 
     @NotNull
-    @Email
     @Column(nullable = false, unique = true)
     private String email;
 

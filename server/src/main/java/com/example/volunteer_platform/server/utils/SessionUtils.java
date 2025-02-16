@@ -1,7 +1,7 @@
 package com.example.volunteer_platform.server.utils;
 
-import com.example.volunteer_platform.server.exeptions.SessionNotFoundException;
-import com.example.volunteer_platform.server.exeptions.UserNotFoundInSessionException;
+import com.example.volunteer_platform.server.exсeptions.SessionNotFoundException;
+import com.example.volunteer_platform.server.exсeptions.UserNotFoundInSessionException;
 import com.example.volunteer_platform.server.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

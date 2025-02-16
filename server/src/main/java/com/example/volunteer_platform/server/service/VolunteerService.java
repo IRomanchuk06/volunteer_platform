@@ -1,9 +1,9 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.exeptions.EmailAlreadyExistsException;
-import com.example.volunteer_platform.server.exeptions.InvalidEmailException;
-import com.example.volunteer_platform.server.exeptions.UserNotExistsException;
-import com.example.volunteer_platform.server.exeptions.VolunteerAlreadyParticipatingException;
+import com.example.volunteer_platform.server.exсeptions.EmailAlreadyExistsException;
+import com.example.volunteer_platform.server.exсeptions.InvalidEmailException;
+import com.example.volunteer_platform.server.exсeptions.UserNotExistsException;
+import com.example.volunteer_platform.server.exсeptions.VolunteerAlreadyParticipatingException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
