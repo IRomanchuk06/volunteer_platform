@@ -1,4 +1,4 @@
-package com.example.volunteer_platform.server.exсeptions;
+package com.example.volunteer_platform.server.exceptions;
 
 public class InvalidEmailException extends RuntimeException {
     public InvalidEmailException(String message) {

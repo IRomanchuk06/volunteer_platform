@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.controller.advice;
 
-import com.example.volunteer_platform.server.exсeptions.*;
+import com.example.volunteer_platform.server.exceptions.*;
 import com.example.volunteer_platform.server.logging.AppLogger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,6 +87,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidEmailException(InvalidEmailException e) {
         AppLogger.SERVER_LOGGER.error("Invalid email error: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotExistsException.class)
+    public ResponseEntity<String> handleUserNotExistsException(UserNotExistsException e) {
+        AppLogger.SERVER_LOGGER.error("UserNotExistsException occurred: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
+        AppLogger.SERVER_LOGGER.error("UserNotFoundException occurred: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
