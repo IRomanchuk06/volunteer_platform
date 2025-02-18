@@ -1,6 +1,7 @@
 package com.example.volunteer_platform.server.service;
 
 import com.example.volunteer_platform.server.exceptions.InvalidPasswordException;
+import com.example.volunteer_platform.server.exceptions.UserNotFoundException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
@@ -34,18 +35,11 @@ class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    private Customer testUser;
+    private final Customer testUser = createTestUser();
     private UserResponseDTO userResponseDTO;
 
     @BeforeEach
     void setUp() {
-        testUser = Customer.builder()
-                .email("test@example.com")
-                .username("testUser")
-                .password("oldPassword")
-                .role(User.UserRole.CUSTOMER)
-                .build();
-
         userResponseDTO = new UserResponseDTO();
         userResponseDTO.setEmail(testUser.getEmail());
         userResponseDTO.setUsername("newUser");
@@ -54,9 +48,7 @@ class UserServiceTests {
     @Test
     void getUserByEmail_UserExists_ReturnsUser() {
         when(userRepository.findUserByEmail("test@example.com")).thenReturn(testUser);
-
         Optional<User> result = userService.getUserByEmail("test@example.com");
-
         assertTrue(result.isPresent());
         assertEquals("testUser", result.get().getUsername());
         verify(userRepository, times(1)).findUserByEmail("test@example.com");
@@ -66,9 +58,7 @@ class UserServiceTests {
     void updateUser_ValidPassword_UpdatesUser() {
         when(userRepository.findUserByEmail("test@example.com")).thenReturn(testUser);
         when(userMapper.toUserResponseDTO(any(User.class))).thenReturn(userResponseDTO);
-
         UserResponseDTO result = userService.updateUser("test@example.com", "newUser", "oldPassword", "newPassword");
-
         assertNotNull(result);
         assertEquals("newUser", result.getUsername());
         verify(userRepository, times(1)).save(any(User.class));
@@ -77,39 +67,30 @@ class UserServiceTests {
     @Test
     void updateUser_InvalidPassword_ThrowsException() {
         when(userRepository.findUserByEmail("test@example.com")).thenReturn(testUser);
-
         assertThrows(InvalidPasswordException.class, () ->
                 userService.updateUser("test@example.com", "newUser", "wrongPassword", "newPassword"));
     }
 
     @Test
-    void deleteUser_UserExists_ReturnsTrue() {
+    void deleteUser_UserExists_DeletesUser() {
         when(userRepository.findUserByEmail("test@example.com")).thenReturn(testUser);
-
-        boolean result = userService.deleteUser("test@example.com");
-
-        assertTrue(result);
+        userService.deleteUser("test@example.com");
         verify(userRepository, times(1)).delete(testUser);
     }
 
     @Test
     void sendMessage_ValidUsers_ReturnsMessageResponseDTO() {
-        Customer recipient = Customer.builder()
-                .email("recipient@example.com")
-                .username("recipientUser")
-                .password("password")
-                .role(User.UserRole.CUSTOMER)
-                .build();
+        Customer recipient = new Customer();
+        recipient.setEmail("recipient@example.com");
+        recipient.setUsername("recipientUser");
+        recipient.setPassword("password");
 
         MessageResponseDTO messageResponse = new MessageResponseDTO();
         messageResponse.setMessage("Message sent successfully");
-
         when(userRepository.findUserByEmail("test@example.com")).thenReturn(testUser);
         when(userRepository.findUserByEmail("recipient@example.com")).thenReturn(recipient);
         when(messageService.sendMessage("Hello", testUser, recipient)).thenReturn(messageResponse);
-
         MessageResponseDTO result = userService.sendMessage("Hello", "test@example.com", "recipient@example.com");
-
         assertNotNull(result);
         assertEquals("Message sent successfully", result.getMessage());
         verify(messageService, times(1)).sendMessage("Hello", testUser, recipient);
@@ -118,43 +99,37 @@ class UserServiceTests {
     @Test
     void getUserByUsername_UserExists_ReturnsUser() {
         when(userRepository.findUserByUsername("testUser")).thenReturn(testUser);
-
         Optional<User> result = userService.getUserByUsername("testUser");
-
         assertTrue(result.isPresent());
         assertEquals("testUser", result.get().getUsername());
         verify(userRepository, times(1)).findUserByUsername("testUser");
     }
 
     @Test
-    void getUserByUsername_UserNotFound_ReturnsEmpty() {
+    void getUserByUsername_UserNotFound_ThrowsException() {
         when(userRepository.findUserByUsername("unknownUser")).thenReturn(null);
-
-        Optional<User> result = userService.getUserByUsername("unknownUser");
-
-        assertTrue(result.isEmpty());
-        verify(userRepository, times(1)).findUserByUsername("unknownUser");
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByUsername("unknownUser"));
     }
 
     @Test
-    void updateUser_UserNotFound_ReturnsNull() {
+    void updateUser_UserNotFound_ThrowsException() {
         when(userRepository.findUserByEmail("notfound@example.com")).thenReturn(null);
-
-        UserResponseDTO result = userService.updateUser("notfound@example.com", "newUser", "oldPassword", "newPassword");
-
-        assertNull(result);
-        verify(userRepository, times(1)).findUserByEmail("notfound@example.com");
-        verify(userRepository, never()).save(any());
+        assertThrows(UserNotFoundException.class, () ->
+                userService.updateUser("notfound@example.com", "newUser", "oldPassword", "newPassword"));
     }
 
     @Test
-    void deleteUser_UserNotFound_ReturnsFalse() {
+    void deleteUser_UserNotFound_ThrowsException() {
         when(userRepository.findUserByEmail("notfound@example.com")).thenReturn(null);
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUser("notfound@example.com"));
+    }
 
-        boolean result = userService.deleteUser("notfound@example.com");
+    private Customer createTestUser() {
+        Customer testUser = new Customer();
+        testUser.setEmail("test@example.com");
+        testUser.setUsername("testUser");
+        testUser.setPassword("oldPassword");
 
-        assertFalse(result);
-        verify(userRepository, times(1)).findUserByEmail("notfound@example.com");
-        verify(userRepository, never()).delete(any());
+        return testUser;
     }
 }
