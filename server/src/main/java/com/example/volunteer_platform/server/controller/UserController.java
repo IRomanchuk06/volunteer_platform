@@ -28,27 +28,37 @@ public class UserController {
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         logger.info("Incoming request to /users/email/{}", email);
-        return ResponseEntity.of(userService.getUserByEmail(email));
+        User user = userService.getUserByEmail(email);
+        ResponseEntity<User> response = ResponseEntity.ok(user);
+        logger.info("Server response: {}", response);
+        return response;
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         logger.info("Incoming request to /users/username/{}", username);
-        return ResponseEntity.of(userService.getUserByUsername(username));
+        User user = userService.getUserByUsername(username);
+        ResponseEntity<User> response = ResponseEntity.ok(user);
+        logger.info("Server response: {}", response);
+        return response;
     }
 
     @PutMapping("/update")
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @RequestBody UpdateUserDTO updateRequest) {
         logger.info("Incoming request to /users/update with data: {}", updateRequest);
-        return ResponseEntity.ok(userService.updateUser(updateRequest.getEmail(),
-                updateRequest.getUsername(), updateRequest.getOldPassword(), updateRequest.getNewPassword()));
+        UserResponseDTO response = userService.updateUser(updateRequest.getEmail(),
+                updateRequest.getUsername(), updateRequest.getOldPassword(), updateRequest.getNewPassword());
+        logger.info("Server response: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteUser(@RequestParam String email) {
         logger.info("Incoming request to /users/delete with email: {}", email);
         userService.deleteUser(email);
-        return ResponseEntity.noContent().build();
+        ResponseEntity<Void> response = ResponseEntity.noContent().build();
+        logger.info("Server response: {}", response);
+        return response;
     }
 
     @PostMapping("/messages/")
@@ -56,8 +66,9 @@ public class UserController {
                                                           HttpServletRequest request) {
         logger.info("Incoming request to /users/messages with data: {}", messageRequest);
         User currentUser = getUserFromSession(request);
-        return ResponseEntity.ok(userService.sendMessage(messageRequest.getMessage(),
+        ResponseEntity<MessageResponseDTO> response = ResponseEntity.ok(userService.sendMessage(messageRequest.getMessage(),
                 messageRequest.getRecipientEmail(), currentUser.getEmail()));
+        logger.info("Server response: {}", response);
+        return response;
     }
 }
-

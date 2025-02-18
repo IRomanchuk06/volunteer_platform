@@ -1,6 +1,7 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.exсeptions.InvalidPasswordException;
+import com.example.volunteer_platform.server.exceptions.InvalidPasswordException;
+import com.example.volunteer_platform.server.exceptions.UserNotFoundException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
@@ -8,8 +9,6 @@ import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service("userService")
 public class UserService {
@@ -25,41 +24,42 @@ public class UserService {
         this.messageService = messageService;
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(userRepository.findUserByEmail(email));
+    public User getUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
+        return user;
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return Optional.ofNullable(userRepository.findUserByUsername(username));
+    public User getUserByUsername(String username) {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with username: " + username);
+        }
+        return user;
     }
 
     public UserResponseDTO updateUser(String email, String newUsername, String oldPassword, String newPassword) {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null) {
-            if (!user.getPassword().equals(oldPassword)) {
-                throw new InvalidPasswordException("You have entered an incorrect password");
-            }
-            user.setUsername(newUsername);
-            user.setPassword(newPassword);
-            userRepository.save(user);
-
-            return userMapper.toUserResponseDTO(user);
+        User user = getUserByEmail(email);
+        if (!user.getPassword().equals(oldPassword)) {
+            throw new InvalidPasswordException("You have entered an incorrect password");
         }
-        return null;
+        user.setUsername(newUsername);
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return userMapper.toUserResponseDTO(user);
     }
 
-    public boolean deleteUser(String email) {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null) {
-            userRepository.delete(user);
-            return true;
-        }
-        return false;
+    public void deleteUser(String email) {
+        User user = getUserByEmail(email);
+        userRepository.delete(user);
     }
 
     public MessageResponseDTO sendMessage(String messageText, String senderEmail, String recipientEmail) {
-        User sender = userRepository.findUserByEmail(senderEmail);
-        User recipient = userRepository.findUserByEmail(recipientEmail);
+        User sender = getUserByEmail(senderEmail);
+        User recipient = getUserByEmail(recipientEmail);
         return messageService.sendMessage(messageText, sender, recipient);
     }
 }
+

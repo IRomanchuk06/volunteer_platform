@@ -48,9 +48,8 @@ class UserServiceTests {
     @Test
     void getUserByEmail_UserExists_ReturnsUser() {
         when(userRepository.findUserByEmail("test@example.com")).thenReturn(testUser);
-        Optional<User> result = userService.getUserByEmail("test@example.com");
-        assertTrue(result.isPresent());
-        assertEquals("testUser", result.get().getUsername());
+        User result = userService.getUserByEmail("test@example.com");
+        assertEquals("testUser", result.getUsername());
         verify(userRepository, times(1)).findUserByEmail("test@example.com");
     }
 
@@ -99,9 +98,8 @@ class UserServiceTests {
     @Test
     void getUserByUsername_UserExists_ReturnsUser() {
         when(userRepository.findUserByUsername("testUser")).thenReturn(testUser);
-        Optional<User> result = userService.getUserByUsername("testUser");
-        assertTrue(result.isPresent());
-        assertEquals("testUser", result.get().getUsername());
+        User result = userService.getUserByUsername("testUser");
+        assertEquals("testUser", result.getUsername());
         verify(userRepository, times(1)).findUserByUsername("testUser");
     }
 
