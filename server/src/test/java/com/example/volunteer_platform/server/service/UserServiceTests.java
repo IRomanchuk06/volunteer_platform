@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.service;
 
-import com.example.volunteer_platform.server.exсeptions.InvalidPasswordException;
+import com.example.volunteer_platform.server.exceptions.InvalidPasswordException;
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
