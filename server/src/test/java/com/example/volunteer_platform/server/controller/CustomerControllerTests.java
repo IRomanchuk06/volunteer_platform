@@ -1,6 +1,7 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.config.JacksonConfig;
+import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.service.CustomerService;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
@@ -10,64 +11,75 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@ExtendWith(MockitoExtension.class)
 class CustomerControllerTests {
 
-    @InjectMocks
-    private CustomerController customerController;
+    private MockMvc mockMvc;
 
     @Mock
     private CustomerService customerService;
 
     @Mock
-    private HttpServletRequest request;
+    private Customer currentUser;
 
-    @Mock
-    private HttpSession session;
+    @InjectMocks
+    private CustomerController customerController;
 
-    @Mock
-    private User currentUser;
+    private final JacksonConfig jacksonConfig = new JacksonConfig();
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        this.mockMvc = MockMvcBuilders
+                .standaloneSetup(customerController)
+                .build();
     }
 
     @Test
-    void testCreateCustomer_Success() {
+    void testCreateCustomer_Success() throws Exception {
         UserRegistrationDTO accountRequest = new UserRegistrationDTO();
         accountRequest.setEmail("test@example.com");
         accountRequest.setPassword("password");
-        accountRequest.setUsername("testuser");
+        accountRequest.setUsername("testUser");
 
         UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(1L);
+        userResponseDTO.setUsername("testUser");
+        userResponseDTO.setPassword("password");
         userResponseDTO.setEmail("test@example.com");
-        userResponseDTO.setUsername("testuser");
+        userResponseDTO.setRole("CUSTOMER");
 
         when(customerService.createCustomer(any(), any(), any())).thenReturn(userResponseDTO);
 
-        ResponseEntity<UserResponseDTO> responseEntity = customerController.createCustomer(accountRequest);
+        mockMvc.perform(post("/customers/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jacksonConfig.objectMapper().writeValueAsString(accountRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.email").value("test@example.com"))
+                .andExpect(jsonPath("$.username").value("testUser"))
+                .andExpect(jsonPath("$.role").value("CUSTOMER"))
+                .andExpect(jsonPath("$.id").value(1L));
 
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
         verify(customerService, times(1)).createCustomer(any(), any(), any());
     }
 
     @Test
-    void testCreateEvent_Success() {
+    void testCreateEvent_Success() throws Exception {
         EventRegistrationDTO eventRequest = new EventRegistrationDTO();
         eventRequest.setName("Test Event");
         eventRequest.setDescription("Test Description");
@@ -81,16 +93,17 @@ class CustomerControllerTests {
         eventResponseDTO.setName("Test Event");
         eventResponseDTO.setDescription("Test Description");
 
-        when(request.getSession(false)).thenReturn(session);
-        when(session.getAttribute("currentUser")).thenReturn(currentUser);
-
         when(customerService.createEvent(any(), any(), any(), any(), any(), any(), any(), anyInt()))
                 .thenReturn(eventResponseDTO);
 
-        ResponseEntity<EventResponseDTO> responseEntity = customerController.createEvent(eventRequest, request);
+        mockMvc.perform(post("/customers/events/")
+                        .sessionAttr("currentUser", currentUser)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jacksonConfig.objectMapper().writeValueAsString(eventRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Test Event"))
+                .andExpect(jsonPath("$.description").value("Test Description"));
 
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
         verify(customerService, times(1)).createEvent(any(), any(), any(), any(), any(), any(), any(), anyInt());
     }
 }

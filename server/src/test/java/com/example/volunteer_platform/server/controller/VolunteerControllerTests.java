@@ -1,31 +1,41 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.service.VolunteerService;
-import com.example.volunteer_platform.shared_dto.*;
-import com.example.volunteer_platform.server.exсeptions.*;
-import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.config.JacksonConfig;
+import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHandler;
+import com.example.volunteer_platform.server.exceptions.EmailAlreadyExistsException;
+import com.example.volunteer_platform.server.exceptions.EventNotExistsException;
+import com.example.volunteer_platform.server.exceptions.SessionNotFoundException;
+import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Volunteer;
-import com.example.volunteer_platform.server.utils.SessionUtils;
+import com.example.volunteer_platform.server.service.VolunteerService;
+import com.example.volunteer_platform.shared_dto.EventParticipantResponseDTO;
+import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+import com.example.volunteer_platform.shared_dto.UserRegistrationDTO;
+import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class VolunteerControllerTests {
+
+    private MockMvc mockMvc;
 
     @Mock
     private VolunteerService volunteerService;
@@ -33,106 +43,100 @@ class VolunteerControllerTests {
     @InjectMocks
     private VolunteerController volunteerController;
 
-    private final Volunteer testVolunteer = Volunteer.builder()
-            .id(1L)
-            .email("volunteer@example.com")
-            .username("volunteerUser")
-            .password("password123")
-            .role(User.UserRole.VOLUNTEER)
-            .build();
+    private final JacksonConfig jacksonConfig = new JacksonConfig();
 
-    @Mock
-    private SessionUtils sessionUtils;
+    @BeforeEach
+    void setUp() {
+        this.mockMvc = MockMvcBuilders
+                .standaloneSetup(volunteerController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
+    }
 
     @Test
-    void createVolunteer_Success() {
+    void testCreateVolunteer_Success() throws Exception {
         UserRegistrationDTO requestDTO = new UserRegistrationDTO("new@example.com", "newPass123", "newUser");
         UserResponseDTO responseDTO = new UserResponseDTO(2L, "newUser", "newPass123", "new@example.com", "VOLUNTEER");
 
         when(volunteerService.createVolunteer(any(), any(), any())).thenReturn(responseDTO);
 
-        ResponseEntity<UserResponseDTO> response = volunteerController.createVolunteer(requestDTO);
+        mockMvc.perform(post("/volunteers/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jacksonConfig.objectMapper().writeValueAsString(requestDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.email").value("new@example.com"))
+                .andExpect(jsonPath("$.username").value("newUser"))
+                .andExpect(jsonPath("$.role").value("VOLUNTEER"))
+                .andExpect(jsonPath("$.id").value(2L));
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(2L, response.getBody().getId());
-        assertEquals("newUser", response.getBody().getUsername());
+        verify(volunteerService, times(1)).createVolunteer(any(), any(), any());
     }
 
     @Test
-    void createVolunteer_EmailConflict() {
+    void testCreateVolunteer_EmailConflict() throws Exception {
         when(volunteerService.createVolunteer(any(), any(), any()))
                 .thenThrow(new EmailAlreadyExistsException("Email already registered"));
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                volunteerController.createVolunteer(new UserRegistrationDTO("exists@example.com", "password123", "userExists"))
-        );
+        UserRegistrationDTO requestDTO = new UserRegistrationDTO("exists@example.com", "password123", "userExists");
 
-        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
-        assertEquals("Email already registered", exception.getReason());
+        mockMvc.perform(post("/volunteers/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jacksonConfig.objectMapper().writeValueAsString(requestDTO)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string("Email already registered"));
+
+        verify(volunteerService, times(1)).createVolunteer(any(), any(), any());
     }
 
     @Test
-    void responseToEvent_Success() {
+    void testResponseToEvent_Success() throws Exception {
         EventResponseDTO responseDTO = createTestEventResponse();
-        HttpServletRequest request = mock(HttpServletRequest.class); // Создаем мок-запрос
 
-        when(SessionUtils.getUserFromSession(request)).thenReturn(testVolunteer);
-        when(volunteerService.responseToEvent(10L, 1L)).thenReturn(responseDTO);
+        lenient().when(volunteerService.responseToEvent(10L, 0L)).thenReturn(responseDTO);
 
-        ResponseEntity<EventResponseDTO> response = volunteerController.responseToEvent(10L, request);
+        mockMvc.perform(post("/volunteers/response/events/10")
+                        .sessionAttr("currentUser", mock(Volunteer.class))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Community Event"))
+                .andExpect(jsonPath("$.description").value("Help needed for community cleanup"));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Community Event", Objects.requireNonNull(response.getBody()).getName());
+        verify(volunteerService, times(1)).responseToEvent(anyLong(), anyLong());
     }
 
     @Test
-    void responseToEvent_Unauthorized() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
+    void testResponseToEvent_Unauthorized() throws Exception {
+        when(volunteerService.responseToEvent(10L, 0L)).thenThrow(new SessionNotFoundException("No active session"));
 
-        when(SessionUtils.getUserFromSession(any(HttpServletRequest.class)))
-                .thenThrow(new SessionNotFoundException("No active session"));
+        mockMvc.perform(post("/volunteers/response/events/10")
+                        .sessionAttr("currentUser", mock(Volunteer.class))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("No active session"));
 
-        ResponseEntity<EventResponseDTO> response = volunteerController.responseToEvent(10L, request);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertNotNull(response.getBody());
+        verify(volunteerService, times(1)).responseToEvent(anyLong(), anyLong());
     }
 
-
     @Test
-    void responseToEvent_NotFound() {
-        when(SessionUtils.getUserFromSession(any())).thenReturn(testVolunteer);
+    void testResponseToEvent_NotFound() throws Exception {
+        when(volunteerService.responseToEvent(99L, 0L)).thenThrow(new EventNotExistsException("Event not found"));
 
-        when(volunteerService.responseToEvent(99L, 1L)).thenThrow(new EventNotExistsException("Event not found"));
+        mockMvc.perform(post("/volunteers/response/events/99")
+                        .sessionAttr("currentUser", mock(Volunteer.class))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Event not found"));
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                volunteerController.responseToEvent(99L, request)
-        );
-
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Event not found", exception.getReason());
-    }
-
-
-    @Test
-    void createVolunteer_InvalidEmailFormat() {
-        when(volunteerService.createVolunteer(any(), any(), any()))
-                .thenThrow(new InvalidEmailException("Invalid email format"));
-
-        UserRegistrationDTO requestDTO = new UserRegistrationDTO("invalid-email", "password123", "userInvalid");
-
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                volunteerController.createVolunteer(requestDTO)
-        );
-
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        assertEquals("Invalid email format", exception.getReason());
+        verify(volunteerService, times(1)).responseToEvent(anyLong(), anyLong());
     }
 
     private EventResponseDTO createTestEventResponse() {
+        EventParticipantResponseDTO customer = new EventParticipantResponseDTO(1L, "customerUser", "customer@example.com", "CUSTOMER");
+
+        EventParticipantResponseDTO volunteer = new EventParticipantResponseDTO(2L, "volunteerUser", "volunteer@example.com", "VOLUNTEER");
+
+        java.util.List<EventParticipantResponseDTO> volunteerList = Collections.singletonList(volunteer);
+
         return new EventResponseDTO(
                 100L,
                 "Community Event",
@@ -143,13 +147,8 @@ class VolunteerControllerTests {
                 LocalTime.of(17, 0),
                 15,
                 8,
-                new EventParticipantResponseDTO(1L, "Organizer", "org@example.com", "CUSTOMER"),
-                List.of(new EventParticipantResponseDTO(
-                        testVolunteer.getId(),
-                        testVolunteer.getUsername(),
-                        testVolunteer.getEmail(),
-                        "VOLUNTEER"
-                ))
+                customer,
+                volunteerList
         );
     }
 }

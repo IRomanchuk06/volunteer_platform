@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,12 +54,17 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@RequestParam String email) {
+    public ResponseEntity<String> deleteUser(@RequestParam String email) {
         logger.info("Incoming request to /users/delete with email: {}", email);
-        userService.deleteUser(email);
-        ResponseEntity<Void> response = ResponseEntity.noContent().build();
-        logger.info("Server response: {}", response);
-        return response;
+        boolean response = userService.deleteUser(email);
+
+        if (response) {
+            logger.info("User deleted successfully");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
+        } else {
+            logger.info("User deletion unsuccessful");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email);
+        }
     }
 
     @PostMapping("/messages/")

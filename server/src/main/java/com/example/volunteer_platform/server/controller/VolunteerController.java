@@ -1,6 +1,5 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.controller.UserController;
 import com.example.volunteer_platform.server.logging.AppLogger;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.VolunteerService;

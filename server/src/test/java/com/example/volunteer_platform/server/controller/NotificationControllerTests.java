@@ -1,98 +1,117 @@
 package com.example.volunteer_platform.server.controller;
 
+import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHandler;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
-import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.service.NotificationService;
-import com.example.volunteer_platform.server.utils.SessionUtils;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.springframework.http.ResponseEntity;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@ExtendWith(MockitoExtension.class)
 class NotificationControllerTests {
 
-    @InjectMocks
-    private NotificationController notificationController;
+    private MockMvc mockMvc;
+
+    @Mock
+    private HttpServletRequest request;
 
     @Mock
     private NotificationService notificationService;
 
-    private MockedStatic<SessionUtils> mockedSessionUtils;
-
-    private static final String USER_EMAIL = "user@example.com";
-    private static final String USER_USERNAME = "User";
-    private static final String USER_PASSWORD = "password";
+    private final Customer customer = createCustomer();
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        Customer customer = createCustomer();
-        mockedSessionUtils = Mockito.mockStatic(SessionUtils.class);
-        mockedSessionUtils.when(() -> SessionUtils.getUserFromSession(any(HttpServletRequest.class)))
-                .thenReturn(customer);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new NotificationController(notificationService))
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     @Test
-    void testGetVolunteerResponses_CustomerRole() {
-        List<VolunteerEventResponseDTO> responses = createVolunteerEventResponses();
-        when(notificationService.getVolunteerResponses(any(User.class))).thenReturn(responses);
-
-        ResponseEntity<?> responseEntity = notificationController.getVolunteerResponses(mock(HttpServletRequest.class));
-
-        assertEquals(200, responseEntity.getStatusCode().value());
-        assertNotNull(responseEntity.getBody());
-        assertEquals(2, ((List<?>) responseEntity.getBody()).size());
+    void testGetReceivedMessages_UserNotFound() throws Exception {
+        mockMvc.perform(get("/notifications/received/messages"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("No active session found"));
     }
 
     @Test
-    void testGetVolunteerResponses_NonCustomerRole() {
-        Volunteer volunteer = createVolunteer();
-        mockedSessionUtils.when(() -> SessionUtils.getUserFromSession(any(HttpServletRequest.class)))
-                .thenReturn(volunteer);
+    public void testGetReceivedMessages() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("currentUser", customer);
+        request.setSession(session);
 
-        ResponseEntity<?> responseEntity = notificationController.getVolunteerResponses(mock(HttpServletRequest.class));
-
-        assertEquals(403, responseEntity.getStatusCode().value());
-        assertEquals("Event feedback is only available to the customer.", responseEntity.getBody());
-    }
-
-    @Test
-    void testGetReceivedMessages() {
         List<MessageResponseDTO> messages = createMessageResponses();
-        when(notificationService.getReceivedMessages(any(User.class))).thenReturn(messages);
+        when(notificationService.getReceivedMessages(customer)).thenReturn(messages);
 
-        ResponseEntity<?> responseEntity = notificationController.getReceivedMessages(mock(HttpServletRequest.class));
+        mockMvc.perform(get("/notifications/received/messages")
+                        .session((MockHttpSession) Objects.requireNonNull(request.getSession())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(2)))
+                .andExpect(jsonPath("$[0].message", is("Message 1")))
+                .andExpect(jsonPath("$[1].message", is("Message 2")));
+    }
 
-        assertEquals(200, responseEntity.getStatusCode().value());
-        assertNotNull(responseEntity.getBody());
-        assertEquals(2, ((List<?>) responseEntity.getBody()).size());
+    @Test
+    void testGetVolunteerResponses_CustomerRole() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("currentUser", customer);
+        request.setSession(session);
+
+        List<VolunteerEventResponseDTO> responses = createVolunteerEventResponses();
+        when(notificationService.getVolunteerResponses(customer)).thenReturn(responses);
+
+        mockMvc.perform(get("/notifications/received/responses")
+                        .session((MockHttpSession) Objects.requireNonNull(request.getSession())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(2)))
+                .andExpect(jsonPath("$[0].eventName", is("Event 1")))
+                .andExpect(jsonPath("$[1].eventName", is("Event 2")));
+    }
+
+    @Test
+    void testGetVolunteerResponses_NonCustomerRole() throws Exception {
+        User volunteer = customer;
+        volunteer.setRole(User.UserRole.VOLUNTEER);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("currentUser", volunteer);
+        request.setSession(session);
+
+        mockMvc.perform(get("/notifications/received/responses")
+                        .session((MockHttpSession) Objects.requireNonNull(request.getSession())))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string(containsString("Event feedback is only available to the customer.")));
     }
 
     private Customer createCustomer() {
         Customer customer = new Customer();
-        customer.setEmail(USER_EMAIL);
-        customer.setPassword(USER_PASSWORD);
-        customer.setUsername(USER_USERNAME);
+        customer.setEmail("user@example.com");
+        customer.setPassword("password");
+        customer.setUsername("User");
         customer.setRole(User.UserRole.CUSTOMER);
         return customer;
-    }
-
-    private Volunteer createVolunteer() {
-        Volunteer volunteer = new Volunteer();
-        volunteer.setEmail(USER_EMAIL);
-        volunteer.setPassword(USER_PASSWORD);
-        volunteer.setUsername(USER_USERNAME);
-        volunteer.setRole(User.UserRole.VOLUNTEER);
-        return volunteer;
     }
 
     private List<VolunteerEventResponseDTO> createVolunteerEventResponses() {
@@ -107,12 +126,5 @@ class NotificationControllerTests {
                 new MessageResponseDTO(1L, "sender@example.com", "recipient@example.com", "Message 1", "info", LocalDateTime.now(), false),
                 new MessageResponseDTO(2L, "sender@example.com", "recipient@example.com", "Message 2", "alert", LocalDateTime.now(), true)
         );
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (mockedSessionUtils != null) {
-            mockedSessionUtils.close();
-        }
     }
 }

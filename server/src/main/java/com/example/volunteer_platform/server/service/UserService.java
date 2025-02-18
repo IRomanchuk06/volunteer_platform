@@ -51,9 +51,13 @@ public class UserService {
         return userMapper.toUserResponseDTO(user);
     }
 
-    public void deleteUser(String email) {
+    public boolean deleteUser(String email) {
         User user = getUserByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
         userRepository.delete(user);
+        return true;
     }
 
     public MessageResponseDTO sendMessage(String messageText, String senderEmail, String recipientEmail) {

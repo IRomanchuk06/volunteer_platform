@@ -1,22 +1,26 @@
 package com.example.volunteer_platform.server.controller;
 
 import com.example.volunteer_platform.server.mapper.UserMapper;
+import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.AuthenticationService;
 import com.example.volunteer_platform.shared_dto.UserLoginDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationControllerTests {
@@ -27,77 +31,87 @@ public class AuthenticationControllerTests {
     @Mock
     private UserMapper userMapper;
 
-    @Mock
-    private HttpServletRequest request;
-
-    @Mock
-    private HttpServletResponse response;
-
-    @Mock
-    private HttpSession session;
-
     @InjectMocks
     private AuthenticationController authenticationController;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        this.mockMvc = MockMvcBuilders.standaloneSetup(authenticationController).build();
+    }
+
     @Test
-    void testLogin_Success() {
+    void testLogin_Success() throws Exception {
         UserLoginDTO loginRequest = new UserLoginDTO();
-        loginRequest.setEmail("user@example.com");
+        loginRequest.setEmail("customer@example.com");
         loginRequest.setPassword("password123");
 
-        User user = mock(User.class);
+        Customer customer = new Customer();
+        customer.setId(1L);
+        customer.setEmail("customer@example.com");
+        customer.setPassword("password123");
+        customer.setRole(User.UserRole.CUSTOMER);
+        customer.setUsername("customer");
+
         UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(1L);
+        userResponseDTO.setUsername("customer");
+        userResponseDTO.setEmail("customer@example.com");
+        userResponseDTO.setPassword("password123");
+        userResponseDTO.setRole("CUSTOMER");
 
-        when(authenticationService.authenticate(anyString(), anyString())).thenReturn(user);
-        when(userMapper.toUserResponseDTO(user)).thenReturn(userResponseDTO);
-        when(request.getSession(true)).thenReturn(session);
+        when(authenticationService.authenticate(any(), any())).thenReturn(customer);
+        when(userMapper.toUserResponseDTO((User) customer)).thenReturn(userResponseDTO);
 
-        ResponseEntity<UserResponseDTO> responseEntity = authenticationController.login(loginRequest, request, response);
+        mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(
+                objectMapper.writeValueAsString(loginRequest))).andExpect(status().isOk()).andExpect(
+                jsonPath("$.email").value("customer@example.com")).andExpect(
+                jsonPath("$.username").value("customer")).andExpect(jsonPath("$.role").value("CUSTOMER")).andExpect(
+                cookie().exists("JSESSIONID")).andExpect(request().sessionAttribute("currentUser", customer));
 
-        assertEquals(200, responseEntity.getStatusCode().value());
-        assertNotNull(responseEntity.getBody());
-        verify(authenticationService, times(1)).authenticate(anyString(), anyString());
-        verify(request, times(1)).getSession(true);
+        verify(authenticationService, times(1)).authenticate(any(), any());
+        verify(userMapper, times(1)).toUserResponseDTO((User) customer);
     }
 
+
     @Test
-    void testGetUserProfile_Success() {
-        User user = mock(User.class);
+    void testGetUserProfile_Success() throws Exception {
+        Customer customer = new Customer();
+        customer.setId(1L);
+        customer.setEmail("customer@example.com");
+        customer.setUsername("customer");
+        customer.setPassword("password123");
+        customer.setRole(User.UserRole.CUSTOMER);
+
         UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(1L);
+        userResponseDTO.setUsername("customer");
+        userResponseDTO.setEmail("customer@example.com");
+        userResponseDTO.setPassword("password123");
+        userResponseDTO.setRole("CUSTOMER");
 
-        when(request.getSession(false)).thenReturn(session);
-        when(session.getAttribute("currentUser")).thenReturn(user);
-        when(userMapper.toUserResponseDTO(user)).thenReturn(userResponseDTO);
+        when(userMapper.toUserResponseDTO((User) customer)).thenReturn(userResponseDTO);
 
-        ResponseEntity<UserResponseDTO> responseEntity = authenticationController.getUserProfile(request);
+        mockMvc.perform(get("/auth/profile").sessionAttr("currentUser", customer)).andExpect(status().isOk()).andExpect(
+                jsonPath("$.id").value(1L)).andExpect(jsonPath("$.username").value("customer")).andExpect(
+                jsonPath("$.email").value("customer@example.com")).andExpect(jsonPath("$.role").value("CUSTOMER"));
 
-        assertEquals(200, responseEntity.getStatusCode().value());
-        assertNotNull(responseEntity.getBody());
-        verify(request, times(1)).getSession(false);
-        verify(session, times(1)).getAttribute("currentUser");
+        verify(userMapper, times(1)).toUserResponseDTO((User) customer);
     }
 
 
     @Test
-    void testLogout_Success() {
-        HttpSession session = mock(HttpSession.class);
-
-        when(request.getSession(false)).thenReturn(session);
-
-        ResponseEntity<Boolean> responseEntity = authenticationController.logout(request, response);
-
-        assertEquals(200, responseEntity.getStatusCode().value());
-        assertEquals(Boolean.TRUE, responseEntity.getBody());
-        verify(session, times(1)).invalidate();
+    void testLogout_Success() throws Exception {
+        Customer customer = new Customer();
+        mockMvc.perform(post("/auth/logout").sessionAttr("CurrentUser", customer)).andExpect(status().isOk()).andExpect(
+                content().string("true"));
     }
 
     @Test
-    void testLogout_Failure_NoActiveSession() {
-        when(request.getSession(false)).thenReturn(null);
-
-        ResponseEntity<Boolean> responseEntity = authenticationController.logout(request, response);
-
-        assertEquals(401, responseEntity.getStatusCode().value());
-        assertEquals(Boolean.FALSE, responseEntity.getBody());
+    void testLogout_Failure_NoActiveSession() throws Exception {
+        mockMvc.perform(post("/auth/logout")).andExpect(status().isUnauthorized()).andExpect(content().string("false"));
     }
 }

@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.exсeptions.AccessDeniedException;
+import com.example.volunteer_platform.server.exceptions.AccessDeniedException;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.NotificationService;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
