@@ -53,9 +53,6 @@ public class UserService {
 
     public boolean deleteUser(String email) {
         User user = getUserByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException("User not found with email: " + email);
-        }
         userRepository.delete(user);
         return true;
     }

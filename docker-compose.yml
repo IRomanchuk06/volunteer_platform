@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_volunteer
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: volunteer_platform
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: volunteer_server
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/volunteer_platform?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/app
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    container_name: volunteer_client
+    depends_on:
+      - server
+    volumes:
+      - ./client:/app
