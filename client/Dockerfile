@@ -1,17 +1,19 @@
-FROM eclipse-temurin:23-jdk AS build
+FROM openjdk:21-jdk AS client-build
 
 WORKDIR /app
+
+RUN microdnf install findutils
 
 COPY . .
 
 RUN ./gradlew --no-daemon bootJar
 
-FROM eclipse-temurin:23-jdk
+FROM openjdk:21-jdk AS final-client
 
 WORKDIR /app
 
-COPY --from=build /app/client/build/libs/client-0.0.1-SNAPSHOT.jar /app/app.jar
-COPY --from=build /app/shared_dto /app/shared_dto
-COPY --from=build /app/shared_utils /app/shared_utils
+COPY --from=client-build /app/client/build/libs/client-0.0.1-SNAPSHOT.jar /app/client.jar
+COPY --from=client-build /app/shared_dto /app/shared_dto
+COPY --from=client-build /app/shared_utils /app/shared_utils
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/client.jar"]

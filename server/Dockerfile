@@ -1,19 +1,19 @@
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-jdk AS server-build
 
 WORKDIR /app
 
-COPY gradlew gradlew.bat ./
-COPY gradle/ gradle/
-COPY build.gradle settings.gradle ./
-RUN chmod +x gradlew
+RUN microdnf install findutils
 
-COPY server/build.gradle server/Dockerfile ./server/
-COPY server/ ./server/
-COPY shared_dto/ ./shared_dto/
-COPY shared_utils/ ./shared_utils/
+COPY . .
 
-RUN ./gradlew --no-daemon bootJar
+RUN ./gradlew --no-daemon bootJar --stacktrace
 
-EXPOSE 8080
+FROM openjdk:21-jdk AS final-server
 
-CMD ["java", "-jar", "build/libs/volunteer_platform-0.0.1-SNAPSHOT.jar"]
+WORKDIR /app
+
+COPY --from=server-build /app/server/build/libs/server-0.0.1-SNAPSHOT.jar /app/server.jar
+COPY --from=server-build /app/shared_dto /app/shared_dto
+COPY --from=server-build /app/shared_utils /app/shared_utils
+
+ENTRYPOINT ["java", "-jar", "/app/server.jar"]
