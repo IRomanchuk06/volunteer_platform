@@ -14,6 +14,12 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+    command: ["mysqld", "--bind-address=0.0.0.0"]
 
   server:
     build:
@@ -21,26 +27,32 @@ services:
       dockerfile: server/Dockerfile
     container_name: volunteer_server
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/volunteer_platform?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
     ports:
       - "8080:8080"
-    volumes:
-      - ./server:/app
-    entrypoint: ["sh", "-c", "until nc -z -v -w30 mysql 3306; do echo waiting for mysql; sleep 5; done; ./gradlew bootRun"]
+    networks:
+      - app-network
 
   client:
     build:
       context: .
       dockerfile: client/Dockerfile
     container_name: volunteer_client
+    stdin_open: true
+    tty: true
     depends_on:
       - server
-    volumes:
-      - ./client:/app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   mysql_data:
