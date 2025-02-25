@@ -49,8 +49,8 @@ dependencies {
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    implementation project(':shared_utils')
-    implementation project(':shared_dto')
+    implementation project(':shared:utils')
+    implementation project(':shared:dto')
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core:4.3.1'

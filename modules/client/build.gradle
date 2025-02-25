@@ -28,8 +28,8 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    implementation project(':shared_dto')
-    implementation project(':shared_utils')
+    implementation project(':shared:dto')
+    implementation project(':shared:utils')
 }
 
 application {

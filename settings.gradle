@@ -1,2 +1,5 @@
 rootProject.name = 'volunteer-platform'
-include('server', 'client', 'shared_utils', 'shared_dto')
+include 'modules:client'
+include 'modules:server'
+include 'shared:utils'
+include 'shared:dto'
