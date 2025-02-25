@@ -39,5 +39,4 @@ out/
 .vscode/
 
 ### Logs ###
-server/logs/
-client/logs/
+**/logs/
