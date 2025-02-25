@@ -1,78 +1,35 @@
-# Volunteer Platform
+## **How to Run the Application**
 
-Консольный клиент и сервер для платформы волонтёрства.
+### **1. Install Docker**
+To run the application, you need Docker installed on your system. Follow the official Docker installation guide:
 
-## Описание проекта
+- [Install Docker](https://www.docker.com/get-started)
 
-Volunteer Platform — это система для организации волонтёрской деятельности, включающая серверную часть на Java Spring Boot и консольный клиент. Сервер поддерживает регистрацию, авторизацию, управление событиями и уведомлениями.
+After installation, verify Docker is working:
+```bash
+docker --version
+```
 
-## Структура проекта
+---
 
-- **server/** — Серверная часть (Spring Boot)
-  - `controller/` — Контроллеры для обработки HTTP-запросов
-  - `service/` — Сервисный слой
-  - `repository/` — Репозитории (Spring Data JPA)
-  - `model/` — Сущности базы данных
-  - `events/` — События и обработчики
-  - `exceptions/` — Пользовательские исключения
-  - `utils/` — Вспомогательные утилиты
-- **client/** — Консольный клиент (Spring Boot)
-  - `config/` — Конфигурационные классы
-  - `console_ui/` — Меню и интерфейсы пользователя
-  - `constants/` — Константы и API-эндпоинты
-  - `enums/` — Перечисления (Enums)
-  - `request_builder/` — Конструкторы HTTP-запросов
-  - `utils/` — Вспомогательные классы
-- **shared_dto/** — Общие DTO для взаимодействия между клиентом и сервером
-- **shared_utils/** — Общие утилиты
+### **2. Run the Application**
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/IRomanchuk06/volunteer_platform
+   cd volunteer_platform
+   ```
 
-## Запуск
+2. Make the `run_app.sh` script executable:
+   ```bash
+   chmod +x scripts/run_app.sh
+   ```
 
-1. **Убедитесь, что у вас установлена Java 21 или выше**:
-    - Проверьте версию Java:
-      ```bash
-      java -version
-      ```
+3. Start the application:
+   ```bash
+   ./scripts/run_app.sh
+   ```
 
-2. **Скачайте или клонируйте проект**:
-    - Клонируйте репозиторий:
-      ```bash
-      git clone https://github.com/IRomanchuk06/volunteer-platform.git
-      ```
-    - Перейдите в папку проекта:
-      ```bash
-      cd volunteer-platform
-      ```
-
-3. **Соберите проект**:
-    - Используйте Gradle для сборки:
-      ```bash
-      ./gradlew build
-      ```
-
-4. **Запустите сервер**:
-    - Откройте новый терминал и запустите сервер:
-      ```bash
-      ./gradlew :server:bootRun
-      ```
-
-5. **Запустите клиент**:
-    - В другом терминале запустите клиент с консольным интерфейсом:
-      ```bash
-      ./gradlew :client:bootRun --console=plain
-      ```
-
-6. **Используйте платформу**:
-    - Следуйте инструкциям в консоли клиента для регистрации, входа и взаимодействия с платформой.
-
-## Зависимости
-- Spring Boot 3.1.5
-- Hibernate Validator
-- Lombok
-- MapStruct
-- MySQL Connector
-- JUnit 5, Mockito (для тестирования)
-
-## Контакты
-Если у вас есть вопросы или предложения, свяжитесь со мной через [GitHub](https://github.com/IRomanchuk06).
-
+   To see detailed logs, use the `--verbose` or `-v` flag:
+   ```bash
+   ./scripts/run_app.sh --verbose
+   ```
