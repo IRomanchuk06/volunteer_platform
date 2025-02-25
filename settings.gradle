@@ -1,4 +1,4 @@
-rootProject.name = 'volunteer-platform'
+rootProject.name = 'volunteer_platform'
 include 'modules:client'
 include 'modules:server'
 include 'shared:utils'
