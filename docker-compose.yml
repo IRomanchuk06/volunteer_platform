@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql_volunteer
+    container_name: sql_volunteer
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -24,9 +22,10 @@ services:
       - app-network
 
   server:
+    image: iromanchuk06/volunteer_server:latest
     build:
       context: .
-      dockerfile: server/Dockerfile
+      dockerfile: modules/server/Dockerfile
     container_name: volunteer_server
     depends_on:
       mysql:
@@ -41,9 +40,10 @@ services:
       - app-network
 
   client:
+    image: iromanchuk06/volunteer_client:latest
     build:
       context: .
-      dockerfile: client/Dockerfile
+      dockerfile: modules/client/Dockerfile
     container_name: volunteer_client
     stdin_open: true
     tty: true

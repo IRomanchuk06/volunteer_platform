@@ -2,22 +2,26 @@ FROM openjdk:21-jdk-slim AS server-build
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y findutils
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY shared/dto shared/dto
+COPY shared/utils shared/utils
+COPY modules/server/build.gradle modules/server/build.gradle
+COPY modules/server/src modules/server/src
 
-COPY . .
-
-RUN ./gradlew --no-daemon bootJar -x test --stacktrace
+RUN ./gradlew --no-daemon modules:server:dependencies
+RUN ./gradlew --no-daemon modules:server:bootJar
 
 FROM openjdk:21-jdk-slim AS final-server
 
 WORKDIR /app
 
-COPY scripts/wait-for-it.sh /app/scripts/wait-for-it.sh
-RUN apt-get update && apt-get install -y netcat-openbsd
-RUN chmod +x /app/scripts/wait-for-it.sh
+RUN useradd -m appuser && chown -R appuser /app
+USER appuser
 
-COPY --from=server-build /app/server/build/libs/server-0.0.1-SNAPSHOT.jar /app/server.jar
-COPY --from=server-build /app/shared_dto /app/shared_dto
-COPY --from=server-build /app/shared_utils /app/shared_utils
+COPY --from=server-build /app/modules/server/build/libs/server-*.jar /app/server.jar
+ADD scripts/wait-for-it.sh /app/scripts/wait-for-it.sh
 
-ENTRYPOINT ["bash", "-c", "/app/scripts/wait-for-it.sh mysql:3306 -- java -jar /app/server.jar"]
+ENTRYPOINT ["/app/scripts/wait-for-it.sh", "mysql:3306", "--timeout=60", "--", "java", "-jar", "/app/server.jar"]
