@@ -1,4 +1,4 @@
-package com.example.volunteer_platform.server.config;
+package com.example.volunteer_platform.server.tests_config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

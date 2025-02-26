@@ -1,14 +1,12 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.config.JacksonConfig;
+import com.example.volunteer_platform.server.tests_config.JacksonConfig;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.service.CustomerService;
 import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

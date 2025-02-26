@@ -20,9 +20,12 @@ public class AuthenticationService {
 
     public User authenticate(String email, String password) {
         Optional<User> user = Optional.ofNullable(userRepository.findUserByEmail(email));
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return user.get();
+        if (user.isPresent()) {
+            if(user.get().getPassword().equals(password)) {
+                return user.get();
+            }
+            throw new AuthenticationException("Invalid password");
         }
-        throw new AuthenticationException("Invalid email or password");
+        throw new AuthenticationException("Invalid email");
     }
 }

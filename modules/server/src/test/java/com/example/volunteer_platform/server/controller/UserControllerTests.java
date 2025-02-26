@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.controller;
 
-import com.example.volunteer_platform.server.config.JacksonConfig;
+import com.example.volunteer_platform.server.tests_config.JacksonConfig;
 import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHandler;
 import com.example.volunteer_platform.server.exceptions.UserNotFoundException;
 import com.example.volunteer_platform.server.model.Customer;

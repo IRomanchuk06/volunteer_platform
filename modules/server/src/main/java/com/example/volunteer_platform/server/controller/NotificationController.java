@@ -5,8 +5,8 @@ import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.NotificationService;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
-import com.example.volunteer_platform.server.logging.AppLogger;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +21,8 @@ import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFr
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
-    private static final Logger logger = AppLogger.SERVER_LOGGER;
 
+    private static final Logger serverLogger = LoggerFactory.getLogger(NotificationController.class);
     private final NotificationService notificationService;
 
     @Autowired
@@ -32,31 +32,31 @@ public class NotificationController {
 
     @GetMapping("/received/messages")
     public ResponseEntity<List<MessageResponseDTO>> getReceivedMessages(HttpServletRequest request) {
-        logger.info("Incoming request to /notifications/received/messages");
+        serverLogger.info("Incoming request to /notifications/received/messages");
 
         User user = getUserFromSession(request);
         List<MessageResponseDTO> messages = notificationService.getReceivedMessages(user);
 
-        logger.info("Responding with status 200 and payload: {}", messages);
+        serverLogger.info("Responding with status 200 and payload: {}", messages);
 
         return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/received/responses")
     public ResponseEntity<List<VolunteerEventResponseDTO>> getVolunteerResponses(HttpServletRequest request) {
-        logger.info("Incoming request to /notifications/received/responses");
+        serverLogger.info("Incoming request to /notifications/received/responses");
 
         User user = getUserFromSession(request);
-        logger.info(String.valueOf(user.getRole()));
+        serverLogger.info(String.valueOf(user.getRole()));
 
         if (!user.getRole().equals(User.UserRole.CUSTOMER)) {
-            logger.warn("Access denied for user with role: {}", user.getRole());
+            serverLogger.warn("Access denied for user with role: {}", user.getRole());
             throw new AccessDeniedException("Event feedback is only available to the customer.");
         }
 
         List<VolunteerEventResponseDTO> responses = notificationService.getVolunteerResponses(user);
 
-        logger.info("Responding with status 200 and payload: {}", responses);
+        serverLogger.info("Responding with status 200 and payload: {}", responses);
 
         return ResponseEntity.ok(responses);
     }

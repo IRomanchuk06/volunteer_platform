@@ -6,10 +6,10 @@ import com.example.volunteer_platform.shared_dto.EventRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserRegistrationDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
-import com.example.volunteer_platform.server.logging.AppLogger;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,6 @@ import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFr
 @RequestMapping("/customers")
 public class CustomerController extends UserController {
 
-    private static final Logger logger = AppLogger.SERVER_LOGGER;
-
     @Autowired
     public CustomerController(CustomerService customerService) {
         super(customerService);
@@ -35,7 +33,7 @@ public class CustomerController extends UserController {
 
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createCustomer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
-        logger.info("Incoming request to /customers with payload: {}", accountRequest);
+        serverLogger.info("Incoming request to /customers with payload: {}", accountRequest);
 
         CustomerService customerService = (CustomerService) userService;
         UserResponseDTO userResponse = customerService.createCustomer(
@@ -43,14 +41,14 @@ public class CustomerController extends UserController {
                 accountRequest.getPassword(),
                 accountRequest.getUsername());
 
-        logger.info("Responding with status {} and payload: {}", HttpStatus.CREATED, userResponse);
+        serverLogger.info("Responding with status {} and payload: {}", HttpStatus.CREATED, userResponse);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PostMapping("/events/")
     public ResponseEntity<EventResponseDTO> createEvent(@Valid @RequestBody EventRegistrationDTO eventRequest, HttpServletRequest request) {
-        logger.info("Incoming request to /customers/events with payload: {}", eventRequest);
+        serverLogger.info("Incoming request to /customers/events with payload: {}", eventRequest);
 
         User currentUser = getUserFromSession(request);
 
@@ -66,7 +64,7 @@ public class CustomerController extends UserController {
                 eventRequest.getNumOfRequiredVolunteers()
         );
 
-        logger.info("Responding with status {} and payload: {}", HttpStatus.CREATED, eventResponse);
+        serverLogger.info("Responding with status {} and payload: {}", HttpStatus.CREATED, eventResponse);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
     }

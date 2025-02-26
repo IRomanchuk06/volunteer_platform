@@ -28,7 +28,9 @@ class VerificationControllerTests {
 
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(verificationController).setControllerAdvice(new GlobalExceptionHandler()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(verificationController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     @Test

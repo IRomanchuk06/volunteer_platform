@@ -49,7 +49,7 @@ public class AuthenticationServiceTests {
         AuthenticationException exception = assertThrows(AuthenticationException.class, () ->
                 authenticationService.authenticate(email, password));
 
-        assertEquals("Invalid email or password", exception.getMessage());
+        assertEquals("Invalid email", exception.getMessage());
     }
 
     @Test
@@ -65,6 +65,6 @@ public class AuthenticationServiceTests {
         AuthenticationException exception = assertThrows(AuthenticationException.class, () ->
                 authenticationService.authenticate(email, password));
 
-        assertEquals("Invalid email or password", exception.getMessage());
+        assertEquals("Invalid password", exception.getMessage());
     }
 }
