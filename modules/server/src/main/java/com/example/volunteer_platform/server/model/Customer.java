@@ -3,15 +3,16 @@ package com.example.volunteer_platform.server.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import lombok.Builder;
 
 import java.util.*;
 
+@EqualsAndHashCode(callSuper = true, exclude = "events")
 @Entity
 @SuperBuilder
 @NoArgsConstructor
+@Data
 public class Customer extends User {
 
     @Builder.Default

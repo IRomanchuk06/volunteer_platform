@@ -7,7 +7,6 @@ import lombok.*;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Message extends Notification{
     private String message;
 }
