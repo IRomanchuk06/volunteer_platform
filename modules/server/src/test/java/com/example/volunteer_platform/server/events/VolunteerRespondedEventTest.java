@@ -5,6 +5,7 @@ import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.Volunteer;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEvent;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class VolunteerRespondedEventTest {
@@ -25,6 +26,6 @@ class VolunteerRespondedEventTest {
     @Test
     void shouldInheritFromApplicationEvent() {
         VolunteerRespondedEvent event = new VolunteerRespondedEvent(this, new Event(), new Volunteer(), new Customer());
-        assertTrue(event instanceof ApplicationEvent);
+        assertInstanceOf(ApplicationEvent.class, event);
     }
 }

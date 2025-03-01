@@ -47,27 +47,20 @@ public class DisplayFormatter {
             return MESSAGE_NOT_AVAILABLE;
         }
 
-        StringBuilder builder = new StringBuilder();
+        String builder = NOTIFICATION_HEADER +
+                ID_LABEL + message.getId() + NEW_LINE +
+                SENDER_LABEL +
+                (message.getSenderEmail() != null ? message.getSenderEmail() : NOT_AVAILABLE) + NEW_LINE +
+                RECIPIENT_LABEL +
+                (message.getRecipientEmail() != null ? message.getRecipientEmail() : NOT_AVAILABLE) + NEW_LINE +
+                DATE_LABEL + (message.getCreatedAt() != null ? message.getCreatedAt().format(
+                DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)) : NOT_AVAILABLE) +
+                NEW_LINE +
+                STATUS_LABEL + (message.isRead() ? "Yes" : "No") + NEW_LINE +
+                MESSAGE_HEADER +
+                (message.getMessage() != null ? message.getMessage() : "No message content") + NEW_LINE;
 
-        builder.append(NOTIFICATION_HEADER);
-
-        builder.append(ID_LABEL).append(message.getId()).append(NEW_LINE);
-
-        builder.append(SENDER_LABEL).append(
-                message.getSenderEmail() != null ? message.getSenderEmail() : NOT_AVAILABLE).append(NEW_LINE);
-
-        builder.append(RECIPIENT_LABEL).append(
-                message.getRecipientEmail() != null ? message.getRecipientEmail() : NOT_AVAILABLE).append(NEW_LINE);
-
-        builder.append(DATE_LABEL).append(message.getCreatedAt() != null ? message.getCreatedAt().format(
-                DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)) : NOT_AVAILABLE).append(NEW_LINE);
-
-        builder.append(STATUS_LABEL).append(message.isRead() ? "Yes" : "No").append(NEW_LINE);
-
-        builder.append(MESSAGE_HEADER).append(
-                message.getMessage() != null ? message.getMessage() : "No message content").append(NEW_LINE);
-
-        return builder.toString();
+        return builder;
     }
 
     public static String formatVolunteerResponseForDisplay(VolunteerEventResponseDTO response) {
@@ -75,23 +68,18 @@ public class DisplayFormatter {
             return VOLUNTEER_RESPONSE_NOT_AVAILABLE;
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(VOLUNTEER_RESPONSE_HEADER);
+        String builder = VOLUNTEER_RESPONSE_HEADER +
+                ID_LABEL + response.getId() + NEW_LINE +
+                VOLUNTEER_LABEL +
+                (response.getVolunteerName() != null ? response.getVolunteerName() + " (ID: " + response.getVolunteerId() + ")" : NOT_AVAILABLE) +
+                NEW_LINE +
+                EVENT_LABEL +
+                (response.getEventName() != null ? response.getEventName() : NOT_AVAILABLE) + NEW_LINE +
+                STATUS_LABEL + (response.isRead() ? "Yes" : "No") + NEW_LINE +
+                RESPONSE_TIME_LABEL + (response.getCreatedAt() != null ? response.getCreatedAt().format(
+                DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)) : NOT_AVAILABLE) +
+                NEW_LINE;
 
-        builder.append(ID_LABEL).append(response.getId()).append(NEW_LINE);
-
-        builder.append(VOLUNTEER_LABEL).append(
-                response.getVolunteerName() != null ? response.getVolunteerName() + " (ID: " + response.getVolunteerId() + ")" : NOT_AVAILABLE).append(
-                NEW_LINE);
-
-        builder.append(EVENT_LABEL).append(
-                response.getEventName() != null ? response.getEventName() : NOT_AVAILABLE).append(NEW_LINE);
-
-        builder.append(STATUS_LABEL).append(response.isRead() ? "Yes" : "No").append(NEW_LINE);
-
-        builder.append(RESPONSE_TIME_LABEL).append(response.getCreatedAt() != null ? response.getCreatedAt().format(
-                DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)) : NOT_AVAILABLE).append(NEW_LINE);
-
-        return builder.toString();
+        return builder;
     }
 }

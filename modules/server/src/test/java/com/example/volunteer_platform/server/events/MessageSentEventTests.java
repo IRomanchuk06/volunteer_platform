@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.events;
 import com.example.volunteer_platform.server.model.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEvent;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageSentEventTests {
@@ -25,6 +26,6 @@ class MessageSentEventTests {
     @Test
     void shouldBeApplicationEventSubclass() {
         MessageSentEvent event = new MessageSentEvent(this, "Msg", new Customer(), new Customer());
-        assertTrue(event instanceof ApplicationEvent);
+        assertInstanceOf(ApplicationEvent.class, event);
     }
 }
