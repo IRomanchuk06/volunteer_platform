@@ -9,12 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VolunteerTests {
     private Volunteer volunteer;
-    private Event event;
 
     @BeforeEach
     void setUp() {
         volunteer = Volunteer.builder().build();
-        event = new Event();
     }
 
     @Nested

@@ -1,6 +1,5 @@
 package com.example.volunteer_platform.server.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +19,11 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @ToString(exclude = {"responses", "volunteers", "customer"})
-@EqualsAndHashCode(exclude = {"responses", "volunteers", "customer"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Event {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

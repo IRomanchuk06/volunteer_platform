@@ -7,7 +7,6 @@ import lombok.*;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(exclude = "event")
 @EqualsAndHashCode(exclude = "event", callSuper = true)
 public class Response extends Notification{

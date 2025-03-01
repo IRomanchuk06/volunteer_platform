@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.model;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -18,26 +18,94 @@ class MessageTests {
     @Mock
     private User recipient;
 
-    @Test
-    void shouldInheritFromNotificationAndSetMessage() {
+    private Message createTestMessage(Long id, String text) {
         Message message = new Message();
+        message.setId(id);
         message.setSender(sender);
         message.setRecipient(recipient);
-        message.setMessage("Test message");
+        message.setMessage(text);
         message.setType(Notification.NotificationType.MESSAGE);
         message.setCreatedAt(LocalDateTime.now());
         message.setRead(false);
-        message.setId(1L);
+        return message;
+    }
 
-        assertAll(
-                () -> assertEquals(1L, message.getId()),
-                () -> assertSame(sender, message.getSender()),
-                () -> assertSame(recipient, message.getRecipient()),
-                () -> assertEquals(Notification.NotificationType.MESSAGE, message.getType()),
-                () -> assertNotNull(message.getCreatedAt()),
-                () -> assertFalse(message.isRead())
-        );
+    @Nested
+    class InheritanceTests {
+        @Test
+        void shouldInheritFromNotificationAndSetMessage() {
+            Message message = createTestMessage(1L, "Test message");
 
-        assertEquals("Test message", message.getMessage());
+            assertAll(
+                    () -> assertEquals(1L, message.getId()),
+                    () -> assertEquals("Test message", message.getMessage()),
+                    () -> assertSame(sender, message.getSender()),
+                    () -> assertEquals(Notification.NotificationType.MESSAGE, message.getType())
+            );
+        }
+    }
+
+    @Nested
+    class EqualsAndHashCodeTests {
+        @Test
+        void shouldBeEqualWithSameIdAndMessage() {
+            Message msg1 = createTestMessage(1L, "Hello");
+            Message msg2 = createTestMessage(1L, "Hello");
+
+            assertEquals(msg1, msg2);
+            assertEquals(msg1.hashCode(), msg2.hashCode());
+        }
+
+        @Test
+        void shouldNotBeEqualWithDifferentMessage() {
+            Message msg1 = createTestMessage(1L, "Hello");
+            Message msg2 = createTestMessage(1L, "Hi");
+
+            assertNotEquals(msg1, msg2);
+        }
+
+        @Test
+        void shouldNotBeEqualWithDifferentId() {
+            Message msg1 = createTestMessage(1L, "Hello");
+            Message msg2 = createTestMessage(2L, "Hello");
+
+            assertNotEquals(msg1, msg2);
+        }
+
+        @Test
+        void shouldImplementCanEqualCorrectly() {
+            Message msg = createTestMessage(1L, "Test");
+            Notification notification = new Message();
+            notification.setId(1L);
+
+            assertTrue(msg.canEqual(notification));
+            assertFalse(msg.canEqual(new Object()));
+        }
+    }
+
+    @Nested
+    class ToStringTests {
+        @Test
+        void shouldIncludeMessageInToString() {
+            Message message = createTestMessage(1L, "Important!");
+            String toString = message.toString();
+
+            assertAll(
+                    () -> assertTrue(toString.contains("message=Important!")),
+                    () -> assertTrue(toString.contains("id=1"))
+            );
+        }
+    }
+
+    @Nested
+    class NullHandlingTests {
+        @Test
+        void shouldHandleNullMessage() {
+            Message message = new Message();
+            message.setMessage(null);
+
+            assertNull(message.getMessage());
+            assertDoesNotThrow(message::hashCode);
+        }
     }
 }

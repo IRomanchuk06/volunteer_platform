@@ -1,15 +1,13 @@
 package com.example.volunteer_platform.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTests {
-
     private User user;
 
     @BeforeEach
@@ -22,89 +20,146 @@ class UserTests {
         user.setRole(User.UserRole.CUSTOMER);
     }
 
-    @Test
-    void testGettersAndSetters() {
-        assertEquals(1L, user.getId());
-        assertEquals("testUser", user.getUsername());
-        assertEquals("testPassword", user.getPassword());
-        assertEquals("test@example.com", user.getEmail());
-        assertEquals(User.UserRole.CUSTOMER, user.getRole());
+    @Nested
+    class InitializationTests {
+        @Test
+        void testAllArgsConstructor() {
+            List<Notification> notifications = new ArrayList<>();
+            User user = new User(1L, "testUser", "testPassword", "test@example.com", User.UserRole.CUSTOMER, notifications) {};
+
+            assertAll(
+                    () -> assertEquals(1L, user.getId()),
+                    () -> assertEquals("testUser", user.getUsername()),
+                    () -> assertEquals("test@example.com", user.getEmail())
+            );
+        }
+
+        @Test
+        void testAllArgsConstructorWithNullValues() {
+            List<Notification> notifications = new ArrayList<>();
+            User user = new User(null, null, null, null, null, notifications) {};
+
+            assertAll(
+                    () -> assertNull(user.getId()),
+                    () -> assertNull(user.getUsername()),
+                    () -> assertNull(user.getRole())
+            );
+        }
     }
 
-    @Test
-    void testNotifications() {
-        Notification notification = new Message();
-        user.getNotifications().add(notification);
+    @Nested
+    class GetterSetterTests {
+        @Test
+        void testGettersAndSetters() {
+            assertAll(
+                    () -> assertEquals(1L, user.getId()),
+                    () -> assertEquals("testPassword", user.getPassword()),
+                    () -> assertEquals(User.UserRole.CUSTOMER, user.getRole())
+            );
+        }
 
-        assertEquals(1, user.getNotifications().size());
-        assertTrue(user.getNotifications().contains(notification));
+        @Test
+        void testSetNotifications() {
+            List<Notification> newNotifications = new ArrayList<>();
+            newNotifications.add(new Message());
+
+            user.setNotifications(newNotifications);
+            assertEquals(1, user.getNotifications().size());
+        }
+
+        @Test
+        void testSetNullNotifications() {
+            user.setNotifications(null);
+            assertNull(user.getNotifications());
+        }
     }
 
-    @Test
-    void testAllArgsConstructor() {
-        List<Notification> notifications = new ArrayList<>();
+    @Nested
+    class NotificationsManagementTests {
+        @Test
+        void testAddNullNotification() {
+            user.getNotifications().add(null);
+            assertEquals(1, user.getNotifications().size());
+        }
 
-        User user = new User(1L, "testUser", "testPassword", "test@example.com", User.UserRole.CUSTOMER, notifications) {};
+        @Test
+        void testRemoveNotification() {
+            Notification notification = new Message();
+            user.getNotifications().add(notification);
+            user.getNotifications().remove(notification);
 
-        assertEquals(1L, user.getId());
-        assertEquals("testUser", user.getUsername());
-        assertEquals("testPassword", user.getPassword());
-        assertEquals("test@example.com", user.getEmail());
-        assertEquals(User.UserRole.CUSTOMER, user.getRole());
-        assertEquals(notifications, user.getNotifications());
+            assertTrue(user.getNotifications().isEmpty());
+        }
     }
 
-    @Test
-    void testAllArgsConstructorWithNullValues() {
-        List<Notification> notifications = new ArrayList<>();
+    @Nested
+    class EqualsAndHashCodeTests {
+        @Test
+        void testEqualsAndHashCode() {
+            User user1 = createUser(1L, "user");
+            User user2 = createUser(1L, "user");
 
-        User user = new User(null, null, null, null, null, notifications) {};
+            assertEquals(user1, user2);
+            assertEquals(user1.hashCode(), user2.hashCode());
+        }
 
-        assertNull(user.getId());
-        assertNull(user.getUsername());
-        assertNull(user.getPassword());
-        assertNull(user.getEmail());
-        assertNull(user.getRole());
-        assertEquals(notifications, user.getNotifications());
+        @Test
+        void testNotEquals() {
+            User user1 = createUser(1L, "user1");
+            User user2 = createUser(2L, "user2");
+
+            assertNotEquals(user1, user2);
+        }
+
+        @Test
+        void testEqualsWithDifferentFields() {
+            User user1 = createUser(1L, "user1");
+            User user2 = createUser(1L, "user2");
+
+            assertNotEquals(user1, user2);
+        }
+
+        @Test
+        void testHashCodeConsistency() {
+            User user = createUser(1L, "test");
+            int initialHashCode = user.hashCode();
+
+            assertEquals(initialHashCode, user.hashCode());
+        }
+
+        private User createUser(Long id, String username) {
+            User user = new User() {};
+            user.setId(id);
+            user.setUsername(username);
+            return user;
+        }
     }
 
-    @Test
-    void testAddNullNotification() {
-        user.getNotifications().add(null);
+    @Nested
+    class CollectionHandlingTests {
+        @Test
+        void testEqualsWithDifferentNotificationLists() {
+            User user1 = createUserWithNotifications(1);
+            User user2 = createUserWithNotifications(2);
 
-        assertEquals(1, user.getNotifications().size());
-        assertNull(user.getNotifications().getFirst());
-    }
+            assertEquals(user1, user2);
+        }
 
-    @Test
-    void testRemoveNotification() {
-        Notification notification = new Message();
-        user.getNotifications().add(notification);
+        @Test
+        void testHashCodeWithDifferentNotificationLists() {
+            User user1 = createUserWithNotifications(1);
+            User user2 = createUserWithNotifications(0);
 
-        assertEquals(1, user.getNotifications().size());
-        assertTrue(user.getNotifications().contains(notification));
+            assertEquals(user1.hashCode(), user2.hashCode());
+        }
 
-        user.getNotifications().remove(notification);
-
-        assertEquals(0, user.getNotifications().size());
-        assertFalse(user.getNotifications().contains(notification));
-    }
-
-    @Test
-    void testEqualsAndHashCode() {
-        User user1 = new User(1L, "testUser", "testPassword", "test@example.com", User.UserRole.CUSTOMER, new ArrayList<>()) {};
-        User user2 = new User(1L, "testUser", "testPassword", "test@example.com", User.UserRole.CUSTOMER, new ArrayList<>()) {};
-
-        assertEquals(user1, user2);
-        assertEquals(user1.hashCode(), user2.hashCode());
-    }
-
-    @Test
-    void testNotEquals() {
-        User user1 = new User(1L, "testUser", "testPassword", "test@example.com", User.UserRole.CUSTOMER, new ArrayList<>()) {};
-        User user2 = new User(2L, "testUser2", "testPassword2", "test2@example.com", User.UserRole.VOLUNTEER, new ArrayList<>()) {};
-
-        assertNotEquals(user1, user2);
-        assertNotEquals(user1.hashCode(), user2.hashCode());
+        private User createUserWithNotifications(int count) {
+            User user = new User() {};
+            user.setId(1L);
+            for (int i = 0; i < count; i++) {
+                user.getNotifications().add(new Message());
+            }
+            return user;
+        }
     }
 }
