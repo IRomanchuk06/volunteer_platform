@@ -2,6 +2,7 @@
 
 VERBOSE=false
 BUILD=false
+CLEAN=false
 DOCKER_CMD="docker"
 
 check_docker_permissions() {
@@ -19,6 +20,9 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --build)
       BUILD=true
+      ;;
+    --clean)
+      CLEAN=true
       ;;
     *)
       echo "Unknown option: $1"
@@ -38,13 +42,18 @@ run_command() {
   fi
 }
 
+if [ "$CLEAN" = true ]; then
+    echo "Cleaning all containers, volumes, and images..."
+    run_command $DOCKER_CMD compose down --volumes --rmi all
+else
+    echo "Stopping and removing existing containers..."
+    run_command $DOCKER_CMD compose down
+fi
+
 if [ "$BUILD" = true ]; then
   echo "Building Docker images..."
   run_command $DOCKER_CMD compose build
 fi
-
-echo "Stopping and removing existing containers..."
-run_command $DOCKER_CMD compose down
 
 echo "Starting server and database..."
 run_command $DOCKER_CMD compose up -d server mysql
