@@ -3,11 +3,13 @@ package com.example.volunteer_platform.server.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

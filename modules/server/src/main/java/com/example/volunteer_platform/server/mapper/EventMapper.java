@@ -37,6 +37,9 @@ public interface EventMapper {
     }
 
     default EventParticipantResponseDTO mapEventParticipant(User user) {
+        if (user == null) {
+            return null;
+        }
         return new EventParticipantResponseDTO(
                 user.getId(),
                 user.getUsername(),

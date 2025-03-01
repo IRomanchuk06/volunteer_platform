@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface VolunteerResponseMapper {
     @Mapping(target = "id", expression = "java(response.getId())")
-    @Mapping(target = "volunteerId", expression = "java(response.getSender().getId())")
-    @Mapping(target = "volunteerName", expression = "java(response.getSender().getUsername())")
-    @Mapping(target = "eventName", expression = "java(response.getEvent().getName())")
+    @Mapping(target = "volunteerId", expression = "java(response.getSender() != null ? response.getSender().getId() : null)")
+    @Mapping(target = "volunteerName", expression = "java(response.getSender() != null ? response.getSender().getUsername() : null)")
+    @Mapping(target = "eventName", expression = "java(response.getEvent() != null ? response.getEvent().getName() : null)")
     @Mapping(target = "read", expression = "java(response.isRead())")
     @Mapping(target = "createdAt", expression = "java(response.getCreatedAt())")
     VolunteerEventResponseDTO toVolunteerResponseDTO(Response response);
