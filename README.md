@@ -190,46 +190,44 @@ POST /users/messages/
 
 ---
 
-## 🐳 Docker Setup  
+### 🛠️ **Development Setup**  
 
-### Services Overview  
-| Service       | Image                  | Port    | Depends On  |
-|---------------|------------------------|---------|-------------|
-| MySQL         | `mysql:8.0`            | 3307    | -           |
-| Spring Server | `volunteer_server`      | 8080    | MySQL       |
-| Console Client| `volunteer_client`      | -       | Server      |
+**1. Clone & Build**  
+```bash  
+git clone https://github.com/IRomanchuk06/volunteer_platform  
+cd volunteer_platform  
+./gradlew clean build  # Build the entire project  
+```  
 
-### Deployment Commands  
-```bash
-# Start full stack
-docker-compose up --build
+**2. Run Services**  
+- **Start the Server** (in one terminal):  
+  ```bash  
+  ./gradlew modules:server:bootRun  # Server starts on http://localhost:8080  
+  ```  
 
-# Stop and clean
-docker-compose down -v
-
-# Monitor logs
-docker logs volunteer_server -f
-```
+- **Start the Client** (in another terminal):  
+  ```bash  
+  ./gradlew modules:client:bootRun  # Interactive console interface  
+  ```  
 
 ---
 
-## 💻 Development Guide  
+### 🚀 **Quick Start for Users**  
 
-### Local Setup  
-1. Clone repository:  
-```bash
-git clone https://github.com/IRomanchuk06/volunteer_platform
-```
+**1. Clone & Run with Docker**  
+```bash  
+git clone https://github.com/IRomanchuk06/volunteer_platform  
+cd volunteer_platform  
+./scripts/run_app.sh  # Starts MySQL, Server, and Client automatically  
+```  
 
-2. Run server:  
-```bash
-./gradlew modules:server:bootRun
-```
+**2. Access Services**  
+- **Server API**: `http://localhost:8080`  
+- **MySQL Database**: Port `3307` (use tools like DBeaver)  
+- **Client**: Follow on-screen instructions in the console.  
 
-3. Run client (separate terminal):  
-```bash
-./gradlew modules:client:bootRun --console=plain  # --console=plain to improve display
-```
+---
+
 
 ### Build Options  
 | Command                      | Description                     |
