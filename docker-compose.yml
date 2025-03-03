@@ -34,11 +34,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/volunteer_platform?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+      SERVER_ENDPOINT: http://server:8080
+
     ports:
       - "8080:8080"
     networks:
       - app-network
-
   client:
     image: iromanchuk06/volunteer_client:latest
     build:

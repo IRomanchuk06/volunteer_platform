@@ -25,6 +25,7 @@ test {
         events "passed", "skipped", "failed", "standardError"
     }
     outputs.upToDateWhen { false }
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification
 }
 
 dependencies {
@@ -69,4 +70,33 @@ application {
 
 tasks.named('bootRun') {
     args = ['--spring.config.location=src/main/resources/application.properties']
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+    reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+}
+
+tasks.jacocoTestReport {
+    dependsOn test
+    onlyIf { test.getDidWork() }
+
+    executionData.from = fileTree(dir: layout.buildDirectory.dir("jacoco"), includes: ["*.exec"])
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.8
+            }
+        }
+    }
 }
