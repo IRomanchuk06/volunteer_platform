@@ -1,37 +1,34 @@
-**Volunteer Platform**  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
-[![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  
-[![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)](https://github.com)
+# **Volunteer Platform**  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)](https://github.com)  
 
-
----
-
-## 📋 Table of Contents  
-- [Key Features](#-key-features)  
-- [Project Structure](#-project-structure)  
-- [Technology Stack](#-technology-stack)  
-- [Server Architecture](#-server-architecture)  
-- [API Workflows](#-api-workflows)  
-- [Docker Deployment](#-docker-deployment)  
-- [Scripts Guide](#-scripts-guide)  
-- [Testing Strategy](#-testing-strategy)  
-- [License](#-license)  
-- [Contact](#-contact)  
+A backend-focused platform demonstrating modern Spring Boot development practices with **3-layer architecture** and **93% test coverage**.  
+*Perfect for learning enterprise-grade Java development!*  
 
 ---
 
-## 🚀 Project Overview
-Platform for coordinating volunteer activities with:
-- **Role-based access**: Customers (event organizers) and Volunteers
-- **Core features**: Event management, real-time messaging, session-based auth
-- **Infrastructure**: Multi-module Gradle project, Dockerized services
-- **CI-ready**: Integrated Jacoco coverage reports, test automation
+## 🌟 **Key Features**  
+- 🏗️ **Clean Architecture** (Controller-Service-Repository)  
+- 🔒 **Role-Based Access** (Customers/Volunteers)  
+- 🧪 **Test-Driven Development** (Unit/Integration Tests)  
+- 📦 **Dockerized Deployment** (MySQL + Spring Boot)  
+- ✉️ **Real-Time Messaging** with Spring Events  
+
+---
+
+## 📋 **Table of Contents**  
+1. [Project Structure](#-project-structure)  
+2. [Tech Stack](#-tech-stack)  
+3. [Architecture](#-architecture)  
+4. [API Examples](#-api-examples)  
+5. [Docker Setup](#-docker-setup)  
+6. [Development Guide](#-development-guide)  
+7. [Testing](#-testing)  
+8. [Support](#-support)  
 
 ---
 
 ## 🗂️ Project Structure  
-### Server Module Deep Dive  
+```text
 ```plaintext
 volunteer_platform/  
 ├── modules/  
@@ -61,28 +58,38 @@ volunteer_platform/
 └── build.gradle                  # Multi-module build config  
 ```
 
----
-
-## ⚙️ Technology Stack
-
-### Backend
-| Component               | Technology                          | Version           |
-|-------------------------|-------------------------------------|-------------------|
-| Framework               | Spring Boot                         | 3.1.5             |
-| ORM                     | Hibernate                           | 6.2.10.Final      |
-| Validation              | Hibernate Validator                 | 8.0.0.Final       |
-| Database                | MySQL (Prod), H2 (Test)             | 8.0.33            |
-| Build Tool              | Gradle                              | 8.5               |
-| Code Quality            | Lombok, Jacoco                      | 1.18.30, 0.8.10   |
-
-### Testing
-| Tool                    | Purpose                              | Coverage         |
-|-------------------------|--------------------------------------|------------------|
-| JUnit 5, Mockito        | Unit & Integration Tests             | 90%+             |
 
 ---
 
-## 🖥️ Server Architecture  
+## ⚡ **Tech Stack**  
+
+### Backend Core  
+| Component       | Technology           | Purpose                          |
+|-----------------|----------------------|----------------------------------|
+| Framework       | Spring Boot 3.2      | REST API development             |
+| ORM             | Hibernate 6          | Database interactions            |
+| Validation      | Hibernate Validator  | Request validation               |
+| Build Tool      | Gradle 8.5           | Dependency management            |
+
+### Infrastructure  
+| Component       | Technology           | Usage                            |
+|-----------------|----------------------|----------------------------------|
+| Database        | MySQL 8.0            | Production data storage          |
+| Containerization| Docker               | Service isolation                |
+| Testing         | JUnit 5 + Mockito    | Test automation                  |
+
+---
+
+## 🏛️ Architecture  
+
+### 3-Layer Design  
+```mermaid
+flowchart TD
+    A[Client] -->|HTTP| B[Controller]
+    B -->|DTO| C[Service]
+    C -->|Entity| D[Repository]
+    D -->|JPA| E[(MySQL)]
+```
 ### Request Processing Flow  
 ```mermaid
 sequenceDiagram
@@ -115,6 +122,24 @@ sequenceDiagram
         Controller-->>Client: 4xx/5xx (Error Details)
     end
 ```
+---
+
+
+### Key Components  
+1. **Controller Layer**  
+   - Handles HTTP requests/responses  
+   - Input validation (`@Valid`)  
+   - Exception handling  
+
+2. **Service Layer**  
+   - Business logic implementation  
+   - Transaction management (`@Transactional`)  
+   - Event publishing  
+
+3. **Repository Layer**  
+   - Database operations via Spring Data JPA  
+   - Custom query methods  
+
 ---
 
 ## 📡 API Workflows  
@@ -165,101 +190,90 @@ POST /users/messages/
 
 ---
 
-## 🐳 Docker Deployment 
-### Services Configuration
-| Service     | Image                  | Port  | 
-|-------------|------------------------|-------| 
-| MySQL       | mysql:8.0              | 3307  |  
-| Server      | volunteer_server:latest| 8080  | 
-| Client      | volunteer_client:latest| -     |  
+## 🐳 Docker Setup  
 
-### Service Dependencies
-```mermaid  
-graph TD  
-    MySQL[(MySQL 8.0)] -->|JDBC| Server[Spring Boot Server]  
-    Server -->|REST API| Client[Console Client]  
-```  
+### Services Overview  
+| Service       | Image                  | Port    | Depends On  |
+|---------------|------------------------|---------|-------------|
+| MySQL         | `mysql:8.0`            | 3307    | -           |
+| Spring Server | `volunteer_server`      | 8080    | MySQL       |
+| Console Client| `volunteer_client`      | -       | Server      |
 
-### Build Optimization
-| Layer               | Server Image        | Client Image        |  
-|---------------------|---------------------|---------------------|  
-| **Base**            | JDK 21 Slim         | JDK 21 Slim         |  
-| **Dependency Cache**| Gradle dependencies | Gradle dependencies |  
-| **Final Image**     | 2-stage build       | 2-stage build       |  
-| **Size**            | ~300MB              | ~250MB              |  
+### Deployment Commands  
+```bash
+# Start full stack
+docker-compose up --build
 
-**Key Practices**:
-- Multi-stage builds to reduce image size
-- Non-root user (`appuser`) for security
-- Minimal base images (JDK Slim)
-- Dependency caching for faster builds
+# Stop and clean
+docker-compose down -v
+
+# Monitor logs
+docker logs volunteer_server -f
+```
 
 ---
 
-### Development Setup
-1. **Clone & Configure**:
+## 💻 Development Guide  
+
+### Local Setup  
+1. Clone repository:  
 ```bash
 git clone https://github.com/IRomanchuk06/volunteer_platform
-./gradlew clean build
 ```
 
-2. **Run Modules**:
+2. Run server:  
 ```bash
-# Start server
 ./gradlew modules:server:bootRun
-
-# Start client (separate terminal)
-./gradlew modules:client:bootRun
 ```
 
-### Usage Setup
-1. **Clone & Configure**:
+3. Run client (separate terminal):  
 ```bash
-git clone https://github.com/IRomanchuk06/volunteer_platform
-./gradlew clean build
+./gradlew modules:client:bootRun --console=plain  # --console=plain to improve display
 ```
-2. **Start the application**:
+
+### Build Options  
+| Command                      | Description                     |
+|------------------------------|---------------------------------|
+| `./gradlew clean build`      | Full project build             |
+| `./gradlew modules:server:test` | Run server tests             |
+| `./gradlew modules:server:test jacocoTestReport` | Run server tests with coverage           |
+
+---
+
+## 🧪 Testing  
+
+### Strategy  
+| Test Type        | Tools                  | Coverage     |
+|------------------|------------------------|--------------|
+| Unit Tests       | JUnit 5 + Mockito      | Business logic|
+| Integration      | Testcontainers         | API endpoints|
+| Security         | Custom validations     | Auth flows   |
+
+### Run Tests  
 ```bash
-./scripts/run_app.sh
+# All tests
+./gradlew testAll
+
+# Coverage report
+./gradlew jacocoTestReport
 ```
 
 ---
 
-## 🛠️ Scripts Guide  
-### run_app.sh Features  
-| Flag          | Description                              | Use Case                     |
-|---------------|------------------------------------------|------------------------------|
-| `--build`     | Rebuild Docker images                   | After code changes           |
-| `--verbose`   | Show detailed container logs            | Debugging startup issues     |
-| `--clean`     | Remove all volumes and networks         | Factory reset simulation     |
+## 📬 Support  
 
-**Usage Examples**:  
-```bash
-# Standard launch
-./scripts/run_app.sh
+**Author**: Ivan Romanchuk  
+**Contact**:  
+[![Email](https://img.shields.io/badge/Email-iromanchuk06@gmail.com-blue?logo=gmail)](mailto:iromanchuk06@gmail.com)  
+[![GitHub](https://img.shields.io/badge/GitHub-IRomanchuk06-181717?logo=github)](https://github.com/IRomanchuk06)  
 
-# Debug mode with rebuild
-./scripts/run_app.sh --verbose --build
-
-# Complete cleanup
-./scripts/run_app.sh --clean
-```
+**Found an issue?**  
+[Open GitHub Ticket](https://github.com/IRomanchuk06/volunteer_platform/issues)
 
 ---
 
-## 🧪 Testing
-
-
----
-
-## 📧 Contact  
-**Maintainer**: Ivan Romanchuk  
-**Technical Support**:  
-- GitHub Issues: [Report Here](https://github.com/IRomanchuk06/volunteer_platform/issues)  
-- Email: [iromanchuk06@gmail.com](mailto:iromanchuk06@gmail.com)  
-
----
-
-> 🔍 **Troubleshooting Tip**:  
-> Use `docker logs volunteer_server` to inspect server logs during debugging.  
+> 🚨 **Troubleshooting Tip**  
+> Use `docker-compose logs server` to view real-time server logs  
 > 
+> 🔄 **Need to Reset?**  
+> Run `docker-compose down -v && docker rmi volunteer_server volunteer_client`
