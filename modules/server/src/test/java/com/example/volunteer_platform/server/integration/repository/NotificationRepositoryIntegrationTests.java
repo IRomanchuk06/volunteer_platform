@@ -1,5 +1,6 @@
-package com.example.volunteer_platform.server.integration;
+package com.example.volunteer_platform.server.integration.repository;
 
+import com.example.volunteer_platform.server.integration.AbstractIntegrationTests;
 import com.example.volunteer_platform.server.model.Message;
 import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
