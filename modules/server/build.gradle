@@ -20,7 +20,7 @@ repositories {
 }
 
 test {
-    maxParallelForks = Runtime.runtime.availableProcessors()
+    
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed", "standardError"

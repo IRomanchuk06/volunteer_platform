@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.repository;
 
 import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +20,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     int getRespondingVolunteersCount(@Param("eventId") Long eventId);
 
     @Modifying
+    @Transactional
     @Query(
             value = "INSERT INTO event_volunteers (event_id, volunteer_id) VALUES (:eventId, :volunteerId)",
             nativeQuery = true
