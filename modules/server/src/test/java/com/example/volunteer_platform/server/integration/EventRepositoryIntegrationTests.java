@@ -6,13 +6,12 @@ import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.repository.EventRepository;
 import com.example.volunteer_platform.server.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -28,6 +27,9 @@ public class EventRepositoryIntegrationTests extends AbstractIntegrationTests {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
@@ -118,7 +120,9 @@ public class EventRepositoryIntegrationTests extends AbstractIntegrationTests {
 
         eventRepository.addVolunteerToEvent(event.getId(), volunteer.getId());
 
-        eventRepository.flush();
+        entityManager.flush();
+        entityManager.clear();
+
         Event updatedEvent = eventRepository.findById(event.getId()).orElseThrow();
 
         assertThat(updatedEvent.getVolunteers()).hasSize(1);
