@@ -25,7 +25,6 @@ test {
         events "passed", "skipped", "failed", "standardError"
     }
     outputs.upToDateWhen { false }
-    finalizedBy jacocoTestReport, jacocoTestCoverageVerification
 }
 
 dependencies {
@@ -88,6 +87,8 @@ tasks.jacocoTestReport {
         html.required = true
         csv.required = false
     }
+
+    finalizedBy jacocoTestCoverageVerification
 }
 
 tasks.jacocoTestCoverageVerification {
