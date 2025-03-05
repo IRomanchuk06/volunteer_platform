@@ -66,17 +66,18 @@ volunteer_platform/
 ### Backend Core  
 | Component       | Technology           | Purpose                          |
 |-----------------|----------------------|----------------------------------|
-| Framework       | Spring Boot 3.2      | REST API development             |
-| ORM             | Hibernate 6          | Database interactions            |
-| Validation      | Hibernate Validator  | Request validation               |
-| Build Tool      | Gradle 8.5           | Dependency management            |
+| **Framework**       | **Spring Boot 3.2**      | REST API development             |
+| **ORM**             | **Hibernate 6**          | Database interactions            |
+| **Validation**      | **Hibernate Validator**  | Request validation               |
+| **Build Tool**      | **Gradle 8.5**           | Dependency management            |
 
 ### Infrastructure  
 | Component       | Technology           | Usage                            |
 |-----------------|----------------------|----------------------------------|
-| Database        | MySQL 8.0            | Production data storage          |
-| Containerization| Docker               | Service isolation                |
-| Testing         | JUnit 5 + Mockito    | Test automation                  |
+| **Database**        | **MySQL 8.0**            | Production data storage          |
+| **Containerization**| **Docker**               | Service isolation                |
+| **Testing**         | **JUnit 5 + Mockito**    | Test automation                  |
+| **Test Database**  | **Testcontainers (MySQL)** | Integration testing with isolated DB |
 
 ---
 
@@ -122,9 +123,6 @@ sequenceDiagram
         Controller-->>Client: 4xx/5xx (Error Details)
     end
 ```
----
-
-
 ### Key Components  
 1. **Controller Layer**  
    - Handles HTTP requests/responses  
@@ -207,9 +205,10 @@ cd volunteer_platform
 
 - **Start the Client** (in another terminal):  
   ```bash  
-  ./gradlew modules:client:bootRun  # Interactive console interface  
-  ```  
+  ./gradlew modules:client:bootRun  # Interactive console interface
 
+  # Use --console=plain for better visual experience
+  ```  
 ---
 
 ### 🚀 **Quick Start for Users**  
@@ -228,34 +227,51 @@ cd volunteer_platform
 
 ---
 
-
-### Build Options  
-| Command                      | Description                     |
-|------------------------------|---------------------------------|
-| `./gradlew clean build`      | Full project build             |
-| `./gradlew modules:server:test` | Run server tests             |
-| `./gradlew modules:server:test jacocoTestReport` | Run server tests with coverage           |
-
----
-
 ## 🧪 Testing  
 
 ### Strategy  
-| Test Type        | Tools                  | Coverage     |
-|------------------|------------------------|--------------|
-| Unit Tests       | JUnit 5 + Mockito      | Business logic|
-| Integration      | Testcontainers         | API endpoints|
-| Security         | Custom validations     | Auth flows   |
+| Test Type             | Tools                     |
+|-----------------------|--------------------------|
+| **Unit Tests**       | JUnit 5 + Mockito        | 
+| **Integration Tests** | Testcontainers + JPA     | 
+| **Security Tests**    | Custom validations       | 
 
-### Run Tests  
+### Coverage Summary  
+- **Total Coverage:** **94%**  
+- **Full coverage (100%)**: Services, Controllers, Exception Handling, Events, Utils  
+- **High coverage (~96%)**: Mappers  
+- **Moderate coverage (~87%)**: Models  
+- **Integration Tests focus on**: Repository layer with real database interactions using **Testcontainers + JPA**
+
+### Run Tests
+
+#### Run All Tests  
 ```bash
-# All tests
-./gradlew testAll
-
-# Coverage report
-./gradlew jacocoTestReport
+./gradlew test
 ```
 
+#### Run Unit Tests  
+```bash
+./gradlew unitTests
+```
+
+##### Run Integration Tests  
+```bash
+./gradlew integrationTests
+```
+
+##### Run Context Tests  
+```bash
+./gradlew contextTest
+```
+
+##### Generate Code Coverage Report  
+```bash
+./gradlew jacocoTestReport
+
+# The generated report can be found at:
+# modules/server/build/reports/jacoco/test/html/index.html
+``` 
 ---
 
 ## 📬 Support  
@@ -264,9 +280,6 @@ cd volunteer_platform
 **Contact**:  
 [![Email](https://img.shields.io/badge/Email-iromanchuk06@gmail.com-blue?logo=gmail)](mailto:iromanchuk06@gmail.com)  
 [![GitHub](https://img.shields.io/badge/GitHub-IRomanchuk06-181717?logo=github)](https://github.com/IRomanchuk06)  
-
-**Found an issue?**  
-[Open GitHub Ticket](https://github.com/IRomanchuk06/volunteer_platform/issues)
 
 ---
 
