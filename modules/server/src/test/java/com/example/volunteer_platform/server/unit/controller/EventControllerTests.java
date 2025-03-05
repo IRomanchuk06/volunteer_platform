@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.unit.controller;
 
 import com.example.volunteer_platform.server.controller.EventController;
 import com.example.volunteer_platform.server.service.EventService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class EventControllerTests {
+class EventControllerTests extends BaseUnitTests {
 
     private MockMvc mockMvc;
 

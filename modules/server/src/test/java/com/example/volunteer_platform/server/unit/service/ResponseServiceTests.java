@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.service;
 import com.example.volunteer_platform.server.model.*;
 import com.example.volunteer_platform.server.repository.NotificationRepository;
 import com.example.volunteer_platform.server.service.ResponseService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ResponseServiceTests {
+public class ResponseServiceTests extends BaseUnitTests {
 
     @Mock
     private NotificationRepository notificationRepository;

@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.controller;
 import com.example.volunteer_platform.server.controller.VerificationController;
 import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHandler;
 import com.example.volunteer_platform.server.service.VerificationService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class VerificationControllerTests {
+class VerificationControllerTests extends BaseUnitTests {
 
     @Mock
     private VerificationService verificationService;

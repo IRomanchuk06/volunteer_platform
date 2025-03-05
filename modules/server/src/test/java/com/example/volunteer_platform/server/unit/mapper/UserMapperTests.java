@@ -2,12 +2,13 @@ package com.example.volunteer_platform.server.unit.mapper;
 
 import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.*;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserMapperTests {
+class UserMapperTests extends BaseUnitTests {
 
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 

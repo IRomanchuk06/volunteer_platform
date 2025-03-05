@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.unit.mapper;
 
 import com.example.volunteer_platform.server.mapper.VolunteerResponseMapper;
 import com.example.volunteer_platform.server.model.*;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class VolunteerResponseMapperTests {
+class VolunteerResponseMapperTests extends BaseUnitTests {
 
     private final VolunteerResponseMapper mapper = Mappers.getMapper(VolunteerResponseMapper.class);
 

@@ -1,6 +1,6 @@
 package com.example.volunteer_platform.server.integration.repository;
 
-import com.example.volunteer_platform.server.integration.AbstractIntegrationTests;
+import com.example.volunteer_platform.server.integration.BaseIntegrationTests;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class UserRepositoryIntegrationTests extends AbstractIntegrationTests {
+public class UserRepositoryIntegrationTests extends BaseIntegrationTests {
 
     @Autowired
     private UserRepository userRepository;

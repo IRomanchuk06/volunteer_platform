@@ -8,6 +8,7 @@ import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
 import com.example.volunteer_platform.server.repository.NotificationRepository;
 import com.example.volunteer_platform.server.service.MessageService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageServiceTests {
+public class MessageServiceTests extends BaseUnitTests {
 
     @Mock
     private NotificationRepository notificationRepository;

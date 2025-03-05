@@ -1,6 +1,7 @@
 package com.example.volunteer_platform.server.unit.controller;
 
 import com.example.volunteer_platform.server.controller.VolunteerController;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.server.unit.tests_config.JacksonConfig;
 import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHandler;
 import com.example.volunteer_platform.server.exceptions.EmailAlreadyExistsException;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class VolunteerControllerTests {
+class VolunteerControllerTests extends BaseUnitTests {
 
     private MockMvc mockMvc;
 

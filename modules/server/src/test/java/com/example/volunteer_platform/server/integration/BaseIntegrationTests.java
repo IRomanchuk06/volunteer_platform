@@ -1,10 +1,12 @@
 package com.example.volunteer_platform.server.integration;
 
+import org.junit.jupiter.api.Tag;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
-public abstract class AbstractIntegrationTests {
+@Tag("integration")
+public abstract class BaseIntegrationTests {
 
     private static final MySQLContainer<?> mysqlContainer;
 

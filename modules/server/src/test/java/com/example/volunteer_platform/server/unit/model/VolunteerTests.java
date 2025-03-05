@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.model;
 import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.model.Volunteer;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
-class VolunteerTests {
+class VolunteerTests extends BaseUnitTests {
     private Volunteer volunteer;
 
     @BeforeEach

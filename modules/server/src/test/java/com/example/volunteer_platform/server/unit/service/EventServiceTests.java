@@ -8,6 +8,7 @@ import com.example.volunteer_platform.server.model.*;
 import com.example.volunteer_platform.server.repository.EventRepository;
 import com.example.volunteer_platform.server.service.EventService;
 import com.example.volunteer_platform.server.service.ResponseService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class EventServiceTests {
+class EventServiceTests extends BaseUnitTests {
 
     @Mock
     private EventRepository eventRepository;

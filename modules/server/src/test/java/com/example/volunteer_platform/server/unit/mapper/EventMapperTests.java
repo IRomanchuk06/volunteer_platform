@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.unit.mapper;
 
 import com.example.volunteer_platform.server.mapper.EventMapper;
 import com.example.volunteer_platform.server.model.*;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.EventParticipantResponseDTO;
 import com.example.volunteer_platform.shared_dto.EventResponseDTO;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EventMapperTests {
+class EventMapperTests extends BaseUnitTests {
 
     private final EventMapper eventMapper = Mappers.getMapper(EventMapper.class);
 

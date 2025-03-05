@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.utils;
 import com.example.volunteer_platform.server.exceptions.SessionNotFoundException;
 import com.example.volunteer_platform.server.exceptions.UserNotFoundInSessionException;
 import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.server.utils.SessionUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SessionUtilsTests {
+class SessionUtilsTests extends BaseUnitTests {
 
     @Mock
     private HttpServletRequest request;

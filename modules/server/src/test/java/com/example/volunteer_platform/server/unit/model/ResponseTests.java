@@ -4,6 +4,7 @@ import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.Response;
 import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class ResponseTests {
+class ResponseTests extends BaseUnitTests {
 
     @Mock
     private User sender;

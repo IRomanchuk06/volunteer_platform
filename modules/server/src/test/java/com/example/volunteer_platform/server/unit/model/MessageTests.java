@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.model;
 import com.example.volunteer_platform.server.model.Message;
 import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class MessageTests {
+class MessageTests extends BaseUnitTests {
 
     @Mock
     private User sender;

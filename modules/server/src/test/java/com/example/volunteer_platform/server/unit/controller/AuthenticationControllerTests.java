@@ -5,6 +5,7 @@ import com.example.volunteer_platform.server.mapper.UserMapper;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.AuthenticationService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.UserLoginDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthenticationControllerTests {
+public class AuthenticationControllerTests extends BaseUnitTests {
 
     @Mock
     private AuthenticationService authenticationService;

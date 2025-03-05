@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.unit.service;
 
 import com.example.volunteer_platform.server.repository.UserRepository;
 import com.example.volunteer_platform.server.service.VerificationService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class VerificationServiceTests {
+class VerificationServiceTests extends BaseUnitTests {
 
     @Mock
     private UserRepository userRepository;

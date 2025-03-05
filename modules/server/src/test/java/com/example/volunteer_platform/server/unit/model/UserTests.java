@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.model;
 import com.example.volunteer_platform.server.model.Message;
 import com.example.volunteer_platform.server.model.Notification;
 import com.example.volunteer_platform.server.model.User;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserTests {
+class UserTests extends BaseUnitTests {
     private User user;
 
     @BeforeEach

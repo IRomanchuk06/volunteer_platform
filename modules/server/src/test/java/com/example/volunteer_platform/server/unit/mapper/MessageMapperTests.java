@@ -2,6 +2,7 @@ package com.example.volunteer_platform.server.unit.mapper;
 
 import com.example.volunteer_platform.server.mapper.MessageMapper;
 import com.example.volunteer_platform.server.model.*;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MessageMapperTests {
+class MessageMapperTests extends BaseUnitTests {
 
     private final MessageMapper messageMapper = Mappers.getMapper(MessageMapper.class);
 

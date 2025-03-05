@@ -8,6 +8,7 @@ import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.repository.UserRepository;
 import com.example.volunteer_platform.server.service.MessageService;
 import com.example.volunteer_platform.server.service.UserService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.UserResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTests {
+class UserServiceTests extends BaseUnitTests {
 
     @Mock
     private UserRepository userRepository;

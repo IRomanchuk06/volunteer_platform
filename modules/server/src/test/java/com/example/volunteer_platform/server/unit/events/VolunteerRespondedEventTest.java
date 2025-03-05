@@ -4,12 +4,13 @@ import com.example.volunteer_platform.server.events.VolunteerRespondedEvent;
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.Volunteer;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VolunteerRespondedEventTest {
+class VolunteerRespondedEventTest extends BaseUnitTests {
     @Test
     void shouldInitializeEventWithAllParameters() {
         Event testEvent = new Event();

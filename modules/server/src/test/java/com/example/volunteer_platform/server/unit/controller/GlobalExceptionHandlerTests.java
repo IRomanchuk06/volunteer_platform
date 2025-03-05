@@ -2,13 +2,14 @@ package com.example.volunteer_platform.server.unit.controller;
 
 import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHandler;
 import com.example.volunteer_platform.server.exceptions.*;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class GlobalExceptionHandlerTests {
+class GlobalExceptionHandlerTests extends BaseUnitTests {
 
     private final GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
 

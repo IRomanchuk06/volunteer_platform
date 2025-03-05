@@ -3,6 +3,7 @@ package com.example.volunteer_platform.server.unit.events.listeners;
 import com.example.volunteer_platform.server.events.MessageSentEvent;
 import com.example.volunteer_platform.server.events.VolunteerRespondedEvent;
 import com.example.volunteer_platform.server.events.listeners.NotificationListener;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.hibernate.mapping.Component;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class NotificationListenerTests {
+class NotificationListenerTests extends BaseUnitTests {
 
     @Spy
     @InjectMocks

@@ -4,6 +4,7 @@ import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.Event;
 import com.example.volunteer_platform.server.model.Response;
 import com.example.volunteer_platform.server.model.Volunteer;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EventTests {
+class EventTests extends BaseUnitTests {
     private Event event;
     private Customer customer;
     private Volunteer volunteer;

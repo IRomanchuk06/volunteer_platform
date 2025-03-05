@@ -2,12 +2,13 @@ package com.example.volunteer_platform.server.unit.events;
 
 import com.example.volunteer_platform.server.events.MessageSentEvent;
 import com.example.volunteer_platform.server.model.Customer;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MessageSentEventTests {
+class MessageSentEventTests extends BaseUnitTests {
 
     @Test
     void shouldCreateEventWithCorrectData() {

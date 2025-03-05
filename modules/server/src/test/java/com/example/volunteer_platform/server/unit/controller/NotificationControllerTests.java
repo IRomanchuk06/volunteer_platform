@@ -5,6 +5,7 @@ import com.example.volunteer_platform.server.controller.advice.GlobalExceptionHa
 import com.example.volunteer_platform.server.model.Customer;
 import com.example.volunteer_platform.server.model.User;
 import com.example.volunteer_platform.server.service.NotificationService;
+import com.example.volunteer_platform.server.unit.BaseUnitTests;
 import com.example.volunteer_platform.shared_dto.MessageResponseDTO;
 import com.example.volunteer_platform.shared_dto.VolunteerEventResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class NotificationControllerTests {
+class NotificationControllerTests extends BaseUnitTests {
 
     private MockMvc mockMvc;
 
