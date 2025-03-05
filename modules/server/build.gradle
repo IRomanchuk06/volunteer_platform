@@ -126,9 +126,3 @@ tasks.register('contextTest', Test) {
         events "passed", "skipped", "failed", "standardError"
     }
 }
-
-tasks.register('allTests') {
-    description = "Runs both unit and integration tests"
-    group = "verification"
-    dependsOn 'unitTests', 'integrationTests', 'contextTest'
-}
