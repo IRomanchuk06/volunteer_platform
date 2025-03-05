@@ -1,8 +1,9 @@
 # **Volunteer Platform**  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)](https://github.com)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen)](https://github.com)  
 
-A backend-focused platform demonstrating modern Spring Boot development practices with **3-layer architecture** and **93% test coverage**.  
-*Perfect for learning enterprise-grade Java development!*  
+A backend-focused platform showcasing modern **Spring Boot** development practices, with a strong emphasis on **unit and integration testing**. The platform is built using a **3-layer architecture** to ensure scalability and maintainability, and boasts **94% test coverage**. 
+
+*While primarily focused on backend development, it also includes a basic user interface for demonstration purposes.*  
 
 ---
 
@@ -19,11 +20,11 @@ A backend-focused platform demonstrating modern Spring Boot development practice
 1. [Project Structure](#-project-structure)  
 2. [Tech Stack](#-tech-stack)  
 3. [Architecture](#-architecture)  
-4. [API Examples](#-api-examples)  
-5. [Docker Setup](#-docker-setup)  
-6. [Development Guide](#-development-guide)  
+4. [API Workflows](#-api-workflows)  
+5. [Development Setup](#-development-setup)  
+6. [Quick Start for Users](#-quick-start-for-users)  
 7. [Testing](#-testing)  
-8. [Support](#-support)  
+8. [Support](#-support)
 
 ---
 
@@ -220,10 +221,17 @@ cd volunteer_platform
 ./scripts/run_app.sh  # Starts MySQL, Server, and Client automatically  
 ```  
 
-**2. Access Services**  
+**Arguments for run_app.sh:**
+| **Argument**          | **Short form** | **Description**                                                   |
+|-----------------------|----------------|-------------------------------------------------------------------|
+| `--verbose`           | `-v`           | Enables verbose output, showing detailed command execution logs. |
+| `--build`             |                | Builds the Docker images before starting the containers.          |
+| `--clean`             |                | Cleans up all containers, volumes, and images before starting.    |
+
+**Access Services:**  
 - **Server API**: `http://localhost:8080`  
 - **MySQL Database**: Port `3307` (use tools like DBeaver)  
-- **Client**: Follow on-screen instructions in the console.  
+- **Client**: Follow on-screen instructions in the console.
 
 ---
 
@@ -284,7 +292,7 @@ cd volunteer_platform
 ---
 
 > 🚨 **Troubleshooting Tip**  
-> Use `docker-compose logs server` to view real-time server logs  
+> Use `docker compose logs server` to view real-time server logs  
 > 
 > 🔄 **Need to Reset?**  
-> Run `docker-compose down -v && docker rmi volunteer_server volunteer_client`
+> Run `docker compose down -v && docker rmi volunteer_server volunteer_client`
