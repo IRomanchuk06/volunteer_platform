@@ -1,8 +1,9 @@
 # **Volunteer Platform**  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)](https://github.com)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen)](https://github.com)  
 
-A backend-focused platform demonstrating modern Spring Boot development practices with **3-layer architecture** and **93% test coverage**.  
-*Perfect for learning enterprise-grade Java development!*  
+A backend-focused platform showcasing modern **Spring Boot** development practices, with a strong emphasis on **unit and integration testing**. The platform is built using a **3-layer architecture** to ensure scalability and maintainability, and boasts **94% test coverage**. 
+
+*While primarily focused on backend development, it also includes a basic user interface for demonstration purposes.*  
 
 ---
 
@@ -19,11 +20,11 @@ A backend-focused platform demonstrating modern Spring Boot development practice
 1. [Project Structure](#-project-structure)  
 2. [Tech Stack](#-tech-stack)  
 3. [Architecture](#-architecture)  
-4. [API Examples](#-api-examples)  
-5. [Docker Setup](#-docker-setup)  
-6. [Development Guide](#-development-guide)  
+4. [API Workflows](#-api-workflows)  
+5. [Development Setup](#-development-setup)  
+6. [Quick Start for Users](#-quick-start-for-users)  
 7. [Testing](#-testing)  
-8. [Support](#-support)  
+8. [Support](#-support)
 
 ---
 
@@ -66,17 +67,18 @@ volunteer_platform/
 ### Backend Core  
 | Component       | Technology           | Purpose                          |
 |-----------------|----------------------|----------------------------------|
-| Framework       | Spring Boot 3.2      | REST API development             |
-| ORM             | Hibernate 6          | Database interactions            |
-| Validation      | Hibernate Validator  | Request validation               |
-| Build Tool      | Gradle 8.5           | Dependency management            |
+| **Framework**       | **Spring Boot 3.2**      | REST API development             |
+| **ORM**             | **Hibernate 6**          | Database interactions            |
+| **Validation**      | **Hibernate Validator**  | Request validation               |
+| **Build Tool**      | **Gradle 8.5**           | Dependency management            |
 
 ### Infrastructure  
 | Component       | Technology           | Usage                            |
 |-----------------|----------------------|----------------------------------|
-| Database        | MySQL 8.0            | Production data storage          |
-| Containerization| Docker               | Service isolation                |
-| Testing         | JUnit 5 + Mockito    | Test automation                  |
+| **Database**        | **MySQL 8.0**            | Production data storage          |
+| **Containerization**| **Docker**               | Service isolation                |
+| **Testing**         | **JUnit 5 + Mockito**    | Test automation                  |
+| **Test Database**  | **Testcontainers (MySQL)** | Integration testing with isolated DB |
 
 ---
 
@@ -122,9 +124,6 @@ sequenceDiagram
         Controller-->>Client: 4xx/5xx (Error Details)
     end
 ```
----
-
-
 ### Key Components  
 1. **Controller Layer**  
    - Handles HTTP requests/responses  
@@ -207,9 +206,10 @@ cd volunteer_platform
 
 - **Start the Client** (in another terminal):  
   ```bash  
-  ./gradlew modules:client:bootRun  # Interactive console interface  
-  ```  
+  ./gradlew modules:client:bootRun  # Interactive console interface
 
+  # Use --console=plain for better visual experience
+  ```  
 ---
 
 ### 🚀 **Quick Start for Users**  
@@ -221,41 +221,65 @@ cd volunteer_platform
 ./scripts/run_app.sh  # Starts MySQL, Server, and Client automatically  
 ```  
 
-**2. Access Services**  
+**Arguments for run_app.sh:**
+| **Argument**          | **Short form** | **Description**                                                   |
+|-----------------------|----------------|-------------------------------------------------------------------|
+| `--verbose`           | `-v`           | Enables verbose output, showing detailed command execution logs. |
+| `--build`             |                | Builds the Docker images before starting the containers.          |
+| `--clean`             |                | Cleans up all containers, volumes, and images before starting.    |
+
+**Access Services:**  
 - **Server API**: `http://localhost:8080`  
 - **MySQL Database**: Port `3307` (use tools like DBeaver)  
-- **Client**: Follow on-screen instructions in the console.  
-
----
-
-
-### Build Options  
-| Command                      | Description                     |
-|------------------------------|---------------------------------|
-| `./gradlew clean build`      | Full project build             |
-| `./gradlew modules:server:test` | Run server tests             |
-| `./gradlew modules:server:test jacocoTestReport` | Run server tests with coverage           |
+- **Client**: Follow on-screen instructions in the console.
 
 ---
 
 ## 🧪 Testing  
 
 ### Strategy  
-| Test Type        | Tools                  | Coverage     |
-|------------------|------------------------|--------------|
-| Unit Tests       | JUnit 5 + Mockito      | Business logic|
-| Integration      | Testcontainers         | API endpoints|
-| Security         | Custom validations     | Auth flows   |
+| Test Type             | Tools                     |
+|-----------------------|--------------------------|
+| **Unit Tests**       | JUnit 5 + Mockito        | 
+| **Integration Tests** | Testcontainers + JPA     | 
+| **Security Tests**    | Custom validations       | 
 
-### Run Tests  
+### Coverage Summary  
+- **Total Coverage:** **94%**  
+- **Full coverage (100%)**: Services, Controllers, Exception Handling, Events, Utils  
+- **High coverage (~96%)**: Mappers  
+- **Moderate coverage (~87%)**: Models  
+- **Integration Tests focus on**: Repository layer with real database interactions using **Testcontainers + JPA**
+
+### Run Tests
+
+#### Run All Tests  
 ```bash
-# All tests
-./gradlew testAll
-
-# Coverage report
-./gradlew jacocoTestReport
+./gradlew test
 ```
 
+#### Run Unit Tests  
+```bash
+./gradlew unitTests
+```
+
+##### Run Integration Tests  
+```bash
+./gradlew integrationTests
+```
+
+##### Run Context Tests  
+```bash
+./gradlew contextTest
+```
+
+##### Generate Code Coverage Report  
+```bash
+./gradlew jacocoTestReport
+
+# The generated report can be found at:
+# modules/server/build/reports/jacoco/test/html/index.html
+``` 
 ---
 
 ## 📬 Support  
@@ -265,13 +289,10 @@ cd volunteer_platform
 [![Email](https://img.shields.io/badge/Email-iromanchuk06@gmail.com-blue?logo=gmail)](mailto:iromanchuk06@gmail.com)  
 [![GitHub](https://img.shields.io/badge/GitHub-IRomanchuk06-181717?logo=github)](https://github.com/IRomanchuk06)  
 
-**Found an issue?**  
-[Open GitHub Ticket](https://github.com/IRomanchuk06/volunteer_platform/issues)
-
 ---
 
 > 🚨 **Troubleshooting Tip**  
-> Use `docker-compose logs server` to view real-time server logs  
+> Use `docker compose logs server` to view real-time server logs  
 > 
 > 🔄 **Need to Reset?**  
-> Run `docker-compose down -v && docker rmi volunteer_server volunteer_client`
+> Run `docker compose down -v && docker rmi volunteer_server volunteer_client`
