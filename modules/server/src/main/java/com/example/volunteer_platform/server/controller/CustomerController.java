@@ -33,16 +33,16 @@ public class CustomerController extends UserController {
 
     @PostMapping("/")
     public ResponseEntity<UserResponseDTO> createCustomer(@Valid @RequestBody UserRegistrationDTO accountRequest) {
-        serverLogger.info("Incoming request to /customers with payload: {}", accountRequest);
-
         CustomerService customerService = (CustomerService) userService;
+
+        serverLogger.info("Received request to create customer with email: {}", accountRequest.getEmail());
+
         UserResponseDTO userResponse = customerService.createCustomer(
                 accountRequest.getEmail(),
                 accountRequest.getPassword(),
                 accountRequest.getUsername());
 
-        serverLogger.info("Responding with status {} and payload: {}", HttpStatus.CREATED, userResponse);
-
+        serverLogger.info("Customer created successfully: {}", accountRequest.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 

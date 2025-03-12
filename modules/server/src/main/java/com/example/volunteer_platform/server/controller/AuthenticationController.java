@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.volunteer_platform.server.utils.SessionUtils.getUserFromSession;
+import static com.example.volunteer_platform.server.utils.StringUtils.maskEmail;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,11 +36,11 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginDTO loginRequest, HttpServletRequest request, HttpServletResponse response) {
-        serverLogger.info("Incoming request to /auth/login with payload: {}", loginRequest);
+        serverLogger.info("Incoming request to /auth/login for email: {}", maskEmail(loginRequest.getEmail()));
 
         User user = authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 
-        serverLogger.info(user.toString());
+        serverLogger.info("User authenticated with ID: {}", user.getId());
 
         HttpSession session = request.getSession(true);
         session.setAttribute("currentUser", user);
@@ -49,7 +50,7 @@ public class AuthenticationController {
 
         UserResponseDTO userResponse = userMapper.toUserResponseDTO(user);
 
-        serverLogger.info("Responding with status {} and payload: {}", HttpStatus.OK, userResponse);
+        serverLogger.info("Responding with status {} for user ID: {}", HttpStatus.OK, userResponse.getId());
 
         return ResponseEntity.ok(userResponse);
     }
@@ -62,7 +63,7 @@ public class AuthenticationController {
 
         UserResponseDTO userResponse = userMapper.toUserResponseDTO(user);
 
-        serverLogger.info("Responding with status {} and payload: {}", HttpStatus.OK, userResponse);
+        serverLogger.info("Responding with status {} for user ID: {}", HttpStatus.OK, userResponse.getId());
 
         return ResponseEntity.ok(userResponse);
     }
