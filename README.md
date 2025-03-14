@@ -16,7 +16,7 @@ A backend-focused platform showcasing modern **Spring Boot** development practic
 
 ---
 
-## 📋 **Table of Contents**  
+### 📋 **Table of Contents**  
 1. [Project Structure](#-project-structure)  
 2. [Tech Stack](#-tech-stack)  
 3. [Architecture](#-architecture)  
@@ -24,11 +24,13 @@ A backend-focused platform showcasing modern **Spring Boot** development practic
 5. [Development Setup](#-development-setup)  
 6. [Quick Start for Users](#-quick-start-for-users)  
 7. [Testing](#-testing)  
-8. [Support](#-support)
-
+8. [CI/CD Pipeline](#-cicd-pipeline)  
+9. [Support](#-support)
+    
 ---
 
-## 🗂️ Project Structure  
+## 🗂️ Project Structure 
+
 ```text
 ```plaintext
 volunteer_platform/  
@@ -50,10 +52,6 @@ volunteer_platform/
 │   └── shared/                   # Shared components  
 │       ├── dto/                  # Data Transfer Objects  
 │       └── utils/                # Helpers
-|
-├── scripts/                      # Automation scripts
-│   ├── run_app.sh                # Main launch script
-│   └── wait-for-it.sh            # Dependency checker
 |
 ├── docker-compose.yml            # Defines MySQL, server, client  
 └── build.gradle                  # Multi-module build config  
@@ -212,21 +210,33 @@ cd volunteer_platform
   ```  
 ---
 
-### 🚀 **Quick Start for Users**  
+### 🚀 **Quick Start for Users**
 
-**1. Clone & Run with Docker**  
-```bash  
-git clone https://github.com/IRomanchuk06/volunteer_platform  
-cd volunteer_platform  
-./scripts/run_app.sh  # Starts MySQL, Server, and Client automatically  
-```  
+#### **1. Clone the Repository**
+```bash
+git clone https://github.com/IRomanchuk06/volunteer_platform
+cd volunteer_platform
+```
 
-**Arguments for run_app.sh:**
-| **Argument**          | **Short form** | **Description**                                                   |
-|-----------------------|----------------|-------------------------------------------------------------------|
-| `--verbose`           | `-v`           | Enables verbose output, showing detailed command execution logs. |
-| `--build`             |                | Builds the Docker images before starting the containers.          |
-| `--clean`             |                | Cleans up all containers, volumes, and images before starting.    |
+---
+
+#### **2. Start the Application**
+Start the required services (MySQL and server) using Docker Compose:
+
+```bash
+docker compose up -d mysql server
+```
+
+---
+
+#### **3. Run the Client**
+After starting the server part, start the client application:
+
+```bash
+docker compose run --rm client
+```
+
+---
 
 **Access Services:**  
 - **Server API**: `http://localhost:8080`  
@@ -281,6 +291,32 @@ cd volunteer_platform
 # modules/server/build/reports/jacoco/test/html/index.html
 ``` 
 ---
+
+### 🔄 **CI/CD Pipeline**  
+[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/IRomanchuk06/volunteer_platform/ci.yml?branch=main&label=CI/CD&logo=githubactions)](https://github.com/IRomanchuk06/volunteer_platform/actions)  
+
+#### Workflow Diagram  
+```mermaid
+flowchart LR
+  A[Code Push/PR] --> B[Build & Test]
+  B --> C{Docker Build?}
+  C -->|Pass| D[Deploy]
+  C -->|Fail| E[Alert]
+```
+
+#### **Key Stages**  
+1. **Build & Test**:  
+   - `./gradlew build` — Build the project.  
+   - `./gradlew test` — Run unit and integration tests.  
+   - `./gradlew jacocoTestReport` — Generate code coverage report (94%).  
+
+2. **Docker**:  
+   - Build Docker images for the server and client.  
+   - Push images to Docker Hub.  
+
+3. **Deploy**:  
+   - Start the application using `docker compose up -d`.  
+   - **Only for the `main` branch** (automatic deployment after successful build and testing).  
 
 ## 📬 Support  
 
