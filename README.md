@@ -7,25 +7,53 @@ A Spring Boot-based backend platform demonstrating modern development practices,
 
 ---
 
+### 🚀 **Quick Start for Users**
+
+#### **1. Clone the Repository**
+```bash
+git clone https://github.com/IRomanchuk06/volunteer_platform
+cd volunteer_platform
+```
+
+---
+
+#### **2. Start the Application**
+Start the required services (MySQL and server) using Docker Compose:
+
+```bash
+docker compose up -d mysql server
+```
+
+---
+
+#### **3. Run the Client**
+After starting the server part, start the client application:
+
+```bash
+docker compose run --rm client
+```
+
+---
+
 ## 🌟 **Key Features**  
 - 🏗️ **Clean Architecture** (Controller-Service-Repository)  
 - 🔒 **Role-Based Access** (Customers/Volunteers)  
 - 🧪 **Test-Driven Development** (Unit/Integration Tests)  
 - 📦 **Dockerized Deployment** (MySQL + Spring Boot)  
 - ✉️ **Real-Time Messaging** with Spring Events  
+- 🚀 **Automated CI/CD Pipeline** (GitHub Actions for Builds, Tests, and Deployment)  
 
 ---
 
-### 📋 **Table of Contents**  
-1. [Project Structure](#-project-structure)  
-2. [Tech Stack](#-tech-stack)  
-3. [Architecture](#-architecture)  
-4. [API Workflows](#-api-workflows)  
-5. [Development Setup](#-development-setup)  
-6. [Quick Start for Users](#-quick-start-for-users)  
-7. [Testing](#-testing)  
-8. [CI/CD Pipeline](#-cicd-pipeline)  
-9. [Support](#-support)
+## 📋 Table of Contents  
+1. [🗂️ Project Structure](#project-structure)  
+2. [⚡ Tech Stack](#tech-stack)  
+3. [🏛️ Architecture](#architecture)  
+4. [📡 API Workflows](#api-workflows)  
+5. [🛠️ Development Setup](#development-setup)  
+6. [🧪 Testing](#testing)  
+7. [🔄 CI/CD Pipeline](#cicd-pipeline)  
+8. [📬 Support](#support)  
     
 ---
 
@@ -207,35 +235,7 @@ cd volunteer_platform
   ./gradlew modules:client:bootRun  # Interactive console interface
 
   # Use --console=plain for better visual experience
-  ```  
----
-
-### 🚀 **Quick Start for Users**
-
-#### **1. Clone the Repository**
-```bash
-git clone https://github.com/IRomanchuk06/volunteer_platform
-cd volunteer_platform
-```
-
----
-
-#### **2. Start the Application**
-Start the required services (MySQL and server) using Docker Compose:
-
-```bash
-docker compose up -d mysql server
-```
-
----
-
-#### **3. Run the Client**
-After starting the server part, start the client application:
-
-```bash
-docker compose run --rm client
-```
-
+  ```
 ---
 
 **Access Services:**  
