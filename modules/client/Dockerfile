@@ -22,6 +22,5 @@ RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
 COPY --from=client-build /app/modules/client/build/libs/client-*.jar /app/client.jar
-ADD scripts/wait-for-it.sh /app/scripts/wait-for-it.sh
 
-CMD ["/app/scripts/wait-for-it.sh", "server:8080", "--timeout=60", "--", "java", "-jar", "/app/client.jar"]
+CMD ["java", "-jar", "/app/client.jar"]
