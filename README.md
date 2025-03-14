@@ -46,18 +46,18 @@ docker compose run --rm client
 ---
 
 ## 📋 Table of Contents  
-1. [🗂️ Project Structure](#project-structure)  
-2. [⚡ Tech Stack](#tech-stack)  
-3. [🏛️ Architecture](#architecture)  
-4. [📡 API Workflows](#api-workflows)  
-5. [🛠️ Development Setup](#development-setup)  
-6. [🧪 Testing](#testing)  
-7. [🔄 CI/CD Pipeline](#cicd-pipeline)  
-8. [📬 Support](#support)  
+1. [🗂️ Project Structure](#-project-structure)  
+2. [⚡ Tech Stack](#-tech-stack)  
+3. [🏛️ Architecture](#-architecture)  
+4. [📡 API Workflows](#-api-workflows)  
+5. [🛠️ Development Setup](#-development-setup)  
+6. [🧪 Testing](#-testing)  
+7. [🔄 CI/CD Pipeline](#-cicd-pipeline)  
+8. [📬 Support](#-support)  
     
 ---
 
-## 🗂️ Project Structure 
+## 🗂️ Project Structure <a name="-project-structure"></a>
 
 ```text
 ```plaintext
@@ -108,7 +108,7 @@ volunteer_platform/
 
 ---
 
-## 🏛️ Architecture  
+## 🏛️ Architecture  <a name="-architecture"></a>
 
 ### 3-Layer Design  
 ```mermaid
@@ -215,7 +215,7 @@ POST /users/messages/
 
 ---
 
-### 🛠️ **Development Setup**  
+### 🛠️ **Development Setup**  <a name="-development-setup"></a>
 
 **1. Clone & Build**  
 ```bash  
