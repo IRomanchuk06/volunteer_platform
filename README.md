@@ -1,9 +1,9 @@
 # **Volunteer Platform**  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen)](https://github.com)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Java 21](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)](https://openjdk.org/projects/jdk/21/)  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)](https://spring.io/projects/spring-boot)  [![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen)](https://github.com) [![GitHub Actions](https://img.shields.io/github/actions/workflow/status/IRomanchuk06/volunteer_platform/ci.yml?branch=main&label=CI/CD&logo=githubactions)](https://github.com/IRomanchuk06/volunteer_platform/actions)  
 
-A backend-focused platform showcasing modern **Spring Boot** development practices, with a strong emphasis on **unit and integration testing**. The platform is built using a **3-layer architecture** to ensure scalability and maintainability, and boasts **94% test coverage**. 
+A Spring Boot-based backend platform demonstrating modern development practices, emphasizing **unit/integration testing** and a **3-layer architecture** for scalability and maintainability. With **94% test coverage**, the project ensures reliability while featuring an automated **GitHub Actions CI/CD pipeline** for builds, testing, Docker image creation, and deployment.  
 
-*While primarily focused on backend development, it also includes a basic user interface for demonstration purposes.*  
+*Includes a minimal UI for demonstration purposes.*  
 
 ---
 
@@ -293,7 +293,6 @@ docker compose run --rm client
 ---
 
 ### 🔄 **CI/CD Pipeline**  
-[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/IRomanchuk06/volunteer_platform/ci.yml?branch=main&label=CI/CD&logo=githubactions)](https://github.com/IRomanchuk06/volunteer_platform/actions)  
 
 #### Workflow Diagram  
 ```mermaid
